@@ -1,0 +1,9 @@
+sudo: true
+
+language: java
+
+jdk:
+ - openjdk11
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
