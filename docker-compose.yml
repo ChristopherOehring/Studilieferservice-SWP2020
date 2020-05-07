@@ -30,3 +30,7 @@ services:
     image: studi-lieferservice/test-module:latest
     ports:
       - 9090:8090
+  group-manager:
+    image: studi-lieferservice/group-manager:latest
+    ports:
+      - 9010:8010
