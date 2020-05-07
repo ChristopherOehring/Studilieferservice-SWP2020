@@ -1,55 +1,56 @@
 package com.manu.prototype.group;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
-
+@Entity
 
 public class Group {
 
-    private final UUID groupId;
-    private final String name;
+    @Id
+    private UUID id;
+
+    @NotNull
+    private String name;
+
     private List<String> users;
 
-
-    public Group(@JsonProperty("id") UUID groupId,
-                 @JsonProperty("name") String name) {
-        this.groupId = groupId;
+    public Group(String name){
         this.name = name;
-        users = new ArrayList<>();
     }
 
-    public UUID getGroupId() {
-        return groupId;
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public List<String> getUsers() {
         return users;
     }
 
-    public List<String> addUser(String user) {
-        users.add(user);
-        return users;
+    public void setUsers(List<String> users) {
+        this.users = users;
     }
 
-    public List<String> removeUser(String user) {
-        users.remove(user);
-        return users;
+    public boolean addUser(String user){
+        return users.add(user);
     }
 
-
-    @Override
-    public String toString() {
-        return "Group{" +
-                "groupId=" + groupId +
-                ", name='" + name + '\'' +
-                ", Users=" + users +
-                '}';
+    public boolean removeUser(String user){
+        return users.remove(user);
     }
 }
