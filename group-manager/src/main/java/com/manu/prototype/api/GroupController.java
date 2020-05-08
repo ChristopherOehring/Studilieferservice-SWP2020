@@ -1,14 +1,13 @@
 package com.manu.prototype.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.manu.prototype.group.JpaGroupRepository;
-import com.manu.prototype.group.Group;
+import com.manu.prototype.persistence.Gruppe;
+import com.manu.prototype.persistence.JpaGroupRepository;
+import com.manu.prototype.persistence.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @RequestMapping("api/group")
 @RestController
@@ -21,74 +20,87 @@ public class GroupController {
     }
 
     @PostMapping(path = "{name}")
-    public Group createGroup(@PathVariable("name") String name) {
-        Group group = new Group(name);
-        group.setId(UUID.randomUUID());
-        return groupRepository.save(group);
+    public Gruppe createGroup(@PathVariable("name") String name) {
+        Gruppe gruppe = new Gruppe();
+        gruppe.setGroupName(name);
+        gruppe.setId(UUID.randomUUID().toString());
+
+        gruppe.addUser("test@testmail.com");
+
+        return groupRepository.save(gruppe);
     }
 
     @GetMapping
-    public List<Group> getAll(){
+    public List<Gruppe> getAll(){
         return groupRepository.findAll();
     }
 
     @GetMapping(path = "{id}")
-    // TODO: 07.05.2020 change loop to Collection.removelf
-    public List<Group> getAllGroupsOfPerson(@PathVariable("id") String user){
-        List<Group> groups = groupRepository.findAll();
-        for(Group g: groups) {
-            if(!g.getUsers().contains(user)) {
-                groups.remove(g);
+    public List<Gruppe> getAllGroupsOfPerson(@PathVariable("id") String userId){
+        List<Gruppe> groups = groupRepository.findAll();
+        List<Gruppe> ret = new ArrayList<>();
+        for(Gruppe g: groups) {
+            if(g.getUsers().contains(":" + userId + ":")){
+                ret.add(g);
             }
         }
-        return groups;
+        return ret;
     }
 
     @DeleteMapping(path = "{id}")
-    public void deleteGroupById(@PathVariable("id") UUID id){
-        groupRepository.delete(id);
+    public void deleteGroupById(@PathVariable("id") String id){
+        groupRepository.deleteById(id);
     }
 
     @PutMapping(path = "add")
-    public boolean addUser(@RequestBody PutUserBody body){
-        Group g = groupRepository.findOne(body.getId());
-        return g.addUser(body.getUser());
+    public String addUser(@RequestBody PutUserBody body){
+        Optional<Gruppe> groupOptional = groupRepository.findById(body.getId());
+        if (groupOptional.isEmpty()) return "Group not found";
+        Gruppe g = groupOptional.get();
+
+        g.addUser(body.getUser());
+        groupRepository.save(g);
+        return "added";
     }
 
     @PutMapping(path = "remove")
-    public boolean removeUser(@RequestBody PutUserBody body){
-        return groupRepository.findOne(body.getId()).removeUser(body.getUser());
+    public void removeUser(@RequestBody PutUserBody body){
+        Optional<Gruppe> groupOptional = groupRepository.findById(body.getId());
+        if (groupOptional.isEmpty()) return;
+        Gruppe g = groupOptional.get();
+        g.removeUser(body.getUser());
+        groupRepository.save(g);
     }
 
     /*
     @PostMapping
-    public void addUserToGroup(@RequestBody String user, Group group) {
+    public void addUserToGroup(@RequestBody String user, Gruppe group) {
         groupService.addUser(user, group);
     }
 
     @RequestMapping("/add-id")
     @PostMapping
-    public void addUserToGroupByID(@RequestBody @JsonProperty("id") UUID id, Group group){
+    public void addUserToGroupByID(@RequestBody @JsonProperty("id") UUID id, Gruppe group){
         groupService.addUserByID(id, group);
     }
 
     @GetMapping(path = "/users")
-    public List<String> getAllUsersFromGroup(Group group) {
+    public List<String> getAllUsersFromGroup(Gruppe group) {
         return groupService.getAllUsers(group);
     }
 
     @GetMapping(path = "/name")
-    public String getGroupName(Group group) {
+    public String getGroupName(Gruppe group) {
         return groupService.getGroupName(group);
     }
 
     @GetMapping(path = "/{id}")
-    public User getUserFromGroupByID(@PathVariable("id") UUID id, Group group) {
+    public User getUserFromGroupByID(@PathVariable("id") UUID id, Gruppe group) {
         return groupService.getUserByID(id, group).orElse(null);
     }
 
     @DeleteMapping(path ="/{id}")
-    public void removeUserFromGroupByID(@PathVariable("id") UUID id, Group group) {
+    public void removeUserFromGroupByID(@PathVariable("id") UUID id, Gruppe group) {
         groupService.removeUserFromGroupByID(id, group);
     }
 

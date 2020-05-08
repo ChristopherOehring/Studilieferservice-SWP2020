@@ -2,19 +2,17 @@ package com.manu.prototype.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.UUID;
-
 public class PutUserBody {
-    private UUID id;
+    private String id;
     private String user;
 
-    public PutUserBody(@JsonProperty("id")UUID id,
+    public PutUserBody(@JsonProperty("id")String id,
                        @JsonProperty("user") String user) {
         this.id = id;
         this.user = user;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
