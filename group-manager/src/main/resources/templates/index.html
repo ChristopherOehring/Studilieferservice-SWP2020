@@ -16,7 +16,8 @@
             <div class="avGrTitle">
                 Verfuegbare Gruppen
             </div>
-            <!--<div class="avGrBody">
+            <!--
+            <div class="avGrBody">
                 <tbody>
                     <tr th:each="gruppe: ${groupList}">
                         <div class="avGroupElement">
@@ -26,30 +27,20 @@
                         </div>
                     </tr>
                 </tbody>
-            </div>-->
+            </div>
+            -->
+
             <div class="avGrBody">
                 <ul>
-                <th:block th:object="${groupList}">
-                   <li th:each="*{getAllGroups}" th:text="${Group.getName}"></li>
-                   <li>Lorem ipsum</li>
-                   <li>dolor sit</li>
-                </th:block>
+                    <th:block th:each="gruppe: ${groupList}">
+                       <li th:text="*{gruppe.groupName}" ></li>
+                    </th:block>
+                    <li>Lorem ipsum</li>
+                    <li>dolor sit</li>
                 </ul>
             </div>
         </div>
 
-        <div class="createGroup">
-            <div class="crGrTitle">
-                Neue Gruppe erstellen
-            </div>
-            <div class="crGrBody">
-                <form action="*{/createGroup}" th:object="${Group}" method="POST">
-                    <label for="groupname" id="selectGroupname">Gruppennamen eingeben</label>
-                    <input type="text" id="groupname" th:field="*{name}" />
-                    <input type="submit" value="Weiter" />
-                </form>
-            </div>
-        </div>
 
         <div class="footer">
             <div class="impres">Impressum</div>
