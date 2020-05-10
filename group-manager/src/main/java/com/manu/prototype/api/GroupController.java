@@ -2,8 +2,7 @@ package com.manu.prototype.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.manu.prototype.persistence.Gruppe;
-import com.manu.prototype.persistence.JpaGroupRepository;
-import com.manu.prototype.persistence.User;
+import com.manu.prototype.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +11,11 @@ import java.util.*;
 @RequestMapping("api/group")
 @RestController
 public class GroupController {
-    private final JpaGroupRepository groupRepository;
+    private final GroupService groupService;
 
     @Autowired
-    public GroupController(final JpaGroupRepository groupRepository, final ObjectMapper objectMapper) {
-        this.groupRepository = Objects.requireNonNull(groupRepository);
+    public GroupController(final GroupService groupService, final ObjectMapper objectMapper) {
+        this.groupService = Objects.requireNonNull(groupService);
     }
 
     @PostMapping(path = "{name}")
@@ -27,17 +26,17 @@ public class GroupController {
 
         gruppe.addUser("test@testmail.com");
 
-        return groupRepository.save(gruppe);
+        return groupService.save(gruppe);
     }
 
     @GetMapping
     public List<Gruppe> getAll(){
-        return groupRepository.findAll();
+        return groupService.findAll();
     }
 
     @GetMapping(path = "{id}")
     public List<Gruppe> getAllGroupsOfPerson(@PathVariable("id") String userId){
-        List<Gruppe> groups = groupRepository.findAll();
+        List<Gruppe> groups = groupService.findAll();
         List<Gruppe> ret = new ArrayList<>();
         for(Gruppe g: groups) {
             if(g.getUsers().contains(":" + userId + ":")){
@@ -49,27 +48,27 @@ public class GroupController {
 
     @DeleteMapping(path = "{id}")
     public void deleteGroupById(@PathVariable("id") String id){
-        groupRepository.deleteById(id);
+        groupService.deleteById(id);
     }
 
     @PutMapping(path = "add")
     public String addUser(@RequestBody PutUserBody body){
-        Optional<Gruppe> groupOptional = groupRepository.findById(body.getId());
+        Optional<Gruppe> groupOptional = groupService.findById(body.getId());
         if (groupOptional.isEmpty()) return "Group not found";
         Gruppe g = groupOptional.get();
 
         g.addUser(body.getUser());
-        groupRepository.save(g);
+        groupService.save(g);
         return "added";
     }
 
     @PutMapping(path = "remove")
     public void removeUser(@RequestBody PutUserBody body){
-        Optional<Gruppe> groupOptional = groupRepository.findById(body.getId());
+        Optional<Gruppe> groupOptional = groupService.findById(body.getId());
         if (groupOptional.isEmpty()) return;
         Gruppe g = groupOptional.get();
         g.removeUser(body.getUser());
-        groupRepository.save(g);
+        groupService.save(g);
     }
 
     /*
