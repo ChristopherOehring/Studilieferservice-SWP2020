@@ -53,4 +53,13 @@ public class Gruppe {
     public void removeUser(String user){
         users = users.replace(":" + user + ":", "");
     }
+
+    @Override
+    public String toString() {
+        return "Gruppe{" +
+                "id='" + id + '\'' +
+                ", groupName='" + groupName + '\'' +
+                ", users='" + users + '\'' +
+                '}';
+    }
 }
