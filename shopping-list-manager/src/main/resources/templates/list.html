@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Einkaufsliste</title>
+</head>
+
+<body>
+    <h1>Einkaufsliste</h1>
+    <h3>Gruppe: <td th:text="${shoppingList.groupName}">Gruppenname</td></h3>
+    <br>
+
+    <form th:action="@{/shoppingList/addItem}" th:object="${item}"  method="POST">
+        <label>Produkte hinzufügen: </label>
+        <input type="text" th:field="*{name}" placeholder="Produkt" >
+        <input type="hidden" name= "groupId"   th:value="${shoppingList.groupId}" />
+        <input type="submit" value="Hinzufügen">
+    </form>
+    <br>
+
+    <h2>Positionen:</h2>
+
+    <tr th:each="item : ${shoppingList.items}">
+        <p><h4><td th:text="${item.name}"></td></h4></p>
+    </tr>
+
+</body>
+</html>

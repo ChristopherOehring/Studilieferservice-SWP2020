@@ -30,3 +30,7 @@ services:
     image: studi-lieferservice/test-module:latest
     ports:
       - 9090:8090
+  shopping-list-manager:
+    image: studi-lieferservice/shopping-list-manager:latest
+    ports:
+      - 9070:8070
