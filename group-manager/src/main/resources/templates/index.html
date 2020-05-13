@@ -1,49 +1,44 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>StudiLieferservice</title>
-        <link rel="stylesheet" type="text/css" href="./css/style.css"/>
-        
-    </head>
-    <body>
-        <div class="header">
-            <div class="logo">REWE</div>
-            <div class="logoAdd">StudiLieferservice</div>
-            <div class="headerTitle">Gruppenwahl</div>
-        
-        </div>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <title>StudiLieferservice</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./css/style.css"/>
 
-        <div class="availableGroups">
-            <div class="avGrTitle">
-                Verfuegbare Gruppen
-            </div>
-            <!--
-            <div class="avGrBody">
-                <tbody>
-                    <tr th:each="gruppe: ${groupList}">
-                        <div class="avGroupElement">
-                            <td th:text="${Group.name}">
-                            <td>DELETE ME</td>
-                            <td>Lorem ipsum</td>
-                        </div>
-                    </tr>
-                </tbody>
-            </div>
-            -->
+</head>
+<body>
+<div class="header">
+    <div class="logo">REWE</div>
+    <div class="logoAdd">StudiLieferservice</div>
+    <div class="headerTitle">Gruppenwahl</div>
 
-            <div class="avGrBody">
-                <ul>
-                    <th:block th:each="gruppe: ${groupList}">
-                       <li th:text="*{gruppe.groupName}" ></li>
-                    </th:block>
-                    <li>Lorem ipsum</li>
-                    <li>dolor sit</li>
-                </ul>
-            </div>
-        </div>
+</div>
 
+<div class="availableGroups">
+    <div class="avGrTitle">
+        Verfügbare Gruppen
+    </div>
+    <div class="avGrBody">
+        <ul>
+            <th:block th:each="gruppe: ${groupList}">
+                <li th:text="*{gruppe.groupName}" ></li>
+            </th:block>
+            <li>Lorem ipsum</li>
+            <li>dolor sit</li>
+        </ul>
+    </div>
+</div>
 
-        <div class="footer">
-            <div class="impres">Impressum</div>
-        </div>
-    </body>
+<div class="createGroup">
+    <div class="crGrTitle">
+        Neue Gruppe erstellen
+    </div>
+    <div class="crGrBody">
+
+    </div>
+</div>
+
+<div class="footer">
+    <div class="impres">Impressum</div>
+</div>
+</body>
 </html>
