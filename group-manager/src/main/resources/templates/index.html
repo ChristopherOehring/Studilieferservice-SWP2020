@@ -6,39 +6,49 @@
 
 </head>
 <body>
-<div class="header">
-    <div class="logo">REWE</div>
-    <div class="logoAdd">StudiLieferservice</div>
-    <div class="headerTitle">Gruppenwahl</div>
-
-</div>
-
-<div class="availableGroups">
-    <div class="avGrTitle">
-        Verfügbare Gruppen
-    </div>
-    <div class="avGrBody">
-        <ul>
-            <th:block th:each="gruppe: ${groupList}">
-                <li th:text="*{gruppe.groupName}" ></li>
-            </th:block>
-            <li>Lorem ipsum</li>
-            <li>dolor sit</li>
-        </ul>
-    </div>
-</div>
-
-<div class="createGroup">
-    <div class="crGrTitle">
-        Neue Gruppe erstellen
-    </div>
-    <div class="crGrBody">
+    <div class="header">
+        <div class="logo">REWE</div>
+        <div class="logoAdd">StudiLieferservice</div>
+        <div class="headerTitle">Gruppenwahl</div>
 
     </div>
-</div>
 
-<div class="footer">
-    <div class="impres">Impressum</div>
-</div>
+    <div class="availableGroups">
+        <div class="avGrTitle">
+            Verfügbare Gruppen:
+        </div>
+        <div class="avGrBody">
+            <ul>
+                <th:block th:each="gruppe: ${groupList}">
+                    <li th:text="*{gruppe.groupName}"> </li>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+
+    <div class="createGroup">
+        <div class="crGrTitle">
+            Neue Gruppe erstellen
+        </div>
+        <div class="crGrBody">
+            <form th:action="@{/web/group/save-group}" th:object="${creationForm}" method="post">
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label> group name:</label> &emsp;
+                        <input type="text" class="form-control" th:field="*{groupName}">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>users:</label> &emsp;&emsp;&emsp;&emsp;
+                        <input type="text" class="form-control" th:field="*{users}">
+                    </div>
+                    <input type="submit" value="Hinzufügen">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="impres">Impressum</div>
+    </div>
 </body>
 </html>

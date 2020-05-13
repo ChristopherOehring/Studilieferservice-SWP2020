@@ -96,6 +96,23 @@ li{
     list-style-type: none;
 }
 
+form{
+    color: rgb(0, 0, 0);
+    left: 10%;
+    right: 10%;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 15px;
+    display: block;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: rgb(255, 157, 157);
+    text-align: left;
+    -webkit-box-shadow: 6px 8px 11px -4px rgba(0,0,0,0.61);
+    -moz-box-shadow: 6px 8px 11px -4px rgba(0,0,0,0.61);
+    box-shadow: 6px 8px 11px -4px rgba(0,0,0,0.61);
+    list-style-type: none;
+}
+
 .createGroup{
     position: fixed;
     right: 20%;
@@ -119,6 +136,7 @@ li{
     font-size: 25px;
     font-weight: bold;
     color: white;
+    padding-bottom: 20px;
 }
 
 .footer{
