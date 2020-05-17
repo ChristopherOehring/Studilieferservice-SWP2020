@@ -30,3 +30,7 @@ services:
     image: studi-lieferservice/test-module:latest
     ports:
       - 9090:8090
+  user-manager:
+    image: studi-lieferservice/user-manager:latest
+    ports:
+      - 9080:8080
