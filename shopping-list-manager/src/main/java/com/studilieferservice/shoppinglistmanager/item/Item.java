@@ -18,7 +18,7 @@ public class Item {
 
     //maybe could be manyToMany later when items are unique as well (need to implement product-manager for that)
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference //to avoid recursion in json
     private ShoppingList shoppingList;
 
     public Item() {}

@@ -1,5 +1,6 @@
 package com.studilieferservice.shoppinglistmanager.shoppinglist;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -7,6 +8,7 @@ public class ShoppingListService {
 
     private final ShoppingListRepository shoppingListRepository;
 
+    @Autowired
     public ShoppingListService(ShoppingListRepository shoppingListRepository) {
         this.shoppingListRepository = shoppingListRepository;
     }
@@ -21,12 +23,12 @@ public class ShoppingListService {
         shoppingListRepository.delete(shoppingList);
     }
 
-//    public ShoppingList getShoppingList(Long id) {
-//
-//        ShoppingList s = shoppingListRepository.getOne(id);
-//
-//        return s;
-//    }
+/*    public ShoppingList getShoppingList(Long id) {
+
+        ShoppingList s = shoppingListRepository.getOne(id);
+
+        return s;
+    }   */
 
     public ShoppingList getShoppingListByGroupId(String groupId) {
 
