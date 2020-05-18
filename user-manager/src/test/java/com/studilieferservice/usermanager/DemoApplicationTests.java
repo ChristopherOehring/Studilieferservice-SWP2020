@@ -1,8 +1,7 @@
-package com.example.regllogin;
+package com.studilieferservice.usermanager;
 
-import com.swp09.reglogin.RegLoginApplication;
-import com.swp09.reglogin.User;
-import com.swp09.reglogin.UserService;
+import com.studilieferservice.usermanager.user.User;
+import com.studilieferservice.usermanager.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,9 +9,8 @@ import org.springframework.test.context.event.annotation.BeforeTestClass;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
-@SpringBootTest(classes = RegLoginApplication.class)
+@SpringBootTest(classes = UserManagerApplication.class)
 class DemoApplicationTests {
-
 
 	@Autowired
 	private UserService userService;
@@ -22,9 +20,6 @@ class DemoApplicationTests {
 		User newUser = new User("Test","test@test.com","testpassword");
 		userService.createUser(newUser);
 		User user = userService.findOne("test@test.com");
-
-
-
 	}
 
  @Test
@@ -32,10 +27,5 @@ class DemoApplicationTests {
 
 	 User user = userService.findOne("test@test.com");
 	 assertNotNull(user);
-
-
  }
-
-
-
 }

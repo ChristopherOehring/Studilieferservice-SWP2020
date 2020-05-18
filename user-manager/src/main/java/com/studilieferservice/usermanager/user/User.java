@@ -1,4 +1,4 @@
-package com.swp09.reglogin;
+package com.studilieferservice.usermanager.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "User")
 public class User {
 
     private boolean isSignedIn ;
@@ -52,7 +51,6 @@ public class User {
     public void setSignedIn(boolean signedIn) {
         isSignedIn = signedIn;
     }
-
 
     public String getFirstName() {
         return firstName;
@@ -107,11 +105,6 @@ public class User {
         this.email = email;
         this.password = password;
     }
-    public User()
-    {
 
-
-    }
-
-
+    public User() { }
 }

@@ -1,5 +1,7 @@
-package com.swp09.reglogin;
+package com.studilieferservice.usermanager.controller;
 
+import com.studilieferservice.usermanager.user.User;
+import com.studilieferservice.usermanager.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,15 +13,20 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 
-
 @Controller
 public class WebController {
 
-    @Autowired
     private final UserService userService;
 
+    @Autowired
     public WebController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/")
+    public String showIndexPage(){
+
+        return "index";
     }
 
     @GetMapping("/register")
@@ -31,7 +38,7 @@ public class WebController {
 
     @GetMapping("/editaccount")
     public String editForm(Model model) {
-        model.addAttribute("user", userService.currentUser);
+        model.addAttribute("user", userService.getCurrentUser());
         return "views/editaccount";
     }
 
@@ -40,15 +47,13 @@ public class WebController {
 
         model.addAttribute("user", new User());
         return "views/login";
-
     }
 
     @GetMapping("/logout")
     public String logoutForm(Model model) {
-        userService.currentUser.setSignedIn(false);
-        model.addAttribute("user", userService.currentUser);
+        userService.getCurrentUser().setSignedIn(false);
+        model.addAttribute("user", userService.getCurrentUser());
         return "views/login";
-
     }
 
     @PostMapping("/register")
@@ -63,12 +68,9 @@ public class WebController {
 
     @PostMapping("/edit")
     public String editUser(@Valid User user, BindingResult bindingResult, Model model) {
-//        if(bindingResult.hasErrors()){
-//            return "views/regerror";
-//        }
+
         userService.edit(user);
         return "views/successedLogin";
-
     }
 
     @GetMapping("/loginn")
@@ -77,8 +79,6 @@ public class WebController {
             return "views/successedLogin";
         else
             return "views/regerror";
-
-
     }
 
     @PutMapping("/logoutt")
@@ -90,8 +90,8 @@ public class WebController {
         }
     }
 
-   @GetMapping("/about")
-   public String about()
+    @GetMapping("/about")
+    public String about()
    {
        return "views/about";
    }
@@ -103,5 +103,10 @@ public class WebController {
         return redirectView;
     }
 
-
+/*    @GetMapping ("/shoppingList")
+    public RedirectView localRedirect2() {
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://localhost:8010/web/group/index");
+        return redirectView;
+    }*/
 }

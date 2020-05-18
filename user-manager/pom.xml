@@ -12,7 +12,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>user-manager</name>
-	<description>user manager</description>
+	<description>Service for managing users and displaying their accounts</description>
 
 	<dependencies>
 		<dependency>
@@ -77,8 +77,6 @@
 			<version>5.2.5.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
-
-
 	</dependencies>
 
 	<build>
@@ -108,7 +106,6 @@
 					</execution>
 				</executions>
 			</plugin>
-	</plugins>
+		</plugins>
 	</build>
-
 </project>
