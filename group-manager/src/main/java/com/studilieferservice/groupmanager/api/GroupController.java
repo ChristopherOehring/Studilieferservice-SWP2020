@@ -1,8 +1,7 @@
-package com.manu.prototype.api;
+package com.studilieferservice.groupmanager.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.manu.prototype.persistence.Gruppe;
-import com.manu.prototype.service.GroupService;
+import com.studilieferservice.groupmanager.persistence.Gruppe;
+import com.studilieferservice.groupmanager.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +13,7 @@ public class GroupController {
     private final GroupService groupService;
 
     @Autowired
-    public GroupController(final GroupService groupService, final ObjectMapper objectMapper) {
+    public GroupController(final GroupService groupService) {
         this.groupService = Objects.requireNonNull(groupService);
     }
 
@@ -70,43 +69,4 @@ public class GroupController {
         g.removeUser(body.getUser());
         groupService.save(g);
     }
-
-    /*
-    @PostMapping
-    public void addUserToGroup(@RequestBody String user, Gruppe group) {
-        groupService.addUser(user, group);
-    }
-
-    @RequestMapping("/add-id")
-    @PostMapping
-    public void addUserToGroupByID(@RequestBody @JsonProperty("id") UUID id, Gruppe group){
-        groupService.addUserByID(id, group);
-    }
-
-    @GetMapping(path = "/users")
-    public List<String> getAllUsersFromGroup(Gruppe group) {
-        return groupService.getAllUsers(group);
-    }
-
-    @GetMapping(path = "/name")
-    public String getGroupName(Gruppe group) {
-        return groupService.getGroupName(group);
-    }
-
-    @GetMapping(path = "/{id}")
-    public User getUserFromGroupByID(@PathVariable("id") UUID id, Gruppe group) {
-        return groupService.getUserByID(id, group).orElse(null);
-    }
-
-    @DeleteMapping(path ="/{id}")
-    public void removeUserFromGroupByID(@PathVariable("id") UUID id, Gruppe group) {
-        groupService.removeUserFromGroupByID(id, group);
-    }
-
-    @RequestMapping("/test")
-    @GetMapping
-    public String test() {
-        return "Hello Test :D";
-    }
-    */
 }

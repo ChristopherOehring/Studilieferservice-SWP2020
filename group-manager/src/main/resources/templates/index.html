@@ -1,46 +1,54 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org" >
-<head>
-    <title>StudiLieferservice</title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../static/style.css" th:href="@{/style.css}"/>
+    <title>StudiLieferservice</title>
 </head>
+
 <body>
     <div class="header">
         <div class="logo">REWE</div>
         <div class="logoAdd">StudiLieferservice</div>
         <div class="headerTitle">Gruppenwahl</div>
-
     </div>
 
-    <div class="availableGroups">
-        <div class="avGrTitle">
-            Verfügbare Gruppen:
+    <div class="columnLeft">
+        <div class="title">
+            Verfügbare Gruppen
         </div>
-        <div class="avGrBody">
-            <ul>
-                <th:block th:each="gruppe: ${groupList}">
-                    <li th:text="*{gruppe.groupName}"> </li>
-                </th:block>
-            </ul>
-        </div>
+
+        <th:block th:each="gruppe: ${groupList}">
+            <div class="element">
+                <b><li th:text="*{gruppe.groupName}"> </li></b>
+
+                <form th:action="@{/web/group/getList}" method="GET">
+                    <input type="submit" value="Shopping List" />
+                    <input type="hidden" name="id" th:value="${gruppe.id}" />
+                </form>
+            </div>
+        </th:block>
     </div>
 
-    <div class="createGroup">
-        <div class="crGrTitle">
+    <div class="columnRight">
+        <div class="title">
             Neue Gruppe erstellen
         </div>
-        <div class="crGrBody">
-            <form th:action="@{/web/group/save-group}" th:object="${creationForm}" method="post">
+
+        <div class="element">
+            <form th:action="@{/web/group/save-group}" th:object="${creationForm}" method="POST">
                 <div class="form-row">
                     <div class="col-md-6 form-group">
-                        <label> group name:</label> &emsp;
+                        <label>group name:</label> &emsp;
                         <input type="text" class="form-control" th:field="*{groupName}">
                     </div>
+
                     <div class="col-md-6 form-group">
                         <label>users:</label> &emsp;&emsp;&emsp;&emsp;
                         <input type="text" class="form-control" th:field="*{users}">
                     </div>
+
                     <input type="submit" value="Hinzufügen">
                 </div>
             </form>
@@ -48,7 +56,8 @@
     </div>
 
     <div class="footer">
-        <div class="impres">Impressum</div>
+        Impressum
     </div>
 </body>
+
 </html>

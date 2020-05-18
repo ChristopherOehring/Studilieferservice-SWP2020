@@ -1,4 +1,4 @@
-package com.manu.prototype.persistence;
+package com.studilieferservice.groupmanager.persistence;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -10,7 +10,6 @@ import javax.persistence.Id;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
-
 
     @Id
     private String id;

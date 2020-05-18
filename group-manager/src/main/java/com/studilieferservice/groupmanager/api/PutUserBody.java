@@ -1,4 +1,4 @@
-package com.manu.prototype.api;
+package com.studilieferservice.groupmanager.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

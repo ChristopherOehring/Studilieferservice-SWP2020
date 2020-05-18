@@ -1,13 +1,13 @@
-package com.manu.prototype;
+package com.studilieferservice.groupmanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PrototypeApplication {
+public class GroupManagerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PrototypeApplication.class, args);
+		SpringApplication.run(GroupManagerApplication.class, args);
 	}
 
 }

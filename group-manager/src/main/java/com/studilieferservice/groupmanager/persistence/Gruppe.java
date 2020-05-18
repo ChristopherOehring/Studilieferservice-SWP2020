@@ -1,10 +1,7 @@
-package com.manu.prototype.persistence;
-
+package com.studilieferservice.groupmanager.persistence;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(name = "gruppe")
 public class Gruppe {
@@ -15,10 +12,10 @@ public class Gruppe {
     @NotNull
     private String groupName;
 
-//    removed because a many to many relation would be nessesary
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "gruppe_id", referencedColumnName = "id")
-//    private List<User> users = new ArrayList<>();
+/*    removed because a many to many relation would be necessary
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "gruppe_id", referencedColumnName = "id")
+    private List<User> users = new ArrayList<>();   */
 
     private String users = "";
 

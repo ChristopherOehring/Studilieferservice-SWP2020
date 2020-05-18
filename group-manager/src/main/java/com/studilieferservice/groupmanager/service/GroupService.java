@@ -1,7 +1,7 @@
-package com.manu.prototype.service;
+package com.studilieferservice.groupmanager.service;
 
-import com.manu.prototype.persistence.*;
-import org.apache.kafka.common.protocol.types.Field;
+import com.studilieferservice.groupmanager.persistence.Gruppe;
+import com.studilieferservice.groupmanager.persistence.JpaGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
