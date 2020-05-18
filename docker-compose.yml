@@ -34,3 +34,12 @@ services:
     image: studi-lieferservice/group-manager:latest
     ports:
       - 9010:8010
+  shopping-list-manager:
+    image: studi-lieferservice/shopping-list-manager:latest
+    ports:
+      - 9070:8070
+  user-manager:
+    image: studi-lieferservice/user-manager:latest
+    ports:
+      - 9080:8080
+
