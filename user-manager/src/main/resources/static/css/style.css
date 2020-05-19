@@ -1,0 +1,35 @@
+
+.mySpace{
+  padding-top: 100px;
+}
+
+.stylepadding {
+  padding: 100px 300px;
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  background-color: #f5f5f5;
+}
+
+#managegroupsbox {
+  position: fixed;
+  left: 20%;
+  top: 200px;
+  height: 60%;
+  width: 20%;
+  padding: 20px;
+}
+
+/*#shoppinglist {
+  position: fixed;
+  right: 30%;
+  top: 200px;
+  height: 60%;
+  width: 20%;
+  padding: 20px;
+}*/
