@@ -1,0 +1,122 @@
+body{
+    margin: 0;
+}
+
+.header{
+    height: 50px;
+    background: #ff0000;
+}
+
+.headerTitle{
+    position: absolute;
+
+    width: 171px;
+    height: 36px;
+    left: calc(50% - 171px/2 - 0.5px);
+    top: 5px;
+
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 30px;
+    line-height: 51px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    color: #FFFFFF;
+}
+
+.logo{
+    position: absolute;
+    left: 18px;
+    top: 5px;
+
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 40px;
+
+    color: #FFFFFF;
+}
+
+.logoAdd{
+    position: absolute;
+    width: 201.56px;
+    height: 35.32px;
+    left: 95px;
+    top: 13px;
+
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 27px;
+
+    color: #FFFFFF;
+}
+
+.columnLeft{
+    position: fixed;
+    left: 20%;
+    top: 100px;
+    height: 60%;
+    width: 20%;
+    padding: 20px;
+    background: rgb(252, 45, 45);
+    -webkit-box-shadow: 7px 10px 6px -6px rgba(0,0,0,0.8);
+    box-shadow: 7px 10px 6px -6px rgba(0,0,0,0.8);
+    border-radius: 20px
+}
+
+.columnRight{
+    position: fixed;
+    right: 20%;
+    top: 100px;
+    height: 60%;
+    width: 20%;
+    padding: 20px;
+    background: rgb(252, 45, 45);
+    -webkit-box-shadow: 7px 10px 6px -6px rgba(0,0,0,0.8);
+    box-shadow: 7px 10px 6px -6px rgba(0,0,0,0.8);
+    border-radius: 20px
+}
+
+.title{
+    text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 25px;
+    font-weight: bold;
+    color: white;
+    padding-bottom: 20px;
+}
+
+.element{
+    color: rgb(0, 0, 0);
+    left: 10%;
+    right: 10%;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 15px;
+    display: block;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    line-height: 2.0;
+    background-color: rgb(220, 220, 220);
+    text-align: left;
+    -webkit-box-shadow: 6px 8px 11px -4px rgba(0,0,0,0.61);
+    -moz-box-shadow: 6px 8px 11px -4px rgba(0,0,0,0.61);
+    box-shadow: 6px 8px 11px -4px rgba(0,0,0,0.61);
+    list-style-type: none;
+}
+
+.footer{
+    position: fixed;
+    height: 25px;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: red;
+    color: white;
+    text-align: center;
+}
