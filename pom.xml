@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.rewedigital.examples.workshop</groupId>
+    <groupId>com.rewedigital.studilieferservice</groupId>
     <artifactId>studi-lieferservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>studi-lieferservice</name>
-    <description>Closure around related projects for easier building</description>
+    <description>Project including multiple submodules to run our application: A web application for ordering groceries in groups</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -20,10 +20,9 @@
     </parent>
 
     <modules>
-        <module>composer-service</module>
-        <module>test-module</module>
-        <!--module>group-manager</module-->
-        <!--module>user-manager</module-->
+        <!--module>composer-service</module-->
+        <module>group-manager</module>
+        <module>user-manager</module>
         <module>shopping-list-manager</module>
     </modules>
 

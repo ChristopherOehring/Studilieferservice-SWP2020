@@ -34,8 +34,8 @@
 
         <div class="element">
             <form th:action="@{/shoppingList/addItem}" th:object="${item}"  method="POST">
-                <label>Produkte hinzufügen: </label>
-                <input type="text" th:field="*{name}" placeholder="Produkt" >
+                <label for="productname">Produkte hinzufügen: </label>
+                <input type="text" id="productname" th:field="*{name}" placeholder="Produkt" >
                 <input type="hidden" name= "groupId"   th:value="${shoppingList.groupId}" />
                 <input type="submit" value="Hinzufügen">
             </form>

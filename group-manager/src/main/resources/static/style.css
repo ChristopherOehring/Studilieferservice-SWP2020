@@ -60,14 +60,15 @@ body{
 .columnLeft{
     position: fixed;
     left: 20%;
+    right: 20%;
     top: 100px;
     height: 60%;
     width: 20%;
     padding: 20px;
     background: rgb(252, 45, 45);
-    -webkit-box-shadow: 7px 10px 6px -6px rgba(0,0,0,0.8);
+    -webkit-box-shadow: 7px 10px 6px -6px rgba(0,0,0,0.8); 
     box-shadow: 7px 10px 6px -6px rgba(0,0,0,0.8);
-    border-radius: 20px
+    border-radius: 20px;
 }
 
 .columnRight{
@@ -87,9 +88,9 @@ body{
     text-align: center;
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-size: 25px;
+    padding-bottom: 20px;
     font-weight: bold;
     color: white;
-    padding-bottom: 20px;
 }
 
 .element{

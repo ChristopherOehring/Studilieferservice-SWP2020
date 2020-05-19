@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.rewedigital.examples.workshop</groupId>
+    <groupId>com.rewedigital.studilieferservice</groupId>
     <artifactId>studi-lieferservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>

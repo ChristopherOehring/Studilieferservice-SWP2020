@@ -8,6 +8,11 @@ Via docker-compose the application runs on port `9070`.
 To see if everything works go to http://localhost:8070/shoppingList/.
 There you should be able to see a simple message.
 
+## Using Docker (starting via docker-compose)
+This module can be started via docker-compose and works fine.
+However, it is possible that other modules cannot access this module when it is
+started using Docker.
+
 ## Create a new shopping list
 You can create new shopping lists with POST.
 Using Postman etc., run a POST request at `http://localhost:8070/shoppingList/create` with the body:
