@@ -40,13 +40,13 @@
             <form th:action="@{/web/group/save-group}" th:object="${creationForm}" method="POST">
                 <div class="form-row">
                     <div class="col-md-6 form-group">
-                        <label>group name:</label> &emsp;
-                        <input type="text" class="form-control" th:field="*{groupName}">
+                        <label for="groupname">group name:</label> &emsp;
+                        <input type="text" class="form-control" id="groupname" th:field="*{groupName}">
                     </div>
 
                     <div class="col-md-6 form-group">
-                        <label>users:</label> &emsp;&emsp;&emsp;&emsp;
-                        <input type="text" class="form-control" th:field="*{users}">
+                        <label for="users">users:</label> &emsp;&emsp;&emsp;&emsp;
+                        <input type="text" class="form-control" id="users" th:field="*{users}">
                     </div>
 
                     <input type="submit" value="Hinzufügen">

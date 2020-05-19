@@ -22,14 +22,10 @@ services:
 #      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
 #      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-  composer:
-    image: studi-lieferservice/composer-service:latest
-    ports:
-      - 9000:8000
-  test-module:
-    image: studi-lieferservice/test-module:latest
-    ports:
-      - 9090:8090
+#  composer:
+#    image: studi-lieferservice/composer-service:latest
+#    ports:
+#      - 9000:8000
   group-manager:
     image: studi-lieferservice/group-manager:latest
     ports:
@@ -42,4 +38,3 @@ services:
     image: studi-lieferservice/user-manager:latest
     ports:
       - 9080:8080
-
