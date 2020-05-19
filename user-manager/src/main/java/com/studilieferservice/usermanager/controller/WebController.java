@@ -85,16 +85,6 @@ public class WebController {
             return "views/regerror";
     }
 
-//    @PutMapping("/logoutt")
-//    public String logout(@Valid User user, BindingResult bindingResult, Model model) {
-//        log.info("logoutt");
-//        if (userService.logout())
-//
-//            return "views/login";
-//        else {
-//            return "views/regerror";
-//        }
-//    }
 
     @GetMapping("/about")
     public String about() {
