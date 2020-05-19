@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-
     private User currentUser;
     final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -39,18 +39,23 @@ public class UserService {
 
     public boolean logout() {
 
-            currentUser.setSignedIn(false);
-            userRepository.save(currentUser);
-            this.currentUser = null;
+        currentUser.setSignedIn(false);
+        userRepository.save(this.currentUser);
+        if (currentUser.isSignedIn() == false) {
+
             return true;
+        } else
+            return false;
     }
 
-    public User edit(User user){
+    public User edit(User user) {
 
         currentUser.setFirstName(user.getFirstName());
         currentUser.setLastName(user.getLastName());
         currentUser.setUserName(user.getUserName());
-        currentUser.setAddress(user.getAddress());
+        currentUser.setStreet(user.getStreet());
+        currentUser.setCity(user.getCity());
+        currentUser.setZip(user.getZip());
         currentUser.setSignedIn(true);
         currentUser.setPassword(currentUser.getPassword());
         currentUser.setEmail(currentUser.getEmail());

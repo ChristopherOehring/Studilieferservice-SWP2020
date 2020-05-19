@@ -3,10 +3,7 @@ package com.studilieferservice.usermanager.user;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -31,7 +28,15 @@ public class User {
 
     @NotEmpty
     @NotNull
-    private String address;
+    private String street;
+
+    @NotEmpty
+    @NotNull
+    private String city;
+
+    @NotEmpty
+    @NotNull
+    private String zip;
 
     @Id
     @Email
@@ -76,12 +81,12 @@ public class User {
         this.userName = userName;
     }
 
-    public String getAddress() {
-        return address;
+    public String getStreet() {
+        return street;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setStreet(String address) {
+        this.street = address;
     }
 
     public String getEmail() {
@@ -107,4 +112,20 @@ public class User {
     }
 
     public User() { }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
 }

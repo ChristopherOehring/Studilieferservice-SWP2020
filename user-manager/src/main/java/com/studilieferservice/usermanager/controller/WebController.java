@@ -1,6 +1,7 @@
 package com.studilieferservice.usermanager.controller;
 
 import com.studilieferservice.usermanager.user.User;
+import com.studilieferservice.usermanager.user.UserRepository;
 import com.studilieferservice.usermanager.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
@@ -17,14 +17,16 @@ import javax.validation.Valid;
 public class WebController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public WebController(UserService userService) {
+    public WebController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/")
-    public String showIndexPage(){
+    public String showIndexPage() {
 
         return "index";
     }
@@ -52,7 +54,9 @@ public class WebController {
     @GetMapping("/logout")
     public String logoutForm(Model model) {
         userService.getCurrentUser().setSignedIn(false);
+        userRepository.save(userService.getCurrentUser());
         model.addAttribute("user", userService.getCurrentUser());
+
         return "views/login";
     }
 
@@ -81,22 +85,23 @@ public class WebController {
             return "views/regerror";
     }
 
-    @PutMapping("/logoutt")
-    public String logout(@Valid User user, BindingResult bindingResult, Model model) {
-        if (userService.logout())
-            return "views/login";
-        else {
-            return "views/regerror";
-        }
-    }
+//    @PutMapping("/logoutt")
+//    public String logout(@Valid User user, BindingResult bindingResult, Model model) {
+//        log.info("logoutt");
+//        if (userService.logout())
+//
+//            return "views/login";
+//        else {
+//            return "views/regerror";
+//        }
+//    }
 
     @GetMapping("/about")
-    public String about()
-   {
-       return "views/about";
-   }
+    public String about() {
+        return "views/about";
+    }
 
-    @GetMapping ("/groupmanager")
+    @GetMapping("/groupmanager")
     public RedirectView localRedirect() {
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("http://localhost:8010/web/group/index");

@@ -31,7 +31,8 @@ public class UserController {
         if (StringUtils.isEmpty(user.getFirstName())
                 || StringUtils.isEmpty(user.getLastName())
                 || StringUtils.isEmpty(user.getUserName())
-                || StringUtils.isEmpty(user.getAddress())
+                || StringUtils.isEmpty(user.getStreet())
+                || StringUtils.isEmpty(user.getZip())
                 || StringUtils.isEmpty(user.getEmail())
                 || StringUtils.isEmpty(user.getPassword())) {
             return ResponseEntity.badRequest().body("User values invalid");
@@ -53,7 +54,7 @@ public class UserController {
         if (StringUtils.isEmpty(user.getFirstName())
                 || StringUtils.isEmpty(user.getLastName())
                 || StringUtils.isEmpty(user.getUserName())
-                || StringUtils.isEmpty(user.getAddress())
+                || StringUtils.isEmpty(user.getStreet())
                 ) {
             return ResponseEntity.badRequest().body("User values invalid");
         } else
