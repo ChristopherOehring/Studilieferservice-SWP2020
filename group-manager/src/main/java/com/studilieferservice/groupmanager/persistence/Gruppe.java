@@ -2,9 +2,17 @@ package com.studilieferservice.groupmanager.persistence;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "gruppe")
 public class Gruppe {
+    /**
+     * basic structure for groups
+     *      String id: group id, is randomly chosen when creating a new group
+     *      String groupname: name of the group, has to be set when creating a new group
+     *      Users are saved in a list of type User
+     */
 
     @Id
     private String id;
@@ -17,7 +25,10 @@ public class Gruppe {
     @JoinColumn(name = "gruppe_id", referencedColumnName = "id")
     private List<User> users = new ArrayList<>();   */
 
-    private String users = "";
+    //private String users = "";
+
+    @ManyToMany
+    private List<User> userList = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -35,7 +46,7 @@ public class Gruppe {
         this.groupName = groupName;
     }
 
-    public String getUsers() {
+    /*public String getUsers() {
         return users;
     }
 
@@ -49,14 +60,26 @@ public class Gruppe {
 
     public void removeUser(String user){
         users = users.replace(":" + user + ":", "");
-    }
+    }*/
 
-    @Override
+    /*@Override
     public String toString() {
         return "Gruppe{" +
                 "id='" + id + '\'' +
                 ", groupName='" + groupName + '\'' +
                 ", users='" + users + '\'' +
                 '}';
+    }*/
+
+    public void addUser(User user) {
+        userList.add(user);
+    }
+
+    public void removeUser(User user) {
+        userList.remove(user);
+    }
+
+    public List<User> getUsers() {
+        return userList;
     }
 }

@@ -1,7 +1,9 @@
 package com.studilieferservice.groupmanager.api;
 
 import com.studilieferservice.groupmanager.persistence.Gruppe;
+import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.GroupService;
+import com.studilieferservice.groupmanager.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +26,12 @@ import java.util.UUID;
 public class WebController {
 
     private final GroupService groupService;
+    private final UserService userService;
 
     @Autowired
-    public WebController(GroupService groupService){
+    public WebController(GroupService groupService, UserService userService){
         this.groupService = groupService;
+        this.userService = userService;
     }
 
     @GetMapping("/index")
@@ -47,8 +51,11 @@ public class WebController {
                 .replace(" ", "")
                 .split(",");
 
+        //TODO fixen ^^ -> firstname/lastname have to be replaced later on, also it might not be the best idea just to add a new user without saving in the user-repository
         for(String s: users){
-            gruppe.addUser(s);
+            User u = new User(s, "fistname", "lastname");
+            gruppe.addUser(u);
+            userService.save(u);
         }
 
         groupService.save(gruppe);

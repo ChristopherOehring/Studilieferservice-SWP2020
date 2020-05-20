@@ -1,72 +1,165 @@
 package com.studilieferservice.groupmanager.api;
 
 import com.studilieferservice.groupmanager.persistence.Gruppe;
+import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.GroupService;
+import com.studilieferservice.groupmanager.service.UserService;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import java.util.*;
 
 @RequestMapping("api/group")
 @RestController
 public class GroupController {
     private final GroupService groupService;
+    private final UserService userService;
 
+    /**
+     * Classic constructor method, no explanation needed
+     * @param groupService Instance of GroupService for configuring/saving groups in JpaGroupRepository extending JpaRepository<Gruppe, String>
+     * @param userService Instance of UserService for configuring/saving users in JpaUserRepository extending JpaRepository<User, String>
+     */
     @Autowired
-    public GroupController(final GroupService groupService) {
+    public GroupController(final GroupService groupService, UserService userService) {
         this.groupService = Objects.requireNonNull(groupService);
+        this.userService = userService;
     }
 
+    /**
+     * Creating a group via POST at api/group/{name} with only one user in the beginning
+     * @param name Name of the Group you want to create
+     * @return new group gets saved as a new group in GroupRepository with a randomly generated UUID
+     * TODO add requesting user to newly created group
+     */
     @PostMapping(path = "{name}")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @NotFound(action = NotFoundAction.IGNORE)
     public Gruppe createGroup(@PathVariable("name") String name) {
         Gruppe gruppe = new Gruppe();
         gruppe.setGroupName(name);
         gruppe.setId(UUID.randomUUID().toString());
-
-        gruppe.addUser("test@testmail.com");
-
+        //Testzwecke
+        User u = new User("test@testmail.com","Testo", "Testson");
+        gruppe.addUser(u);
+        userService.save(u);
         return groupService.save(gruppe);
     }
 
+    /**
+     * Use via GET at /api/group/, gives you all existing groups with information such as group-name, group-id and users
+     * @return List of existing Groups
+     */
     @GetMapping
     public List<Gruppe> getAll(){
         return groupService.findAll();
     }
 
+    /**
+     * Use via GET at /api/group/{user-id}, gives you all existing groups of a specific user with information such as group-name, group-id and users
+     * WARNING: squared runtime due to checking of ALL members of ALL groups
+     * @break quit the for loop (which is used to iterate over all members), when user is found - not very useful but may save a bit of runtime
+     * @param userId User-ID is its E-Mail-Address
+     * @return List of existing Groups, where user has joined
+     */
     @GetMapping(path = "{id}")
     public List<Gruppe> getAllGroupsOfPerson(@PathVariable("id") String userId){
         List<Gruppe> groups = groupService.findAll();
         List<Gruppe> ret = new ArrayList<>();
         for(Gruppe g: groups) {
-            if(g.getUsers().contains(":" + userId + ":")){
-                ret.add(g);
+            for (User u: g.getUsers()) {
+                if (u.getId().equals(userId)) {
+                    ret.add(g);
+                    break;
+                }
             }
         }
         return ret;
     }
 
+    /**
+     * Delete a group via DELETE at /api/group/{id}
+     * @param id UUID of group you want to delete
+     * @return just an informative string whether this group got deleted right now or didn't exist and ... that's it
+     */
     @DeleteMapping(path = "{id}")
-    public void deleteGroupById(@PathVariable("id") String id){
-        groupService.deleteById(id);
+    public String deleteGroupById(@PathVariable("id") String id){
+        if(groupService.findById(id).isPresent()) {
+            groupService.deleteById(id);
+            return "Deleted group";
+        } else
+        return "Group not found";
     }
 
+    /**
+     * Add an user to a specific group, use via PUT at "api/group/add" with a body in JSON-format like that:
+     *      {
+     * 	        "id":"group-id",
+     * 	        "user":"user-mail-address",
+     * 	        "firstname":"some firstname",
+     * 	        "lastname":"some lastname"
+     *      }
+     * @param body JSON-Payload containing 4 Strings, used to determine user and group
+     * @return 3 Cases:
+     *          Group not found: something is wrong with the group-ID - maybe a group with this ID does not exist anymore or you've got a typo
+     *          User already member of group: yeah, you can't have a user twice
+     *          User added to repository and to group: user was not in group before and is now added to its group in the groupRepository and to the userRepository (if user didn't exist before, otherwise it will say "User added to group")
+     */
     @PutMapping(path = "add")
     public String addUser(@RequestBody PutUserBody body){
         Optional<Gruppe> groupOptional = groupService.findById(body.getId());
         if (groupOptional.isEmpty()) return "Group not found";
         Gruppe g = groupOptional.get();
-
-        g.addUser(body.getUser());
+        for (User u: g.getUsers()) {
+            if(u.getId().equals(body.getUserID())) {
+                return "User already member of group";
+            }
+        }
+        User u = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName());
+        g.addUser(u);
+        if (userService.findUser(body.getUserID()).isEmpty()) {
+            userService.save(u);
+            return "User added to repository and to group";
+        }
         groupService.save(g);
-        return "added";
+        return "User added to group";
     }
 
+    /**
+     * Remove an user from a specific group, use via PUT at "api/group/remove" with a body in JSON-format like that:
+     *      {
+     *           "id":"group-id",
+     *           "user":"user-mail-address",
+     *           "firstname":"some firstname",
+     *           "lastname":"some lastname"
+     *      }
+     * @param body JSON-Payload containing 4 Strings, but only "id" and "user" are important (where "user" is the mail-address)
+     * @return 4 Cases:
+     *          Group not found: something is wrong with the group-ID - maybe a group with this ID does not exist anymore or you've got a typo
+     *          Group is now empty and will be deleted: The last remaining member was removed, so the group is useless and got deleted
+     *          User removed: Congratulations, that's what you tried to achieve - the user is removed from the groupRepository (but still remains in the userRepository because he still might be in other groups)
+     *          "No user was found in this group with this id, but since You tried to remove him, it doesn't matter anymore": No user was found in this group with this id, but since You tried to remove him, it doesn't matter anymore
+     */
     @PutMapping(path = "remove")
-    public void removeUser(@RequestBody PutUserBody body){
+    public String removeUser(@RequestBody PutUserBody body){
         Optional<Gruppe> groupOptional = groupService.findById(body.getId());
-        if (groupOptional.isEmpty()) return;
+        if (groupOptional.isEmpty()) return "Group not found";
         Gruppe g = groupOptional.get();
-        g.removeUser(body.getUser());
-        groupService.save(g);
+        for (User u: g.getUsers()) {
+            if(u.getId().equals(body.getUserID())) {
+                g.removeUser(u);
+                groupService.save(g);
+                if(g.getUsers().isEmpty()) {
+                    groupService.deleteById(body.getId());
+                    return "Group is now empty and will be deleted";
+                }
+                return "User removed";
+            }
+        }
+        return "No user was found in this group with this id, but since You tried to remove him, it doesn't matter anymore";
     }
 }
