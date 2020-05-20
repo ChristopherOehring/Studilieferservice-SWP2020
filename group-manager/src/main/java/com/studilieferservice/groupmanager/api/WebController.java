@@ -21,6 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * provides a web-controller at /web/group
+ * A web controller returns html documents and is meant to be consumed via browser
+ */
+
 @RequestMapping("/web/group")
 @Controller
 public class WebController {
@@ -28,12 +33,18 @@ public class WebController {
     private final GroupService groupService;
     private final UserService userService;
 
+
     @Autowired
     public WebController(GroupService groupService, UserService userService){
         this.groupService = groupService;
         this.userService = userService;
     }
 
+    /**
+     * get request on .../index invokes the index.html of the group-manager
+     * @param model is used by thymeleaf in the html page to
+     * @return returns "index" which results in invocation of the index.html
+     */
     @GetMapping("/index")
     public String index(Model model) {
         model.addAttribute("groupList", groupService.findAll());
@@ -41,6 +52,14 @@ public class WebController {
         return "index";
     }
 
+    /**
+     * Meant to be used by a webpage to create a new group. Will redirect to the index afterwards.
+     * @param form contains all necessary information to create a group
+     * @return redirects to /index
+     * @throws JSONException Throws exception if the String body is not a valid JSON,
+     * which should only happen if the group-name in the form is somehow invalid.
+     * (I dont know if this is even possible)
+     */
     @PostMapping("/save-group")
     public String saveGroupSubmission(@ModelAttribute CreationForm form) throws JSONException {
         Gruppe gruppe = new Gruppe();
@@ -70,6 +89,7 @@ public class WebController {
 
         JSONObject jsonObject= new JSONObject(body);
 
+        //Raw use of parameterized class. Intellij doesnt like this:
         HttpEntity request = new HttpEntity(jsonObject.toString(), headers);
 
         RestTemplate restTemplate = new RestTemplate();
@@ -78,14 +98,10 @@ public class WebController {
         return "redirect:index";
     }
 
-    private ModelAndView build(List<Gruppe> gruppen) {
-
-        var result = new ModelAndView("index");
-        result.addObject("groupList", gruppen);
-        System.out.println(gruppen);
-        return result;
-    }
-
+    /**
+     * redirects to the shopping list
+     * @param request contains the group id in field "id"
+     */
     @GetMapping("/getList")
     public RedirectView getList(HttpServletRequest request){
 

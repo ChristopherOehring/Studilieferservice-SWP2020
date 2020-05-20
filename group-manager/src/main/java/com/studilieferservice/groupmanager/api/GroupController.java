@@ -13,6 +13,11 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import java.util.*;
 
+/**
+ * Rest-Controller: provides a rest api at /api/group
+ * @version 1.0
+ */
+
 @RequestMapping("api/group")
 @RestController
 public class GroupController {
@@ -72,10 +77,10 @@ public class GroupController {
     /**
      * Use via GET at /api/group/{user-id}, gives you all existing groups of a specific user with information such as group-name, group-id and users
      * WARNING: squared runtime due to checking of ALL members of ALL groups
-     * @break quit the for loop (which is used to iterate over all members), when user is found - not very useful but may save a bit of runtime
      * @param userId User-ID is its E-Mail-Address
      * @return List of existing Groups, where user has joined
      */
+    // TODO: 5/21/20 use a user-service to make this prettier and faster
     @GetMapping(path = "{id}")
     public List<Gruppe> getAllGroupsOfPerson(@PathVariable("id") String userId){
         List<Gruppe> groups = groupService.findAll();
