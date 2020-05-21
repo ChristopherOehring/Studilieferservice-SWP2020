@@ -1,0 +1,6 @@
+image: adoptopenjdk/maven-openjdk11:latest
+
+build:
+  stage: build
+  script:
+    - mvn clean install -DskipTests -Ddockerfile.skip -Dmaven.javadoc.skip=true -B -V
