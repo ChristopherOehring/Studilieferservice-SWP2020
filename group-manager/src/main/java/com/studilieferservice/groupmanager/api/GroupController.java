@@ -31,22 +31,32 @@ public class GroupController {
     }
 
     /**
-     * Creating a group via POST at api/group/{name} with only one user in the beginning
+     * Creating a group via POST at api/group/{name} with only one user in the beginning, determined by a body in JSON-format like that:
+     *      {
+     *           "id":"group-id",
+     *           "user":"user-mail-address",
+     *           "firstname":"some first name",
+     *           "lastname":"some last name"
+     *      }
+     * Requesting user is promoted to owner and admin
+     * There is always only one owner and never less
      * @param name Name of the Group you want to create
      * @return new group gets saved as a new group in GroupRepository with a randomly generated UUID
-     * TODO add requesting user to newly created group
      */
     @PostMapping(path = "{name}")
     @ManyToMany(fetch = FetchType.LAZY)
     @NotFound(action = NotFoundAction.IGNORE)
-    public Gruppe createGroup(@PathVariable("name") String name) {
+    public Gruppe createGroup(@PathVariable("name") String name, @RequestBody PutUserBody body) {
         Gruppe gruppe = new Gruppe();
         gruppe.setGroupName(name);
         gruppe.setId(UUID.randomUUID().toString());
         //Testzwecke
-        User u = new User("test@testmail.com","Testo", "Testson");
-        gruppe.addUser(u);
-        userService.save(u);
+        //Owner o = new Owner("test@testmail.com","Testo", "Testson"); //RIP Testo Testson
+        User owner = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName());
+        gruppe.setOwner(owner);
+        if (userService.findUser(owner.getId()).isEmpty()) {
+            userService.save(owner);
+        }
         return groupService.save(gruppe);
     }
 
@@ -100,13 +110,14 @@ public class GroupController {
      *      {
      * 	        "id":"group-id",
      * 	        "user":"user-mail-address",
-     * 	        "firstname":"some firstname",
-     * 	        "lastname":"some lastname"
+     * 	        "firstname":"some first name",
+     * 	        "lastname":"some last name"
      *      }
      * @param body JSON-Payload containing 4 Strings, used to determine user and group
-     * @return 3 Cases:
+     * @return 4 Cases:
      *          Group not found: something is wrong with the group-ID - maybe a group with this ID does not exist anymore or you've got a typo
      *          User already member of group: yeah, you can't have a user twice
+     *          User already admin of group: there is already an admin with this ID, he cannot be both user and admin
      *          User added to repository and to group: user was not in group before and is now added to its group in the groupRepository and to the userRepository (if user didn't exist before, otherwise it will say "User added to group")
      */
     @PutMapping(path = "add")
@@ -117,6 +128,11 @@ public class GroupController {
         for (User u: g.getUsers()) {
             if(u.getId().equals(body.getUserID())) {
                 return "User already member of group";
+            }
+        }
+        for (User a: g.getAdmins()) {
+            if(a.getId().equals(body.getUserID())) {
+                return "User already admin of group";
             }
         }
         User u = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName());
@@ -134,15 +150,15 @@ public class GroupController {
      *      {
      *           "id":"group-id",
      *           "user":"user-mail-address",
-     *           "firstname":"some firstname",
-     *           "lastname":"some lastname"
+     *           "firstname":"some first name",
+     *           "lastname":"some last name"
      *      }
      * @param body JSON-Payload containing 4 Strings, but only "id" and "user" are important (where "user" is the mail-address)
      * @return 4 Cases:
      *          Group not found: something is wrong with the group-ID - maybe a group with this ID does not exist anymore or you've got a typo
      *          Group is now empty and will be deleted: The last remaining member was removed, so the group is useless and got deleted
      *          User removed: Congratulations, that's what you tried to achieve - the user is removed from the groupRepository (but still remains in the userRepository because he still might be in other groups)
-     *          "No user was found in this group with this id, but since You tried to remove him, it doesn't matter anymore": No user was found in this group with this id, but since You tried to remove him, it doesn't matter anymore
+     *          No user was found in this group with this id, but since You tried to remove him, it doesn't matter anymore: No user was found in this group with this id, but since You tried to remove him, it doesn't matter anymore
      */
     @PutMapping(path = "remove")
     public String removeUser(@RequestBody PutUserBody body){
@@ -153,13 +169,82 @@ public class GroupController {
             if(u.getId().equals(body.getUserID())) {
                 g.removeUser(u);
                 groupService.save(g);
-                if(g.getUsers().isEmpty()) {
+                if(g.getUsers().isEmpty() && g.getAdmins().isEmpty()) {
                     groupService.deleteById(body.getId());
                     return "Group is now empty and will be deleted";
                 }
                 return "User removed";
             }
         }
+        for (User a: g.getAdmins()) {
+            if(a.getId().equals(body.getUserID())) {
+                return "You can't remove an admin";
+            }
+        }
         return "No user was found in this group with this id, but since You tried to remove him, it doesn't matter anymore";
+    }
+
+    /**
+     * User PUT at /api/group/add_admin with a body in JSON-format like that:
+     *      {
+     *           "id":"group-id",
+     *           "user":"user-mail-address",
+     *           "firstname":"some first name",
+     *           "lastname":"some last name"
+     *      }
+     * @param body JSON-Payload containing 4 Strings, but only "id" and "user" are important (where "user" is the mail-address)
+     * @return 3 Cases:
+     *          Group not found: something is wrong with the group-ID - maybe a group with this ID does not exist anymore or you've got a typo
+     *          User <firstname> <lastname> is now an admin: success, this user got promoted to admin and is no longer shown in the user list but in the admin list
+     *          User <User-ID> is not a member of this group or already an admin: you have to add the user first, before promoting him to admin, or he might already be an admin
+     */
+    @PutMapping(path = "add_admin")
+    public String addAdmin(@RequestBody PutUserBody body) {
+        Optional<Gruppe> groupOptional = groupService.findById(body.getId());
+        if (groupOptional.isEmpty()) return "Group not found";
+        Gruppe g = groupOptional.get();
+        for (User u: g.getUsers()) {
+            if(u.getId().equals(body.getUserID())) {
+                g.addAdmin(body.getUser());
+                g.removeUser(u);
+                groupService.save(g);
+                return "User "+u.getFirstName()+" "+u.getLastName()+" is now an admin";
+            }
+        }
+        return "User "+body.getUserID()+" is not a member of this group or already an admin";
+    }
+
+    /**
+     * User PUT at /api/group/add_admin with a body in JSON-format like that:
+     *      {
+     *           "id":"group-id",
+     *           "user":"user-mail-address",
+     *           "firstname":"some first name",
+     *           "lastname":"some last name"
+     *      }
+     * @param body JSON-Payload containing 4 Strings, but only "id" and "user" are important (where "user" is the mail-address)
+     * @return 4 Cases:
+     *          Group not found: something is wrong with the group-ID - maybe a group with this ID does not exist anymore or you've got a typo
+     *          Owner cannot be degraded: There is always one owner and never less, you can't degrade him
+     *          Admin <firstname> <lastname> removed: This admin got removed from the admin list and is now a mere user of this group
+     *          There is no admin <User-ID> in this group: The admin you want to remove does not exist in this group or is already just a mere user
+     */
+    @PutMapping(path = "degrade_admin")
+    public String degradeAdmin(@RequestBody PutUserBody body) {
+        Optional<Gruppe> groupOptional = groupService.findById(body.getId());
+        if (groupOptional.isEmpty()) return "Group not found";
+        Gruppe g = groupOptional.get();
+        for (User a: g.getAdmins()) {
+            if(a.getId().equals(body.getUserID())) {
+                if(g.isOwner(a)) {
+                    return "Owner cannot be degraded";
+                }
+                g.removeAdmin(a);
+                g.addUser(a);
+                groupService.save(g);
+                return "Admin "+a.getFirstName()+" "+a.getLastName()+" removed";
+            }
+        }
+        return "There is no admin "+body.getUserID()+" in this group";
     }
 }

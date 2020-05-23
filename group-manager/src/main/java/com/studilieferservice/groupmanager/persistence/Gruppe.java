@@ -20,6 +20,9 @@ public class Gruppe {
     @NotNull
     private String groupName;
 
+    @ManyToOne
+    private User owner;
+
 /*    removed because a many to many relation would be necessary
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "gruppe_id", referencedColumnName = "id")
@@ -29,6 +32,9 @@ public class Gruppe {
 
     @ManyToMany
     private List<User> userList = new ArrayList<>();
+
+    @ManyToMany
+    private List<User> adminList = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -81,5 +87,31 @@ public class Gruppe {
 
     public List<User> getUsers() {
         return userList;
+    }
+
+    public List<User> getAdmins() {
+        return adminList;
+    }
+
+    public void addAdmin(User admin) {
+        this.adminList.add(admin);
+    }
+
+    public void removeAdmin(User admin) {
+        this.adminList.remove(admin);
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    //is it okay to cast? TODO Think about a better solution...
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public boolean isOwner(User user) {
+
+        return user==this.owner;
     }
 }
