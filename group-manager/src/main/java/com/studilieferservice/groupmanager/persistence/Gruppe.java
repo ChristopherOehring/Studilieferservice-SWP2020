@@ -23,13 +23,6 @@ public class Gruppe {
     @ManyToOne
     private User owner;
 
-/*    removed because a many to many relation would be necessary
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "gruppe_id", referencedColumnName = "id")
-    private List<User> users = new ArrayList<>();   */
-
-    //private String users = "";
-
     @ManyToMany
     private List<User> userList = new ArrayList<>();
 
@@ -51,31 +44,6 @@ public class Gruppe {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
-
-    /*public String getUsers() {
-        return users;
-    }
-
-    public void setUsers(String users) {
-        this.users = users;
-    }
-
-    public void addUser(String user){
-        users = users + ":" + user + ":";
-    }
-
-    public void removeUser(String user){
-        users = users.replace(":" + user + ":", "");
-    }*/
-
-    /*@Override
-    public String toString() {
-        return "Gruppe{" +
-                "id='" + id + '\'' +
-                ", groupName='" + groupName + '\'' +
-                ", users='" + users + '\'' +
-                '}';
-    }*/
 
     public void addUser(User user) {
         userList.add(user);
