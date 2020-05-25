@@ -1,7 +1,7 @@
 package com.studilieferservice.usermanager;
 
-import com.studilieferservice.usermanager.user.User;
-import com.studilieferservice.usermanager.user.UserService;
+import com.studilieferservice.usermanager.userService.User;
+import com.studilieferservice.usermanager.userService.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

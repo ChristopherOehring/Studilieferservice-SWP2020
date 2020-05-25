@@ -1,4 +1,4 @@
-package com.studilieferservice.usermanager.user;
+package com.studilieferservice.usermanager.userService;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

@@ -1,9 +1,10 @@
 package com.studilieferservice.usermanager.controller;
 
-import com.studilieferservice.usermanager.user.User;
-import com.studilieferservice.usermanager.user.UserService;
+import com.studilieferservice.usermanager.userService.User;
+import com.studilieferservice.usermanager.userService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +13,12 @@ public class UserController {
 
     private final UserService userService;
 
+
+
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
+
     }
 
     /**
@@ -38,6 +42,7 @@ public class UserController {
                 || StringUtils.isEmpty(user.getPassword())) {
             return ResponseEntity.badRequest().body("User values invalid");
         } else
+
             return ResponseEntity.ok(userService.createUser(user));
     }
 
@@ -89,4 +94,5 @@ public class UserController {
         else
             return ResponseEntity.badRequest().build();
     }
+
 }

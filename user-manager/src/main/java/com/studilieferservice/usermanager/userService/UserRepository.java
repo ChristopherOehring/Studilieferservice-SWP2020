@@ -1,4 +1,4 @@
-package com.studilieferservice.usermanager.user;
+package com.studilieferservice.usermanager.userService;
 
 import org.springframework.data.repository.CrudRepository;
 
