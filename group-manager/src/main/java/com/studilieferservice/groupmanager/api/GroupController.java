@@ -124,25 +124,28 @@ public class GroupController {
     public String addUser(@RequestBody PutUserBody body){
         Optional<Gruppe> groupOptional = groupService.findById(body.getId());
         if (groupOptional.isEmpty()) return "Group not found";
-        Gruppe g = groupOptional.get();
-        for (User u: g.getUsers()) {
-            if(u.getId().equals(body.getUserID())) {
-                return "User already member of group";
+        if (body.getUser().isValidEmailAddress(body.getUserID())) {
+            Gruppe g = groupOptional.get();
+            for (User u : g.getUsers()) {
+                if (u.getId().equals(body.getUserID())) {
+                    return "User already member of group";
+                }
             }
-        }
-        for (User a: g.getAdmins()) {
-            if(a.getId().equals(body.getUserID())) {
-                return "User already admin of group";
+            for (User a : g.getAdmins()) {
+                if (a.getId().equals(body.getUserID())) {
+                    return "User already admin of group";
+                }
             }
+            User u = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName());
+            g.addUser(u);
+            if (userService.findUser(body.getUserID()).isEmpty()) {
+                userService.save(u);
+                return "User added to repository and to group";
+            }
+            groupService.save(g);
+            return "User added to group";
         }
-        User u = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName());
-        g.addUser(u);
-        if (userService.findUser(body.getUserID()).isEmpty()) {
-            userService.save(u);
-            return "User added to repository and to group";
-        }
-        groupService.save(g);
-        return "User added to group";
+        return "Could not add user, something is wrong with your email address (non-empty, may only contain letters, numbers, dots, periods or dashes) or your name (non-empty, may only contain letters, dashes and spaces)";
     }
 
     /**
@@ -184,6 +187,35 @@ public class GroupController {
         return "No user was found in this group with this id, but since You tried to remove him, it doesn't matter anymore";
     }
 
+    @PutMapping(path = "update")
+    public String updateUser(@RequestBody PutUserBody body) {
+        Optional<Gruppe> groupOptional = groupService.findById(body.getId());
+        if (groupOptional.isEmpty()) return "Group not found";
+        if (body.getUser().isValidEmailAddress(body.getUserID())) {
+            Gruppe g = groupOptional.get();
+            for (User u : g.getUsers()) {
+                if (u.getId().equals(body.getUserID())) {
+                    g.updateUser(u, body.getUser());
+                    groupService.save(g);
+                    return "Updated user " + body.getUserFirstName() + " " + body.getUserLastName();
+                }
+            }
+            for (User a : g.getAdmins()) {
+                if (a.getId().equals(body.getUserID())) {
+                    g.updateUser(a, body.getUser());
+                    groupService.save(g);
+                    return "Updated admin " + body.getUserFirstName() + " " + body.getUserLastName();
+                }
+            }
+            if (g.getOwner().getId().equals(body.getUserID())) {
+                g.updateUser(g.getOwner(), body.getUser());
+                return "Updated owner " + body.getUserFirstName() + " " + body.getUserLastName();
+            }
+            return "User " + body.getUserID() + " not found!";
+        }
+        return "Could not update user, something is wrong with your email address (non-empty, may only contain letters, numbers, dots, periods or dashes) or your name (non-empty, may only contain letters, dashes and spaces)";
+    }
+
     /**
      * User PUT at /api/group/add_admin with a body in JSON-format like that:
      *      {
@@ -203,15 +235,18 @@ public class GroupController {
         Optional<Gruppe> groupOptional = groupService.findById(body.getId());
         if (groupOptional.isEmpty()) return "Group not found";
         Gruppe g = groupOptional.get();
-        for (User u: g.getUsers()) {
-            if(u.getId().equals(body.getUserID())) {
-                g.addAdmin(body.getUser());
-                g.removeUser(u);
-                groupService.save(g);
-                return "User "+u.getFirstName()+" "+u.getLastName()+" is now an admin";
+        if (body.getUser().isValidEmailAddress(body.getUserID())) {
+            for (User u : g.getUsers()) {
+                if (u.getId().equals(body.getUserID())) {
+                    g.addAdmin(body.getUser());
+                    g.removeUser(u);
+                    groupService.save(g);
+                    return "User " + u.getFirstName() + " " + u.getLastName() + " is now an admin";
+                }
             }
+            return "User " + body.getUserID() + " is not a member of this group or already an admin";
         }
-        return "User "+body.getUserID()+" is not a member of this group or already an admin";
+        return "Could not promote user to admin, something is wrong with your email address (non-empty, may only contain letters, numbers, dots, periods or dashes) or your name (non-empty, may only contain letters, dashes and spaces)";
     }
 
     /**
@@ -246,5 +281,38 @@ public class GroupController {
             }
         }
         return "There is no admin "+body.getUserID()+" in this group";
+    }
+
+    @PutMapping(path = "set_owner")
+    public String setOwner(@RequestBody PutUserBody body) {
+        Optional<Gruppe> groupOptional = groupService.findById(body.getId());
+        if (groupOptional.isEmpty()) return  "Group not found";
+        Gruppe g = groupOptional.get();
+        if (body.getUser().isValidEmailAddress(body.getUserID())) {
+            if (g.getOwner().getId().equals(body.getUser().getId()))
+                return body.getUserFirstName() + " " + body.getUserLastName() + " is already the owner of this group";
+            for (User a : g.getAdmins()) {
+                if (a.getId().equals(body.getUserID())) {
+                    User oldOwer = g.getOwner();
+                    g.setOwner(body.getUser());
+                    g.removeAdmin(a);
+                    g.addAdmin(oldOwer);
+                    groupService.save(g);
+                    return "Admin " + body.getUserFirstName() + " " + body.getUserLastName() + " is now the owner of this group";
+                }
+            }
+            for (User u : g.getUsers()) {
+                if (u.getId().equals(body.getUserID())) {
+                    User oldOwer = g.getOwner();
+                    g.setOwner(body.getUser());
+                    g.removeUser(u);
+                    g.addAdmin(oldOwer);
+                    groupService.save(g);
+                    return "User " + body.getUserFirstName() + " " + body.getUserLastName() + " is now the owner of this group";
+                }
+            }
+            return "There is no user with the email address " + body.getUserID() + " in this group";
+        }
+        return "Could not set owner, something is wrong with your email address (non-empty, may only contain letters, numbers, dots, periods or dashes) or your name (non-empty, may only contain letters, dashes and spaces)";
     }
 }

@@ -89,6 +89,13 @@ public class Gruppe {
         return userList;
     }
 
+    public void updateUser(User oldUser, User newUser) {
+        if (this.userList.contains(oldUser)) {
+            userList.remove(oldUser);
+            userList.add(newUser);
+        }
+    }
+
     public List<User> getAdmins() {
         return adminList;
     }
@@ -105,13 +112,11 @@ public class Gruppe {
         return owner;
     }
 
-    //is it okay to cast? TODO Think about a better solution...
     public void setOwner(User owner) {
         this.owner = owner;
     }
 
     public boolean isOwner(User user) {
-
         return user==this.owner;
     }
 }
