@@ -1,0 +1,7 @@
+<proxies>
+   <proxy>
+        <host>141.24.212.83</host>
+        <port>3128</port>
+        <nonProxyHosts>localhost|127.*|[::1]</nonProxyHosts>
+    </proxy>
+</proxies>
