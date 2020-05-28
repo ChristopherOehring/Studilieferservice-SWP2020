@@ -18,11 +18,8 @@ import java.util.Map;
 @Configuration
 public class KafkaProducerConfiguration {
 
-    private final String servers;
-
-    public KafkaProducerConfiguration(@Value("localhost:5000") final String servers) {
-        this.servers = servers;
-    }
+    @Value(value = "${spring.kafka.bootstrap-servers}")
+    private String bootstrapAddress;
 
     @Bean
     public NewTopic products() {
@@ -33,8 +30,7 @@ public class KafkaProducerConfiguration {
     @Bean
     public KafkaAdmin admin() {
         Map<String, Object> configs = new HashMap<>();
-        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG,
-                servers);
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
         return new KafkaAdmin(configs);
     }
 
@@ -43,21 +39,18 @@ public class KafkaProducerConfiguration {
         return new KafkaTemplate<>(producerFactory());
     }
 
-    private ProducerFactory<String, String> producerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigs());
-    }
-
-    private Map<String, Object> producerConfigs() {
-        final Map<String, Object> props = new HashMap<>();
-
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 500);
-        //props.put(ProducerConfig.ACKS_CONFIG, "all");
-        props.put(ProducerConfig.RETRIES_CONFIG, 2);
-        //props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, Long.MAX_VALUE);
-
-        return props;
+    @Bean
+    public ProducerFactory<String, String> producerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(
+                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+                bootstrapAddress);
+        configProps.put(
+                ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+                StringSerializer.class);
+        configProps.put(
+                ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+                StringSerializer.class);
+        return new DefaultKafkaProducerFactory<>(configProps);
     }
 }

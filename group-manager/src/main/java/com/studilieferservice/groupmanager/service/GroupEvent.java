@@ -3,16 +3,22 @@ package com.studilieferservice.groupmanager.service;
 import com.studilieferservice.groupmanager.persistence.Gruppe;
 import org.springframework.context.ApplicationEvent;
 
-public class GroupCreationEvent extends ApplicationEvent {
+public class GroupEvent extends ApplicationEvent {
 
     private final Gruppe group;
+    private final GroupEventType type;
 
-    public GroupCreationEvent(Gruppe group, Object scource){
-        super(scource);
+    public GroupEvent(Gruppe group, Object source, GroupEventType type){
+        super(source);
         this.group = group;
+        this.type = type;
     }
 
     public Gruppe getGroup() {
         return group;
+    }
+
+    public GroupEventType getType() {
+        return type;
     }
 }
