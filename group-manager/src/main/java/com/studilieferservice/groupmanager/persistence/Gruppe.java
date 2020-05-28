@@ -108,4 +108,19 @@ public class Gruppe {
     public boolean isOwner(User user) {
         return user==this.owner;
     }
+
+    public String getPermissions(User user){
+        if(memberList.contains(user)) return "member";
+        if(adminList.contains(user)) return "admin";
+        if(owner == user) return "owner";
+        return null;
+    }
+
+    public boolean promote(User user){
+        if(memberList.remove(user)) {
+            adminList.add(user);
+            return true;
+        }
+        return false;
+    }
 }
