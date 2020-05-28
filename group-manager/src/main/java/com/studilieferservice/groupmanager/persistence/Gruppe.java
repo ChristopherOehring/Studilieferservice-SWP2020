@@ -24,7 +24,7 @@ public class Gruppe {
     private User owner;
 
     @ManyToMany
-    private List<User> userList = new ArrayList<>();
+    private List<User> memberList = new ArrayList<>();
 
     @ManyToMany
     private List<User> adminList = new ArrayList<>();
@@ -63,22 +63,22 @@ public class Gruppe {
 
     public void addUser(User user) {
         version++;
-        userList.add(user);
+        memberList.add(user);
     }
 
     public void removeUser(User user) {
         version++;
-        userList.remove(user);
+        memberList.remove(user);
     }
 
     public List<User> getUsers() {
-        return userList;
+        return memberList;
     }
 
     public void updateUser(User oldUser, User newUser) {
-        if (this.userList.contains(oldUser)) {
-            userList.remove(oldUser);
-            userList.add(newUser);
+        if (this.memberList.contains(oldUser)) {
+            memberList.remove(oldUser);
+            memberList.add(newUser);
         }
     }
 
