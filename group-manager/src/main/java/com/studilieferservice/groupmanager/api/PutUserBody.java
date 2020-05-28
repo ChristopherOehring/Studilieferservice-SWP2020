@@ -17,9 +17,10 @@ public class PutUserBody {
     public PutUserBody(@JsonProperty("id")String id,
                        @JsonProperty("user") String userId,
                        @JsonProperty("firstname") String firstname,
-                       @JsonProperty("lastname") String lastname) {
+                       @JsonProperty("lastname") String lastname,
+                       @JsonProperty("username") String username) {
         this.id = id;
-        this.user = new User(userId, firstname, lastname);
+        this.user = new User(userId, firstname, lastname, username);
     }
 
     public String getId() {
@@ -31,7 +32,7 @@ public class PutUserBody {
     }
 
     public String getUserID() {
-        return user.getId();
+        return user.getEmail();
     }
 
     public String getUserFirstName() {
@@ -40,5 +41,9 @@ public class PutUserBody {
 
     public String getUserLastName() {
         return user.getLastName();
+    }
+
+    public String getUserName() {
+        return user.getUserName();
     }
 }

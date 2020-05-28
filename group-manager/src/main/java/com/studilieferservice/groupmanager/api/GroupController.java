@@ -57,9 +57,9 @@ public class GroupController {
         gruppe.setId(UUID.randomUUID().toString());
         //Testzwecke
         //Owner o = new Owner("test@testmail.com","Testo", "Testson"); //RIP Testo Testson
-        User owner = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName());
+        User owner = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName(), body.getUserName());
         gruppe.setOwner(owner);
-        if (userService.findUser(owner.getId()).isEmpty()) {
+        if (userService.findUser(owner.getEmail()).isEmpty()) {
             userService.save(owner);
         }
         return groupService.save(gruppe);
@@ -87,7 +87,7 @@ public class GroupController {
         List<Gruppe> ret = new ArrayList<>();
         for(Gruppe g: groups) {
             for (User u: g.getUsers()) {
-                if (u.getId().equals(userId)) {
+                if (u.getEmail().equals(userId)) {
                     ret.add(g);
                     break;
                 }
@@ -132,16 +132,16 @@ public class GroupController {
         if (body.getUser().isValidEmailAddress(body.getUserID())) {
             Gruppe g = groupOptional.get();
             for (User u : g.getUsers()) {
-                if (u.getId().equals(body.getUserID())) {
+                if (u.getEmail().equals(body.getUserID())) {
                     return "User already member of group";
                 }
             }
             for (User a : g.getAdmins()) {
-                if (a.getId().equals(body.getUserID())) {
+                if (a.getEmail().equals(body.getUserID())) {
                     return "User already admin of group";
                 }
             }
-            User u = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName());
+            User u = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName(), body.getUserName());
             g.addUser(u);
             if (userService.findUser(body.getUserID()).isEmpty()) {
                 userService.save(u);
@@ -174,7 +174,7 @@ public class GroupController {
         if (groupOptional.isEmpty()) return "Group not found";
         Gruppe g = groupOptional.get();
         for (User u: g.getUsers()) {
-            if(u.getId().equals(body.getUserID())) {
+            if(u.getEmail().equals(body.getUserID())) {
                 g.removeUser(u);
                 groupService.save(g);
                 if(g.getUsers().isEmpty() && g.getAdmins().isEmpty()) {
@@ -185,7 +185,7 @@ public class GroupController {
             }
         }
         for (User a: g.getAdmins()) {
-            if(a.getId().equals(body.getUserID())) {
+            if(a.getEmail().equals(body.getUserID())) {
                 return "You can't remove an admin";
             }
         }
@@ -199,20 +199,20 @@ public class GroupController {
         if (body.getUser().isValidEmailAddress(body.getUserID())) {
             Gruppe g = groupOptional.get();
             for (User u : g.getUsers()) {
-                if (u.getId().equals(body.getUserID())) {
+                if (u.getEmail().equals(body.getUserID())) {
                     g.updateUser(u, body.getUser());
                     groupService.save(g);
                     return "Updated user " + body.getUserFirstName() + " " + body.getUserLastName();
                 }
             }
             for (User a : g.getAdmins()) {
-                if (a.getId().equals(body.getUserID())) {
+                if (a.getEmail().equals(body.getUserID())) {
                     g.updateUser(a, body.getUser());
                     groupService.save(g);
                     return "Updated admin " + body.getUserFirstName() + " " + body.getUserLastName();
                 }
             }
-            if (g.getOwner().getId().equals(body.getUserID())) {
+            if (g.getOwner().getEmail().equals(body.getUserID())) {
                 g.updateUser(g.getOwner(), body.getUser());
                 return "Updated owner " + body.getUserFirstName() + " " + body.getUserLastName();
             }
@@ -242,7 +242,7 @@ public class GroupController {
         Gruppe g = groupOptional.get();
         if (body.getUser().isValidEmailAddress(body.getUserID())) {
             for (User u : g.getUsers()) {
-                if (u.getId().equals(body.getUserID())) {
+                if (u.getEmail().equals(body.getUserID())) {
                     g.addAdmin(body.getUser());
                     g.removeUser(u);
                     groupService.save(g);
@@ -275,7 +275,7 @@ public class GroupController {
         if (groupOptional.isEmpty()) return "Group not found";
         Gruppe g = groupOptional.get();
         for (User a: g.getAdmins()) {
-            if(a.getId().equals(body.getUserID())) {
+            if(a.getEmail().equals(body.getUserID())) {
                 if(g.isOwner(a)) {
                     return "Owner cannot be degraded";
                 }
@@ -294,10 +294,10 @@ public class GroupController {
         if (groupOptional.isEmpty()) return  "Group not found";
         Gruppe g = groupOptional.get();
         if (body.getUser().isValidEmailAddress(body.getUserID())) {
-            if (g.getOwner().getId().equals(body.getUser().getId()))
+            if (g.getOwner().getEmail().equals(body.getUser().getEmail()))
                 return body.getUserFirstName() + " " + body.getUserLastName() + " is already the owner of this group";
             for (User a : g.getAdmins()) {
-                if (a.getId().equals(body.getUserID())) {
+                if (a.getEmail().equals(body.getUserID())) {
                     User oldOwer = g.getOwner();
                     g.setOwner(body.getUser());
                     g.removeAdmin(a);
@@ -307,7 +307,7 @@ public class GroupController {
                 }
             }
             for (User u : g.getUsers()) {
-                if (u.getId().equals(body.getUserID())) {
+                if (u.getEmail().equals(body.getUserID())) {
                     User oldOwer = g.getOwner();
                     g.setOwner(body.getUser());
                     g.removeUser(u);

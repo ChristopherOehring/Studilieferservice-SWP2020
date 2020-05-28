@@ -1,10 +1,9 @@
 package com.studilieferservice.groupmanager.persistence;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.apache.kafka.common.protocol.types.Field;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Nullable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -15,23 +14,30 @@ import javax.persistence.Id;
 public class User {
 
     @Id
-    private String id;
+    private String email;
 
     private String firstName;
 
     private String lastName;
 
+    private String userName;
+
     /**
      * just another constructor for creating users
-     * @param id user-id, which has to be a valid email address
+     * @param email user-id, which has to be a valid email address
      * @param firstName user's first name
      * @param lastName user's last name
+     * @param userName user's screen name
      */
-    public User(String id, String firstName, String lastName) {
-        if (isValidEmailAddress(id) && isValidName(firstName) && isValidName(lastName)) {
-            this.id = id;
+    public User(@JsonProperty("email") String email,
+                @JsonProperty("firstName") String firstName,
+                @JsonProperty("lastName") String lastName,
+                @JsonProperty("userName") String userName) {
+        if (isValidEmailAddress(email) && isValidName(firstName) && isValidName(lastName)) {
+            this.email = email;
             this.firstName = simplifyName(firstName);
             this.lastName = simplifyName(lastName);
+            this.userName = userName;
         }
         else if(!isValidName(firstName) || !isValidName(lastName)) {
             System.out.println("You have to fill in both your first name and last name, also you may only use letters, dashes and spaces");
@@ -48,12 +54,12 @@ public class User {
 
     }
 
-    public String getId() {
-        return id;
+    public String getEmail() {
+        return email;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setEmail(String id) {
+        this.email = id;
     }
 
     public String getFirstName() {
@@ -171,5 +177,13 @@ public class User {
             }*/
         }
         return name;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
