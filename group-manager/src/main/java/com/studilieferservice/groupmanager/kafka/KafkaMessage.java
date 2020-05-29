@@ -1,4 +1,4 @@
-package com.studilieferservice.groupmanager.kafaka;
+package com.studilieferservice.groupmanager.kafka;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

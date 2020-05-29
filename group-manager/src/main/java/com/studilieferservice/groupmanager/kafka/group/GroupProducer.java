@@ -1,4 +1,4 @@
-package com.studilieferservice.groupmanager.kafaka.group;
+package com.studilieferservice.groupmanager.kafka.group;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

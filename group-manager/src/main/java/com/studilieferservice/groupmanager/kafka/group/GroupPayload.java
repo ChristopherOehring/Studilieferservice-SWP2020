@@ -1,11 +1,6 @@
-package com.studilieferservice.groupmanager.kafaka.group;
+package com.studilieferservice.groupmanager.kafka.group;
 
-import com.studilieferservice.groupmanager.persistence.User;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class GroupPayload {
     private String id;

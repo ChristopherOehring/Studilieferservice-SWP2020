@@ -1,4 +1,4 @@
-package com.studilieferservice.groupmanager.kafaka.user;
+package com.studilieferservice.groupmanager.kafka.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studilieferservice.groupmanager.persistence.User;
@@ -26,7 +26,7 @@ public class UserConsumer {
             return;
         }
 
-        UserKafkaMessage userMessage = null;
+        UserKafkaMessage userMessage;
 
         try {
             userMessage = objectMapper.readValue(message, UserKafkaMessage.class);

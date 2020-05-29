@@ -1,7 +1,7 @@
-package com.studilieferservice.groupmanager.kafaka.user;
+package com.studilieferservice.groupmanager.kafka.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.studilieferservice.groupmanager.kafaka.KafkaMessage;
+import com.studilieferservice.groupmanager.kafka.KafkaMessage;
 import com.studilieferservice.groupmanager.persistence.User;
 
 public class UserKafkaMessage extends KafkaMessage<User> {
