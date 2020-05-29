@@ -22,7 +22,7 @@ public class KafkaProducerConfiguration {
     private String bootstrapAddress;
 
     @Bean
-    public NewTopic products() {
+    public NewTopic groups() {
         return new NewTopic("groups", 4, (short) 1);
     }
 
