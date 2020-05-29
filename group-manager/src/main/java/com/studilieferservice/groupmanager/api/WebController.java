@@ -25,12 +25,6 @@ import java.util.UUID;
  * provides a web-controller at /web/group
  * A web controller returns html documents and is meant to be consumed via browser
  */
-/* TODO: 5/29/20 Generell überarbeiten:
-    * Nutzer werden separat ins user repository hinzugefügt.
-    * Beim erstellen einer Gruppe wird nur die NutzerId des owners übergeben
-    * Nutzer können danach per Id hinzugefügt werden
-    !So etwas solle soweit möglich per GroupService geregelt werden!
- */
 
 @RequestMapping("/web/group")
 @Controller

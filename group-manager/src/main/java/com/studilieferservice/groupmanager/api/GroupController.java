@@ -18,6 +18,13 @@ import java.util.*;
  * @version 1.0
  */
 
+/* TODO: 5/29/20 Generell überarbeiten:
+    * Nutzer werden separat ins user repository hinzugefügt.
+    * Beim erstellen einer Gruppe wird nur die NutzerId des owners übergeben
+    * Nutzer können danach per Id hinzugefügt werden
+    !So etwas solle soweit möglich per GroupService geregelt werden!
+ */
+
 @RequestMapping("api/group")
 @RestController
 public class GroupController {
