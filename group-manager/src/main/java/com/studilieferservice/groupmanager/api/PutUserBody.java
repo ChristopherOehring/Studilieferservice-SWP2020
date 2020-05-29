@@ -1,8 +1,10 @@
 package com.studilieferservice.groupmanager.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.studilieferservice.groupmanager.persistence.User;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PutUserBody {
     private String id;
     private User user;
