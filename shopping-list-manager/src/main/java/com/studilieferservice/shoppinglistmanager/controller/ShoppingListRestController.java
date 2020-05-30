@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * REST-Controller: nimmt alle REST-Anfragen dieses Moduls an.
- * Alle Anfragen werden unter ".../shoppingList/" angenommen.
+ * REST Controller: accepts all REST requests of this module.
+ * All requests are accepted at ".../shoppingList/".
  * @author Stefan Horst
  * @version 1.0
  */
@@ -23,8 +23,8 @@ public class ShoppingListRestController {
     }
 
     /**
-     * REST-Anfrage für "/": zum Testen, ob das Modul funktioniert.
-     * @return eine einfache Textnachricht
+     * REST request for "/": for testing purposes, to see if the module works.
+     * @return a simple text message
      */
     @GetMapping("/")
     public String index() {
@@ -32,9 +32,9 @@ public class ShoppingListRestController {
     }
 
     /**
-     * REST-Anfrage für "/create": legt eine neue Einkaufsliste an, welche in der Datenbank gespeichert wird.
-     * @param shoppingList im Body der Anfrage: die {@link ShoppingList}, die erstellt und gespeichert werden soll
-     * @return die angelegte {@link ShoppingList} als Objekt
+     * REST request for "/create": creates a new shopping list which is saved in the database.
+     * @param shoppingList in the body of the request: the {@link ShoppingList} that will be created and saved
+     * @return the created {@link ShoppingList} as a JSON object
      */
     @PostMapping("/create")
     public ShoppingList createShoppingList(@RequestBody ShoppingList shoppingList) {
@@ -46,9 +46,9 @@ public class ShoppingListRestController {
 
     //not yet in use
     /**
-     * REST-Anfrage für "/delete": löscht eine zuvor {@link #createShoppingList(ShoppingList) angelegte} Einkaufsliste.
-     * @param shoppingList im Body der Anfrage: die {@link ShoppingList}, die gelöscht werden soll
-     * @return die gelöschte {@link ShoppingList} als Objekt
+     * REST request for "/delete": deletes a previously {@link #createShoppingList(ShoppingList) created} shopping list.
+     * @param shoppingList in the body of the request: the {@link ShoppingList} that will be deleted
+     * @return the deleted {@link ShoppingList} as a JSON object
      */
     @DeleteMapping("/delete")
     public ShoppingList deleteShoppingList(@RequestBody ShoppingList shoppingList) {

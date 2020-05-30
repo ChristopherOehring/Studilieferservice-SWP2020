@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Web-Controller: nimmt alle Web-Anfragen dieses Moduls an und gibt entsprechende HTML-Seiten zurück.
- * Alle Anfragen werden unter ".../shoppingList/" angenommen.
+ * Web Controller: accepts all web requests of this module and returns corresponding HTML pages.
+ * All requests are accepted at ".../shoppingList/".
  * @author Stefan Horst
  * @version 1.0
  */
@@ -31,10 +31,10 @@ public class ShoppingListWebController {
     }
 
     /**
-     * Web-Anfrage (GET) für "/[Gruppen-ID]": ruft die Webseite für die Einkaufsliste zur jeweiligen Gruppe bzw. Gruppen-ID auf.
-     * @param groupId Die im URL-Pfad angegebene Gruppen-ID
-     * @param model Spring-spezifisch: das {@code model} der angefragten Einkaufsliste, dessen Daten in die list.html eingefügt werden
-     * @return die HTML-Seite "list.html", die eine Einkaufsliste anzeigt
+     * Web request (GET) for "/[Group-ID]": retrieves the page of the shopping list for the respective group.
+     * @param groupId The group-ID which is passed as a parameter through the URL
+     * @param model Spring specific: the {@code model} of the requested {@link ShoppingList}, the data of which is dynamically inserted into the list.html
+     * @return the HTML page "list.html" which displays the shopping list
      */
     @GetMapping("/{groupId}")
     public String getShoppingListByGroupId(@PathVariable String groupId, Model model) {
@@ -46,10 +46,10 @@ public class ShoppingListWebController {
     }
 
     /**
-     * Web-Anfrage (POST) für "/addItem": fügt der aktuell angezeigten Einkaufsliste einen Artikel hinzu.
-     * @param item der eingegebene Artikel
-     * @param request Spring-spezifisch: daraus kann die in der HTML-Seite "list.html" hinterlegte Gruppen-ID entnommen werden
-     * @return eine Weiterleitung auf {@link #getShoppingListByGroupId(String, Model) getShoppingListByGroupId} mit der aktuellen Gruppen-ID
+     * Web request (POST) for "/addItem": adds an item to the shopping list that is currently being displayed.
+     * @param item the {@link Item} that will be added to the {@link ShoppingList}
+     * @param request Spring specific: for accessing the group-ID which is stored the body of the HTML page "list.html"
+     * @return a redirection to {@link #getShoppingListByGroupId(String, Model) getShoppingListByGroupId} with the current group-ID
      */
     //HttpServletRequest is used in here for getting values from hidden fields (groupId)
     @PostMapping("/addItem")
