@@ -128,7 +128,7 @@ public class Gruppe {
         return false;
     }
 
-    public boolean deomote(User user){
+    public boolean demote(User user){
         if(adminList.remove(user)) {
             memberList.add(user);
             return true;

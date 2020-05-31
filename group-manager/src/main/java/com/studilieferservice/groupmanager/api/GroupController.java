@@ -219,7 +219,7 @@ public class GroupController {
         Gruppe group = groupService.findById(body.getGroupId()).get();
         User user = userService.findUser(body.getEmail()).get();
 
-        group.promote(user);
+        group.demote(user);
         return groupService.save(group);
     }
     
