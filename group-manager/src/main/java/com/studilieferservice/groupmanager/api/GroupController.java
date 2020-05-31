@@ -16,7 +16,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 // TODO: 5/29/20 Is everything here only for testing purposes?
-// TODO: 5/31/20 Needs to be tested 
+// TODO: 5/31/20 Should we have a method to remove admins, or do they need to be demoted first?
+// TODO: 5/31/20 Should you be able to create multiple groups with the same name?
 /**
  * Provides a api for the group-service at /api/group-service
  */
@@ -214,7 +215,7 @@ public class GroupController {
      *      *             }
      * @return the group, as it was saved in the database
      */
-    @PutMapping(path = "/group/promote")
+    @PutMapping(path = "/group/demote")
     public Gruppe demote(@RequestBody GroupAndUserBody body){
         Gruppe group = groupService.findById(body.getGroupId()).get();
         User user = userService.findUser(body.getEmail()).get();

@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: 5/31/20 Fix the version, so that it only goes up by one if something actually changes. (not important)
 @Entity(name = "gruppe")
 public class Gruppe {
     /**
@@ -61,19 +62,23 @@ public class Gruppe {
     }
 
     // TODO: 5/31/20 user -> member
-    public void addMember(User user) {
+    public boolean addMember(User user) {
+        if(owner.equals(user) || adminList.contains(user) || memberList.contains(user)) return false;
         version++;
-        memberList.add(user);
+        return memberList.add(user);
     }
 
-    public void removeMember(User user) {
-        version++;
-        memberList.remove(user);
+    public boolean removeMember(User user) {
+        if(memberList.remove(user)){
+            version++;
+            return true;
+        }
+        return false;
     }
 
     public boolean removeAdminOrMember(User user){
         version++;
-        return memberList.remove(user) || adminList.remove(user);
+        return (memberList.remove(user) | adminList.remove(user));
     }
 
     public List<User> getMembers() {
@@ -84,6 +89,7 @@ public class Gruppe {
         if (this.memberList.contains(oldUser)) {
             memberList.remove(oldUser);
             memberList.add(newUser);
+            version++;
         }
     }
 
@@ -91,25 +97,48 @@ public class Gruppe {
         return adminList;
     }
 
-    public void addAdmin(User admin) {
+    // TODO: 5/31/20 Should this really be possible?:
+    public boolean addAdmin(User admin) {
+        if(adminList.contains(admin) || memberList.contains(admin) || owner.equals(admin)) {
+            return false;
+        }
         version++;
-        this.adminList.add(admin);
+        return this.adminList.add(admin);
     }
 
-    public void removeAdmin(User admin) {
-        version++;
-        this.adminList.remove(admin);
-    }
-
-    public User getOwner() {
-        return owner;
+    public boolean removeAdmin(User admin) {
+        if (this.adminList.remove(admin)) {
+            version++;
+            return true;
+        }
+        return false;
     }
 
     public void setOwner(User owner) {
         version++;
+        removeAdminOrMember(owner);
         this.owner = owner;
     }
 
+    public boolean promote(User user){
+        if(memberList.remove(user)) {
+            adminList.add(user);
+            version++;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean demote(User user){
+        if(adminList.remove(user)) {
+            memberList.add(user);
+            version++;
+            return true;
+        }
+        return false;
+    }
+
+// lookup
     public boolean isOwner(User user) {
         return user==this.owner;
     }
@@ -121,19 +150,7 @@ public class Gruppe {
         return null;
     }
 
-    public boolean promote(User user){
-        if(memberList.remove(user)) {
-            adminList.add(user);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean demote(User user){
-        if(adminList.remove(user)) {
-            memberList.add(user);
-            return true;
-        }
-        return false;
+    public User getOwner() {
+        return owner;
     }
 }
