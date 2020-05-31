@@ -60,12 +60,13 @@ public class Gruppe {
         this.groupName = groupName;
     }
 
-    public void addUser(User user) {
+    // TODO: 5/31/20 user -> member
+    public void addMember(User user) {
         version++;
         memberList.add(user);
     }
 
-    public void removeUser(User user) {
+    public void removeMember(User user) {
         version++;
         memberList.remove(user);
     }
@@ -75,7 +76,7 @@ public class Gruppe {
         return memberList.remove(user) || adminList.remove(user);
     }
 
-    public List<User> getUsers() {
+    public List<User> getMembers() {
         return memberList;
     }
 

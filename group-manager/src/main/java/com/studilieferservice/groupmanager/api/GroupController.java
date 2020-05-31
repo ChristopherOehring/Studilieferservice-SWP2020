@@ -159,7 +159,7 @@ public class GroupController {
         Gruppe group = groupService.findById(body.getGroupId()).get();
         User user = userService.findUser(body.getEmail()).get();
         
-        group.addUser(user);
+        group.addMember(user);
         return groupService.save(group);
     }
 
@@ -179,7 +179,7 @@ public class GroupController {
         Gruppe group = groupService.findById(body.getGroupId()).get();
         User user = userService.findUser(body.getEmail()).get();
 
-        group.removeUser(user);
+        group.removeMember(user);
         return groupService.save(group);
     }
 

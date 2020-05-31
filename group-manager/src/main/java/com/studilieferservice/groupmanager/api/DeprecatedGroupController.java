@@ -94,7 +94,7 @@ public class DeprecatedGroupController {
         List<Gruppe> groups = groupService.findAll();
         List<Gruppe> ret = new ArrayList<>();
         for(Gruppe g: groups) {
-            for (User u: g.getUsers()) {
+            for (User u: g.getMembers()) {
                 if (u.getEmail().equals(userId)) {
                     ret.add(g);
                     break;
@@ -139,7 +139,7 @@ public class DeprecatedGroupController {
         if (groupOptional.isEmpty()) return "Group not found";
         if (body.getUser().isValidEmailAddress(body.getUserID())) {
             Gruppe g = groupOptional.get();
-            for (User u : g.getUsers()) {
+            for (User u : g.getMembers()) {
                 if (u.getEmail().equals(body.getUserID())) {
                     return "User already member of group";
                 }
@@ -150,7 +150,7 @@ public class DeprecatedGroupController {
                 }
             }
             User u = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName(), body.getUserName());
-            g.addUser(u);
+            g.addMember(u);
             if (userService.findUser(body.getUserID()).isEmpty()) {
                 userService.save(u);
                 return "User added to repository and to group";
@@ -181,11 +181,11 @@ public class DeprecatedGroupController {
         Optional<Gruppe> groupOptional = groupService.findById(body.getId());
         if (groupOptional.isEmpty()) return "Group not found";
         Gruppe g = groupOptional.get();
-        for (User u: g.getUsers()) {
+        for (User u: g.getMembers()) {
             if(u.getEmail().equals(body.getUserID())) {
-                g.removeUser(u);
+                g.removeMember(u);
                 groupService.save(g);
-                if(g.getUsers().isEmpty() && g.getAdmins().isEmpty()) {
+                if(g.getMembers().isEmpty() && g.getAdmins().isEmpty()) {
                     groupService.deleteById(body.getId());
                     return "Group is now empty and will be deleted";
                 }
@@ -206,7 +206,7 @@ public class DeprecatedGroupController {
         if (groupOptional.isEmpty()) return "Group not found";
         if (body.getUser().isValidEmailAddress(body.getUserID())) {
             Gruppe g = groupOptional.get();
-            for (User u : g.getUsers()) {
+            for (User u : g.getMembers()) {
                 if (u.getEmail().equals(body.getUserID())) {
                     g.updateUser(u, body.getUser());
                     groupService.save(g);
@@ -249,10 +249,10 @@ public class DeprecatedGroupController {
         if (groupOptional.isEmpty()) return "Group not found";
         Gruppe g = groupOptional.get();
         if (body.getUser().isValidEmailAddress(body.getUserID())) {
-            for (User u : g.getUsers()) {
+            for (User u : g.getMembers()) {
                 if (u.getEmail().equals(body.getUserID())) {
                     g.addAdmin(body.getUser());
-                    g.removeUser(u);
+                    g.removeMember(u);
                     groupService.save(g);
                     return "User " + u.getFirstName() + " " + u.getLastName() + " is now an admin";
                 }
@@ -288,7 +288,7 @@ public class DeprecatedGroupController {
                     return "Owner cannot be degraded";
                 }
                 g.removeAdmin(a);
-                g.addUser(a);
+                g.addMember(a);
                 groupService.save(g);
                 return "Admin "+a.getFirstName()+" "+a.getLastName()+" removed";
             }
@@ -314,11 +314,11 @@ public class DeprecatedGroupController {
                     return "Admin " + body.getUserFirstName() + " " + body.getUserLastName() + " is now the owner of this group";
                 }
             }
-            for (User u : g.getUsers()) {
+            for (User u : g.getMembers()) {
                 if (u.getEmail().equals(body.getUserID())) {
                     User oldOwer = g.getOwner();
                     g.setOwner(body.getUser());
-                    g.removeUser(u);
+                    g.removeMember(u);
                     g.addAdmin(oldOwer);
                     groupService.save(g);
                     return "User " + body.getUserFirstName() + " " + body.getUserLastName() + " is now the owner of this group";

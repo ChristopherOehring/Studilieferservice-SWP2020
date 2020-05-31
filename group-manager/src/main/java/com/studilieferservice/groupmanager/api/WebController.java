@@ -14,11 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -73,7 +71,7 @@ public class WebController {
         //TODO fixen ^^ -> firstname/lastname have to be replaced later on, also it might not be the best idea just to add a new user without saving in the user-repository
         for(String s: users){
             User u = new User(s, "fistname", "lastname", "username");
-            gruppe.addUser(u);
+            gruppe.addMember(u);
             userService.save(u);
         }
 

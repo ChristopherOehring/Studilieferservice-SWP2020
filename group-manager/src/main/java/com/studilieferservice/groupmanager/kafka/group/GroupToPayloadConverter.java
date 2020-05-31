@@ -16,7 +16,7 @@ public class GroupToPayloadConverter implements Converter<Gruppe, GroupPayload> 
                 gruppe.getGroupName(),
                 gruppe.getOwner().getEmail(),
                 gruppe.getAdmins().stream().map(User::getEmail).collect(Collectors.toList()),
-                gruppe.getUsers().stream().map(User::getEmail).collect(Collectors.toList()),
+                gruppe.getMembers().stream().map(User::getEmail).collect(Collectors.toList()),
                 gruppe.getVersion()
         );
     }
