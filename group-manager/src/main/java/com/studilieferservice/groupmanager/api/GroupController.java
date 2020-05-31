@@ -1,330 +1,227 @@
 package com.studilieferservice.groupmanager.api;
 
+import com.studilieferservice.groupmanager.api.bodys.DeleteGroupBody;
+import com.studilieferservice.groupmanager.api.bodys.GetUserBody;
+import com.studilieferservice.groupmanager.api.bodys.CreateGroupBody;
+import com.studilieferservice.groupmanager.api.bodys.GroupAndUserBody;
 import com.studilieferservice.groupmanager.persistence.Gruppe;
 import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.GroupService;
 import com.studilieferservice.groupmanager.service.UserService;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+// TODO: 5/29/20 Is everything here only for testing purposes?
+// TODO: 5/31/20 Needs to be tested 
 /**
- * Rest-Controller: provides a rest api at /api/group
- * @version 1.0
+ * Provides a api for the group-service at /api/group-service
  */
-
-/* TODO: 5/29/20 Generell überarbeiten:
-    * Nutzer werden separat ins user repository hinzugefügt.
-    * Beim erstellen einer Gruppe wird nur die NutzerId des owners übergeben
-    * Nutzer können danach per Id hinzugefügt werden
-    !So etwas solle soweit möglich per GroupService geregelt werden!
- */
-
-@RequestMapping("api/group")
+@RequestMapping("/api/group-service")
 @RestController
 public class GroupController {
     private final GroupService groupService;
     private final UserService userService;
 
-    /**
-     * Classic constructor method, no explanation needed
-     * @param groupService Instance of GroupService for configuring/saving groups in JpaGroupRepository extending JpaRepository<Gruppe, String>
-     * @param userService Instance of UserService for configuring/saving users in JpaUserRepository extending JpaRepository<User, String>
-     */
     @Autowired
-    public GroupController(final GroupService groupService, UserService userService) {
-        this.groupService = Objects.requireNonNull(groupService);
+    public GroupController(GroupService groupService, UserService userService) {
+        this.groupService = groupService;
         this.userService = userService;
     }
 
+//Users
+
     /**
-     * Creating a group via POST at api/group/{name} with only one user in the beginning, determined by a body in JSON-format like that:
-     *      {
-     *           "id":"group-id",
-     *           "user":"user-mail-address",
-     *           "firstname":"some first name",
-     *           "lastname":"some last name"
-     *      }
-     * Requesting user is promoted to owner and admin
-     * There is always only one owner and never less
-     * @param name Name of the Group you want to create
-     * @return new group gets saved as a new group in GroupRepository with a randomly generated UUID
+     * Adds a user to the Database of this Microservice.
+     * Can be reached with a POST request at /api/group-service/user
+     *
+     * @param user A user in JsonFormat.
+     *             Example:
+     *             {
+     *             "email":"max.mustermann@tu-ilmenau.de",
+     *             "firstname":"Max",
+     *             "lastname":"Mustermann",
+     *             "username": "Moritz"
+     *             }
+     * @return returns the added user
      */
-    @PostMapping(path = "{name}")
-    @ManyToMany(fetch = FetchType.LAZY)
-    @NotFound(action = NotFoundAction.IGNORE)
-    public Gruppe createGroup(@PathVariable("name") String name, @RequestBody PutUserBody body) {
-        Gruppe gruppe = new Gruppe();
-        gruppe.setGroupName(name);
-        gruppe.setId(UUID.randomUUID().toString());
-        //Testzwecke
-        //Owner o = new Owner("test@testmail.com","Testo", "Testson"); //RIP Testo Testson
-        User owner = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName(), body.getUserName());
-        gruppe.setOwner(owner);
-        if (userService.findUser(owner.getEmail()).isEmpty()) {
-            userService.save(owner);
-        }
-        return groupService.save(gruppe);
+    @PostMapping(path = "/user")
+    public User addUser(@RequestBody User user) {
+        System.out.println("success");
+        return userService.save(user);
     }
 
     /**
-     * Use via GET at /api/group/, gives you all existing groups with information such as group-name, group-id and users
-     * @return List of existing Groups
+     * Removes a user from the Database
+     * Can be reached with a DELETE request at /api/group-service/user
+     *
+     * @param email the email adress of the user
+     * @return returns "Operation successfull" if there was no error
+     * , even if there was no user with that id
      */
-    @GetMapping
-    public List<Gruppe> getAll(){
+    @DeleteMapping(path = "/user")
+    public String removeUser(@RequestBody String email) {
+        System.out.println(email);
+        userService.deleteUserById(email);
+        return "operation successful";
+    }
+
+    /**
+     * Can be reached with a GET request at /api/group-service/user
+     *
+     * @param email the email of the user that should be returned as <b>raw text</b>
+     * @return the user with that email, if there is one, null otherwise
+     */
+    @GetMapping(path = "/user")
+    public User getUser(@RequestBody GetUserBody email) {
+        Optional<User> userOptional = userService.findUser(email.getValue());
+        if (userOptional.isEmpty()) return null;
+        return userOptional.get();
+    }
+
+    /**
+     * Can be reached with a GET request at /api/group-service/allUsers
+     *
+     * @return returns all users in the database of the group-manager Microservice
+     */
+    @GetMapping(path = "/allUsers")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+//Groups
+
+    /**
+     * Can be used to create a group
+     * Can be reached with a POST request at /api/group-service/group
+     *
+     * @param body A GroupCreationBody wich contains the groupName and the email of the owner
+     *             Example:
+     *             {
+     *             "groupName":"SWP",
+     *             "email":"max.mustermann@tu-ilmenau.de"
+     *             }
+     * @return The group, if it was successfully created, null if no user with the owner email could be found
+     */
+    @PostMapping(path = "/group")
+    public Gruppe createGroup(@RequestBody CreateGroupBody body) {
+        Optional<User> ownerOptional = userService.findUser(body.getOwnerEmail());
+        if (ownerOptional.isEmpty()) return null;
+        Gruppe group = new Gruppe();
+        group.setId(UUID.randomUUID().toString());
+        group.setGroupName(body.getGroupName());
+        group.setOwner(ownerOptional.get());
+        return groupService.save(group);
+    }
+
+    /**
+     * Can be Used to delete a group
+     * Can be reached with a DELETE request at /api/group-service/group
+     * @param body contains the "groupId" as json
+     *             Example:
+     *             {
+     *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163"
+     *             }
+     * @return returns true if the operation was successful
+     */
+    @DeleteMapping(path = "/group")
+    public boolean removeGroup(@RequestBody DeleteGroupBody body){
+        return groupService.deleteById(body.getValue());
+    }
+
+    /**
+     * Can be used to get all groups
+     * Can be reached with a GET request at /api/group-service/group
+     * @return list of all groups in the database of this service
+     */
+    @GetMapping(path = "/group")
+    public List<Gruppe> getAllGroups() {
         return groupService.findAll();
     }
 
     /**
-     * Use via GET at /api/group/{user-id}, gives you all existing groups of a specific user with information such as group-name, group-id and users
-     * WARNING: squared runtime due to checking of ALL members of ALL groups
-     * @param userId User-ID is its E-Mail-Address
-     * @return List of existing Groups, where user has joined
+     * Can be used to add a user (from the database) to the list of members of a specific Group
+     * Can be reached with a PUT request at /api/group-service/group/add
+     * Parameters are sent via a JSON body in the http request
+     * @param body A GroupAndUserBody, wich contains the groupId and the identifying email of the user
+     *      *             Example:
+     *      *             {
+     *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
+     *      *                  "email":"max.mustermann@tu-ilmenau.de"
+     *      *             }
+     * @return returns the group, including its new member
      */
-    // TODO: 5/21/20 use a user-service to make this prettier and faster
-    @GetMapping(path = "{id}")
-    public List<Gruppe> getAllGroupsOfPerson(@PathVariable("id") String userId){
-        List<Gruppe> groups = groupService.findAll();
-        List<Gruppe> ret = new ArrayList<>();
-        for(Gruppe g: groups) {
-            for (User u: g.getUsers()) {
-                if (u.getEmail().equals(userId)) {
-                    ret.add(g);
-                    break;
-                }
-            }
-        }
-        return ret;
+    @PutMapping(path = "/group/add")
+    public Gruppe addMember(@RequestBody GroupAndUserBody body) {
+        Gruppe group = groupService.findById(body.getGroupId()).get();
+        User user = userService.findUser(body.getEmail()).get();
+        
+        group.addUser(user);
+        return groupService.save(group);
     }
 
     /**
-     * Delete a group via DELETE at /api/group/{id}
-     * @param id UUID of group you want to delete
-     * @return just an informative string whether this group got deleted right now or didn't exist and ... that's it
+     * Removes a user from a group
+     * Can be reached with a PUT request at /api/group-service/group/remove
+     * @param body A GroupAndUserBody, wich contains the groupId and the identifying email of the user
+     *      *             Example:
+     *      *             {
+     *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
+     *      *                  "email":"max.mustermann@tu-ilmenau.de"
+     *      *             }
+     * @return the group, as it was saved in the database
      */
-    @DeleteMapping(path = "{id}")
-    public String deleteGroupById(@PathVariable("id") String id){
-        if(groupService.findById(id).isPresent()) {
-            groupService.deleteById(id);
-            return "Deleted group";
-        } else
-        return "Group not found";
+    @PutMapping(path = "/group/remove")
+    public Gruppe removeMember(@RequestBody GroupAndUserBody body) {
+        Gruppe group = groupService.findById(body.getGroupId()).get();
+        User user = userService.findUser(body.getEmail()).get();
+
+        group.removeUser(user);
+        return groupService.save(group);
     }
 
     /**
-     * Add an user to a specific group, use via PUT at "api/group/add" with a body in JSON-format like that:
-     *      {
-     * 	        "id":"group-id",
-     * 	        "user":"user-mail-address",
-     * 	        "firstname":"some first name",
-     * 	        "lastname":"some last name"
-     *      }
-     * @param body JSON-Payload containing 4 Strings, used to determine user and group
-     * @return 4 Cases:
-     *          Group not found: something is wrong with the group-ID - maybe a group with this ID does not exist anymore or you've got a typo
-     *          User already member of group: yeah, you can't have a user twice
-     *          User already admin of group: there is already an admin with this ID, he cannot be both user and admin
-     *          User added to repository and to group: user was not in group before and is now added to its group in the groupRepository and to the userRepository (if user didn't exist before, otherwise it will say "User added to group")
+     * Promotes a member of a group to admin
+     * Can be reached with a PUT request at /api/group-service/group/promote
+     * @param body A GroupAndUserBody, wich contains the groupId and the identifying email of the user
+     *      *             Example:
+     *      *             {
+     *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
+     *      *                  "email":"max.mustermann@tu-ilmenau.de"
+     *      *             }
+     * @return the group, as it was saved in the database
      */
-    @PutMapping(path = "add")
-    public String addUser(@RequestBody PutUserBody body){
-        Optional<Gruppe> groupOptional = groupService.findById(body.getId());
-        if (groupOptional.isEmpty()) return "Group not found";
-        if (body.getUser().isValidEmailAddress(body.getUserID())) {
-            Gruppe g = groupOptional.get();
-            for (User u : g.getUsers()) {
-                if (u.getEmail().equals(body.getUserID())) {
-                    return "User already member of group";
-                }
-            }
-            for (User a : g.getAdmins()) {
-                if (a.getEmail().equals(body.getUserID())) {
-                    return "User already admin of group";
-                }
-            }
-            User u = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName(), body.getUserName());
-            g.addUser(u);
-            if (userService.findUser(body.getUserID()).isEmpty()) {
-                userService.save(u);
-                return "User added to repository and to group";
-            }
-            groupService.save(g);
-            return "User added to group";
-        }
-        return "Could not add user, something is wrong with your email address (non-empty, may only contain letters, numbers, dots, periods or dashes) or your name (non-empty, may only contain letters, dashes and spaces)";
+    @PutMapping(path = "/group/promote")
+    public Gruppe promote(@RequestBody GroupAndUserBody body){
+        Gruppe group = groupService.findById(body.getGroupId()).get();
+        User user = userService.findUser(body.getEmail()).get();
+    
+        group.promote(user);
+        return groupService.save(group);
     }
 
     /**
-     * Remove an user from a specific group, use via PUT at "api/group/remove" with a body in JSON-format like that:
-     *      {
-     *           "id":"group-id",
-     *           "user":"user-mail-address",
-     *           "firstname":"some first name",
-     *           "lastname":"some last name"
-     *      }
-     * @param body JSON-Payload containing 4 Strings, but only "id" and "user" are important (where "user" is the mail-address)
-     * @return 4 Cases:
-     *          Group not found: something is wrong with the group-ID - maybe a group with this ID does not exist anymore or you've got a typo
-     *          Group is now empty and will be deleted: The last remaining member was removed, so the group is useless and got deleted
-     *          User removed: Congratulations, that's what you tried to achieve - the user is removed from the groupRepository (but still remains in the userRepository because he still might be in other groups)
-     *          No user was found in this group with this id, but since You tried to remove him, it doesn't matter anymore: No user was found in this group with this id, but since You tried to remove him, it doesn't matter anymore
+     * Demotes a admin of a group to member
+     * Can be reached with a PUT request at /api/group-service/group/promote
+     * @param body A GroupAndUserBody, wich contains the groupId and the identifying email of the user
+     *      *             Example:
+     *      *             {
+     *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
+     *      *                  "email":"max.mustermann@tu-ilmenau.de"
+     *      *             }
+     * @return the group, as it was saved in the database
      */
-    @PutMapping(path = "remove")
-    public String removeUser(@RequestBody PutUserBody body){
-        Optional<Gruppe> groupOptional = groupService.findById(body.getId());
-        if (groupOptional.isEmpty()) return "Group not found";
-        Gruppe g = groupOptional.get();
-        for (User u: g.getUsers()) {
-            if(u.getEmail().equals(body.getUserID())) {
-                g.removeUser(u);
-                groupService.save(g);
-                if(g.getUsers().isEmpty() && g.getAdmins().isEmpty()) {
-                    groupService.deleteById(body.getId());
-                    return "Group is now empty and will be deleted";
-                }
-                return "User removed";
-            }
-        }
-        for (User a: g.getAdmins()) {
-            if(a.getEmail().equals(body.getUserID())) {
-                return "You can't remove an admin";
-            }
-        }
-        return "No user was found in this group with this id, but since You tried to remove him, it doesn't matter anymore";
-    }
+    @PutMapping(path = "/group/promote")
+    public Gruppe demote(@RequestBody GroupAndUserBody body){
+        Gruppe group = groupService.findById(body.getGroupId()).get();
+        User user = userService.findUser(body.getEmail()).get();
 
-    @PutMapping(path = "update")
-    public String updateUser(@RequestBody PutUserBody body) {
-        Optional<Gruppe> groupOptional = groupService.findById(body.getId());
-        if (groupOptional.isEmpty()) return "Group not found";
-        if (body.getUser().isValidEmailAddress(body.getUserID())) {
-            Gruppe g = groupOptional.get();
-            for (User u : g.getUsers()) {
-                if (u.getEmail().equals(body.getUserID())) {
-                    g.updateUser(u, body.getUser());
-                    groupService.save(g);
-                    return "Updated user " + body.getUserFirstName() + " " + body.getUserLastName();
-                }
-            }
-            for (User a : g.getAdmins()) {
-                if (a.getEmail().equals(body.getUserID())) {
-                    g.updateUser(a, body.getUser());
-                    groupService.save(g);
-                    return "Updated admin " + body.getUserFirstName() + " " + body.getUserLastName();
-                }
-            }
-            if (g.getOwner().getEmail().equals(body.getUserID())) {
-                g.updateUser(g.getOwner(), body.getUser());
-                return "Updated owner " + body.getUserFirstName() + " " + body.getUserLastName();
-            }
-            return "User " + body.getUserID() + " not found!";
-        }
-        return "Could not update user, something is wrong with your email address (non-empty, may only contain letters, numbers, dots, periods or dashes) or your name (non-empty, may only contain letters, dashes and spaces)";
+        group.promote(user);
+        return groupService.save(group);
     }
-
-    /**
-     * User PUT at /api/group/add_admin with a body in JSON-format like that:
-     *      {
-     *           "id":"group-id",
-     *           "user":"user-mail-address",
-     *           "firstname":"some first name",
-     *           "lastname":"some last name"
-     *      }
-     * @param body JSON-Payload containing 4 Strings, but only "id" and "user" are important (where "user" is the mail-address)
-     * @return 3 Cases:
-     *          Group not found: something is wrong with the group-ID - maybe a group with this ID does not exist anymore or you've got a typo
-     *          User <firstname> <lastname> is now an admin: success, this user got promoted to admin and is no longer shown in the user list but in the admin list
-     *          User <User-ID> is not a member of this group or already an admin: you have to add the user first, before promoting him to admin, or he might already be an admin
-     */
-    @PutMapping(path = "add_admin")
-    public String addAdmin(@RequestBody PutUserBody body) {
-        Optional<Gruppe> groupOptional = groupService.findById(body.getId());
-        if (groupOptional.isEmpty()) return "Group not found";
-        Gruppe g = groupOptional.get();
-        if (body.getUser().isValidEmailAddress(body.getUserID())) {
-            for (User u : g.getUsers()) {
-                if (u.getEmail().equals(body.getUserID())) {
-                    g.addAdmin(body.getUser());
-                    g.removeUser(u);
-                    groupService.save(g);
-                    return "User " + u.getFirstName() + " " + u.getLastName() + " is now an admin";
-                }
-            }
-            return "User " + body.getUserID() + " is not a member of this group or already an admin";
-        }
-        return "Could not promote user to admin, something is wrong with your email address (non-empty, may only contain letters, numbers, dots, periods or dashes) or your name (non-empty, may only contain letters, dashes and spaces)";
-    }
-
-    /**
-     * User PUT at /api/group/add_admin with a body in JSON-format like that:
-     *      {
-     *           "id":"group-id",
-     *           "user":"user-mail-address",
-     *           "firstname":"some first name",
-     *           "lastname":"some last name"
-     *      }
-     * @param body JSON-Payload containing 4 Strings, but only "id" and "user" are important (where "user" is the mail-address)
-     * @return 4 Cases:
-     *          Group not found: something is wrong with the group-ID - maybe a group with this ID does not exist anymore or you've got a typo
-     *          Owner cannot be degraded: There is always one owner and never less, you can't degrade him
-     *          Admin <firstname> <lastname> removed: This admin got removed from the admin list and is now a mere user of this group
-     *          There is no admin <User-ID> in this group: The admin you want to remove does not exist in this group or is already just a mere user
-     */
-    @PutMapping(path = "degrade_admin")
-    public String degradeAdmin(@RequestBody PutUserBody body) {
-        Optional<Gruppe> groupOptional = groupService.findById(body.getId());
-        if (groupOptional.isEmpty()) return "Group not found";
-        Gruppe g = groupOptional.get();
-        for (User a: g.getAdmins()) {
-            if(a.getEmail().equals(body.getUserID())) {
-                if(g.isOwner(a)) {
-                    return "Owner cannot be degraded";
-                }
-                g.removeAdmin(a);
-                g.addUser(a);
-                groupService.save(g);
-                return "Admin "+a.getFirstName()+" "+a.getLastName()+" removed";
-            }
-        }
-        return "There is no admin "+body.getUserID()+" in this group";
-    }
-
-    @PutMapping(path = "set_owner")
-    public String setOwner(@RequestBody PutUserBody body) {
-        Optional<Gruppe> groupOptional = groupService.findById(body.getId());
-        if (groupOptional.isEmpty()) return  "Group not found";
-        Gruppe g = groupOptional.get();
-        if (body.getUser().isValidEmailAddress(body.getUserID())) {
-            if (g.getOwner().getEmail().equals(body.getUser().getEmail()))
-                return body.getUserFirstName() + " " + body.getUserLastName() + " is already the owner of this group";
-            for (User a : g.getAdmins()) {
-                if (a.getEmail().equals(body.getUserID())) {
-                    User oldOwer = g.getOwner();
-                    g.setOwner(body.getUser());
-                    g.removeAdmin(a);
-                    g.addAdmin(oldOwer);
-                    groupService.save(g);
-                    return "Admin " + body.getUserFirstName() + " " + body.getUserLastName() + " is now the owner of this group";
-                }
-            }
-            for (User u : g.getUsers()) {
-                if (u.getEmail().equals(body.getUserID())) {
-                    User oldOwer = g.getOwner();
-                    g.setOwner(body.getUser());
-                    g.removeUser(u);
-                    g.addAdmin(oldOwer);
-                    groupService.save(g);
-                    return "User " + body.getUserFirstName() + " " + body.getUserLastName() + " is now the owner of this group";
-                }
-            }
-            return "There is no user with the email address " + body.getUserID() + " in this group";
-        }
-        return "Could not set owner, something is wrong with your email address (non-empty, may only contain letters, numbers, dots, periods or dashes) or your name (non-empty, may only contain letters, dashes and spaces)";
-    }
+    
+    // TODO: 5/31/20 as of now, admins cant be removed here, Should this be possible?
 }

@@ -48,7 +48,6 @@ public class Gruppe {
     }
 
     public void setId(String id) {
-        version++;
         this.id = id;
     }
 
@@ -69,6 +68,11 @@ public class Gruppe {
     public void removeUser(User user) {
         version++;
         memberList.remove(user);
+    }
+
+    public boolean removeAdminOrMember(User user){
+        version++;
+        return memberList.remove(user) || adminList.remove(user);
     }
 
     public List<User> getUsers() {
@@ -119,6 +123,14 @@ public class Gruppe {
     public boolean promote(User user){
         if(memberList.remove(user)) {
             adminList.add(user);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deomote(User user){
+        if(adminList.remove(user)) {
+            memberList.add(user);
             return true;
         }
         return false;

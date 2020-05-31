@@ -43,7 +43,7 @@ public class GroupService {
     public Gruppe save(Gruppe group) {
         Gruppe saved = groupRepository.save(group);
 
-        eventPublisher.publishEvent(new GroupEvent(saved, this, CREATION));
+        eventPublisher.publishEvent(new GroupEvent(saved, this, UPDATE));
 
         return saved;
     }
@@ -70,16 +70,5 @@ public class GroupService {
 
     public Optional<Gruppe> findById(String id) {
         return groupRepository.findById(id);
-    }
-
-    /**
-     * befördert einen Nutzer zum Admin, falls er bereits ein "member" der Gruppe ist
-     * @param groupId die id der gruppe
-     * @param userId die id des nutzers
-     */
-    public boolean promote(String groupId, String userId) throws NoSuchElementException {
-        Gruppe group = groupRepository.findById(groupId).get();
-        User user = userService.findUser(userId).get();
-        return group.promote(user);
     }
 }
