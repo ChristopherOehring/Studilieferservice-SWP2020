@@ -11,3 +11,7 @@ kafka:
     acks: "all"
   listener:
     ack-mode: manual
+
+version: "3.0"
+
+

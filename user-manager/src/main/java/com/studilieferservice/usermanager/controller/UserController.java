@@ -1,12 +1,14 @@
 package com.studilieferservice.usermanager.controller;
 
 import com.studilieferservice.usermanager.userService.User;
+import com.studilieferservice.usermanager.userService.UserRepository;
 import com.studilieferservice.usermanager.userService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 @RestController
 public class UserController {
@@ -14,12 +16,12 @@ public class UserController {
     private final UserService userService;
 
 
-
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
 
     }
+
 
     /**
      * this Method is used to create a new User
@@ -47,12 +49,11 @@ public class UserController {
     }
 
     /**
-     *
      * @param user
      * @return
      */
     @PostMapping("/rest-edit")
-    public ResponseEntity<?> edit(@RequestBody User user){
+    public ResponseEntity<?> edit(@RequestBody User user) {
 
         if (user == null) {
             return ResponseEntity.badRequest().body("User is Null");
@@ -63,14 +64,13 @@ public class UserController {
                 || StringUtils.isEmpty(user.getStreet())
                 || StringUtils.isEmpty(user.getCity())
                 || StringUtils.isEmpty(user.getZip())
-                ) {
+        ) {
             return ResponseEntity.badRequest().body("User values invalid");
         } else
             return ResponseEntity.ok(userService.edit(user));
     }
 
     /**
-     *
      * @param user
      * @return Response CodeStatus
      */
@@ -83,12 +83,11 @@ public class UserController {
     }
 
     /**
-     *
      * @param
      * @return Response CodeStatus
      */
     @PutMapping("/rest-logout")
-    public ResponseEntity<?> logout(){
+    public ResponseEntity<?> logout() {
         if (userService.logout() == true)
             return ResponseEntity.accepted().build();
         else

@@ -5,26 +5,40 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.transaction.Transactional;
+
 
 @Service
+
 public class UserService {
     private final ApplicationEventPublisher eventPublisher;
     private final UserRepository userRepository;
     private User currentUser;
     final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+
     @Autowired
-    public UserService(ApplicationEventPublisher eventPublisher, UserRepository userRepository) {
+    public UserService(ApplicationEventPublisher eventPublisher, UserRepository userRepository
+
+                       ) {
         this.eventPublisher = eventPublisher;
         this.userRepository = userRepository;
+
+
     }
 
     public User createUser(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
         currentUser = null;
         User saved = userRepository.save(user);
-        eventPublisher.publishEvent(new UserEvent(saved, this));
+
+
+        eventPublisher.publishEvent(new UserEvent(user, this));
         return saved;
+
+
+
+
     }
 
     public boolean login(User user) {
@@ -87,4 +101,7 @@ public class UserService {
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
+
+
+
 }
