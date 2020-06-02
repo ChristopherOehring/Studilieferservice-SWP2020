@@ -20,6 +20,7 @@ import java.util.UUID;
 // TODO: 5/31/20 Should you be able to create multiple groups with the same name?
 /**
  * Provides a api for the group-service at /api/group-service
+ * @version 1.1 6/02/20
  */
 @RequestMapping("/api/group-service")
 @RestController
@@ -36,10 +37,10 @@ public class GroupController {
 //Users
 
     /**
-     * Adds a user to the Database of this Microservice.
-     * Can be reached with a POST request at /api/group-service/user
+     * Adds a member to the Database of this Microservice.
+     * Can be reached with a POST request at /api/group-service/member
      *
-     * @param user A user in JsonFormat.
+     * @param member A member in JsonFormat.
      *             Example:
      *             {
      *             "email":"max.mustermann@tu-ilmenau.de",
@@ -47,49 +48,49 @@ public class GroupController {
      *             "lastname":"Mustermann",
      *             "username": "Moritz"
      *             }
-     * @return returns the added user
+     * @return returns the added member
      */
-    @PostMapping(path = "/user")
-    public User addUser(@RequestBody User user) {
+    @PostMapping(path = "/member")
+    public User addMember(@RequestBody User member) {
         System.out.println("success");
-        return userService.save(user);
+        return userService.save(member);
     }
 
     /**
-     * Removes a user from the Database
-     * Can be reached with a DELETE request at /api/group-service/user
+     * Removes a member from the Database
+     * Can be reached with a DELETE request at /api/group-service/member
      *
-     * @param email the email adress of the user
+     * @param email the email adress of the member
      * @return returns "Operation successfull" if there was no error
-     * , even if there was no user with that id
+     * , even if there was no member with that id //TODO isn't that supposed to be a bug??
      */
-    @DeleteMapping(path = "/user")
-    public String removeUser(@RequestBody String email) {
+    @DeleteMapping(path = "/member")
+    public String removeMember(@RequestBody String email) {
         System.out.println(email);
         userService.deleteUserById(email);
         return "operation successful";
     }
 
     /**
-     * Can be reached with a GET request at /api/group-service/user
+     * Can be reached with a GET request at /api/group-service/member
      *
-     * @param email the email of the user that should be returned as <b>raw text</b>
-     * @return the user with that email, if there is one, null otherwise
+     * @param email the email of the member that should be returned as <b>raw text</b>
+     * @return the member with that email, if there is one, null otherwise
      */
-    @GetMapping(path = "/user")
-    public User getUser(@RequestBody GetUserBody email) {
+    @GetMapping(path = "/member")
+    public User getMember(@RequestBody GetUserBody email) {
         Optional<User> userOptional = userService.findUser(email.getValue());
         if (userOptional.isEmpty()) return null;
         return userOptional.get();
     }
 
     /**
-     * Can be reached with a GET request at /api/group-service/allUsers
+     * Can be reached with a GET request at /api/group-service/allMembers
      *
-     * @return returns all users in the database of the group-manager Microservice
+     * @return returns all Members in the database of the group-manager Microservice
      */
-    @GetMapping(path = "/allUsers")
-    public List<User> getAllUsers() {
+    @GetMapping(path = "/allMembers")
+    public List<User> getAllMembers() {
         return userService.getAllUsers();
     }
 

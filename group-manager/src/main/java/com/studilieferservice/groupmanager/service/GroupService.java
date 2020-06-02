@@ -2,13 +2,11 @@ package com.studilieferservice.groupmanager.service;
 
 import com.studilieferservice.groupmanager.persistence.Gruppe;
 import com.studilieferservice.groupmanager.persistence.JpaGroupRepository;
-import com.studilieferservice.groupmanager.persistence.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.studilieferservice.groupmanager.service.GroupEventType.*;

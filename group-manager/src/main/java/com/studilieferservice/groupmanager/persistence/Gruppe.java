@@ -61,7 +61,7 @@ public class Gruppe {
         this.groupName = groupName;
     }
 
-    // TODO: 5/31/20 user -> member
+    // TODO: 5/31/20 user -> member         aye, all is fixed ~ Manu 6/02/20
     public boolean addMember(User user) {
         if(owner.equals(user) || adminList.contains(user) || memberList.contains(user)) return false;
         version++;
@@ -85,10 +85,10 @@ public class Gruppe {
         return memberList;
     }
 
-    public void updateUser(User oldUser, User newUser) {
-        if (this.memberList.contains(oldUser)) {
-            memberList.remove(oldUser);
-            memberList.add(newUser);
+    public void updateMember(User oldMember, User newMember) {
+        if (this.memberList.contains(oldMember)) {
+            memberList.remove(oldMember);
+            memberList.add(newMember);
             version++;
         }
     }
@@ -140,7 +140,7 @@ public class Gruppe {
 
 // lookup
     public boolean isOwner(User user) {
-        return user==this.owner;
+        return user ==this.owner;
     }
 
     public String getPermissions(User user){

@@ -1,6 +1,5 @@
 package com.studilieferservice.groupmanager.service;
 
-import com.studilieferservice.groupmanager.persistence.Gruppe;
 import com.studilieferservice.groupmanager.persistence.JpaUserRepository;
 import com.studilieferservice.groupmanager.persistence.User;
 import org.springframework.beans.factory.annotation.Autowired;

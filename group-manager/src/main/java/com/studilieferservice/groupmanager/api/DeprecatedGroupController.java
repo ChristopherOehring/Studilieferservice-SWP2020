@@ -208,20 +208,20 @@ public class DeprecatedGroupController {
             Gruppe g = groupOptional.get();
             for (User u : g.getMembers()) {
                 if (u.getEmail().equals(body.getUserID())) {
-                    g.updateUser(u, body.getUser());
+                    g.updateMember(u, body.getUser());
                     groupService.save(g);
                     return "Updated user " + body.getUserFirstName() + " " + body.getUserLastName();
                 }
             }
             for (User a : g.getAdmins()) {
                 if (a.getEmail().equals(body.getUserID())) {
-                    g.updateUser(a, body.getUser());
+                    g.updateMember(a, body.getUser());
                     groupService.save(g);
                     return "Updated admin " + body.getUserFirstName() + " " + body.getUserLastName();
                 }
             }
             if (g.getOwner().getEmail().equals(body.getUserID())) {
-                g.updateUser(g.getOwner(), body.getUser());
+                g.updateMember(g.getOwner(), body.getUser());
                 return "Updated owner " + body.getUserFirstName() + " " + body.getUserLastName();
             }
             return "User " + body.getUserID() + " not found!";
