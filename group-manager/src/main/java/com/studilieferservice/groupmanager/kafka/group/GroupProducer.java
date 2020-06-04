@@ -48,7 +48,7 @@ public class GroupProducer {
         }
 
         assert payload != null; // throws an error if the payload is somehow null
-        kafkaTemplate.send("groups", payload.getId(), message);
+        kafkaTemplate.send("groupTopic", payload.getId(), message);
     }
 
 

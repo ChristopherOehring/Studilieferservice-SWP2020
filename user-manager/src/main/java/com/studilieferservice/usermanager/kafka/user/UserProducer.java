@@ -34,7 +34,9 @@ public class UserProducer {
         if (StringUtils.isEmpty(message)){
             return;
         }
-        kafkaTemplete.send("usersTopic",userPayload.getEmail(),message);
+
+        assert userPayload != null; // throws an error if the payload is somehow null
+        kafkaTemplete.send("userTopic",userPayload.getEmail(),message);
 
     }
 

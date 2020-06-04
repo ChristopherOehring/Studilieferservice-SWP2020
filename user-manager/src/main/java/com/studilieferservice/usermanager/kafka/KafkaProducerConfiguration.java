@@ -1,4 +1,4 @@
-package com.studilieferservice.groupmanager.kafka;
+package com.studilieferservice.usermanager.kafka;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -22,8 +22,8 @@ public class KafkaProducerConfiguration {
     private String bootstrapAddress;
 
     @Bean
-    public NewTopic groups() {
-        return new NewTopic("groupTopic", 4, (short) 1);
+    public NewTopic userTopic() {
+        return new NewTopic("userTopic", 4, (short) 1);
     }
 
 

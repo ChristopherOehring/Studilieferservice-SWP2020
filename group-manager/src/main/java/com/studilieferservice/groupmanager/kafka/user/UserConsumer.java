@@ -18,7 +18,7 @@ public class UserConsumer {
         this.objectMapper = objectMapper;
     }
 
-    @KafkaListener(topics = "usersTopic", id = "user_1")
+    @KafkaListener(topics = "userTopic", id = "user_1")
     public void consume(ConsumerRecord<String,String> consumerRecord, Acknowledgment acknowledgment){
         String message = consumerRecord.value();
         if(StringUtils.isEmpty(message)){
