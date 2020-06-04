@@ -3,23 +3,29 @@ version: '3'
 
 services:
   db:
-    image: postgres
-    restart: always
-    ports:
-    - 5432:5432
+    image: library/postgres:latest
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: group-manager
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: db_pwd
+      POSTGRES_DB: docker
+      # Single database
+      # - POSTGRES_DB=db
+      # Configure multiple databases here
+      # Note: does not allow names containing "-"
+      POSTGRES_MULTIPLE_DATABASES: groupManager,userManager
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
 
   adminer:
-    image: adminer
+    image: library/adminer:latest
     restart: always
     ports:
     - 9002:8080
     environment:
       ADMINER_DESIGN: ng9
-#brade, pappu687
+# brade, pappu687
 # Hell-Pastell: esterka, ng9
 # DarkMode: galkaev
 # Colorful blue and green: lucas-sandery
@@ -56,11 +62,11 @@ services:
     image: studi-lieferservice/group-manager:latest
     ports:
       - 9010:8010
-  shopping-list-manager:
-    image: studi-lieferservice/shopping-list-manager:latest
-    ports:
-      - 9070:8070
-  user-manager:
-    image: studi-lieferservice/user-manager:latest
-    ports:
-      - 9080:8080
+#  shopping-list-manager:
+#    image: studi-lieferservice/shopping-list-manager:latest
+#    ports:
+#      - 9070:8070
+#  user-manager:
+#    image: studi-lieferservice/user-manager:latest
+#    ports:
+#      - 9080:8080
