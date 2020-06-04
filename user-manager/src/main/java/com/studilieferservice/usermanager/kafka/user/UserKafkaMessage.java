@@ -3,6 +3,9 @@ package com.studilieferservice.usermanager.kafka.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.studilieferservice.usermanager.kafka.KafkaMessage;
 
+/**
+ * specify the kafka message to userKafkaMessage
+ */
 public class UserKafkaMessage extends KafkaMessage<UserPayload> {
     protected UserKafkaMessage(@JsonProperty("id") String id,
                                @JsonProperty("key")String key,

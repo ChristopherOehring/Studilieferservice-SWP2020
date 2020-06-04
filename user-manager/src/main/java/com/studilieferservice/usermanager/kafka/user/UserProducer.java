@@ -26,6 +26,13 @@ public class UserProducer {
         this.conversionService = conversionService;
         this.objectMapper = objectMapper;
     }
+
+    /**
+     * this method is used to produce an kafka message for the given userEvent
+     * and send it to the kafka topic
+     *
+     * @param userEvent
+     */
     @EventListener
     public void produceUserEvent(UserEvent userEvent){
         UserPayload userPayload = conversionService.convert(userEvent.getUser(), UserPayload.class);
@@ -38,6 +45,14 @@ public class UserProducer {
 
     }
 
+    /**
+     * this method is used by produceUserEvent(..) method
+     * to create an kafka message with the given userPayload
+     *
+     * @param userPayload
+     *
+     * @return kafka message as String
+     */
     private String createKafkaMessage(UserPayload userPayload) {
         UserKafkaMessage message = new UserKafkaMessage(
                 UUID.randomUUID().toString(),

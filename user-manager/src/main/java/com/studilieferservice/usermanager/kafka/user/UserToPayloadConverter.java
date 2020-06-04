@@ -4,7 +4,9 @@ import com.studilieferservice.usermanager.userService.User;
 import org.springframework.stereotype.Component;
 import org.springframework.core.convert.converter.Converter;
 
-
+/**
+ * to convert the User object to UserPayload object
+ */
 @Component
 public class UserToPayloadConverter implements Converter<User, UserPayload> {
     @Override

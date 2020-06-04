@@ -7,6 +7,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.transaction.Transactional;
 
+/**
+ * just a normal service for handling JpaRepositories
+ */
 
 @Service
 
@@ -20,16 +23,22 @@ public class UserService {
     @Autowired
     public UserService(ApplicationEventPublisher eventPublisher, UserRepository userRepository
 
-                       ) {
+    ) {
         this.eventPublisher = eventPublisher;
         this.userRepository = userRepository;
 
 
     }
 
+    /**
+     * saves users to the repository and publish an userEvent
+     *
+     * @param user
+     * @return the saved user
+     */
     public User createUser(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
-        currentUser = null;
+        setCurrentUser(null);
         User saved = userRepository.save(user);
 
 
@@ -37,24 +46,36 @@ public class UserService {
         return saved;
 
 
-
-
     }
 
+    /**
+     * fetch if the email in DB exist and then
+     * matches the given password
+     * if all matches, then update the given user date to true in DB
+     *
+     * @param user
+     * @return true if the password and the email correct, otherwise false
+     */
     public boolean login(User user) {
 
-        User user1 = userRepository.findByEmail(user.getEmail());
+        User user1 = findOne(user.getEmail());
+        //userRepository.findByEmail(user.getEmail());
 
         if (user1 == null || !encoder.matches(user.getPassword(), user1.getPassword())) {
             return false;
         } else {
             user1.setSignedIn(true);
             userRepository.save(user1);
-            currentUser = user1;
+            setCurrentUser(user1);
             return true;
         }
     }
 
+    /**
+     * update the login user state to false in DB
+     *
+     * @return true if the update success was, otherwise false
+     */
     public boolean logout() {
 
         currentUser.setSignedIn(false);
@@ -66,6 +87,12 @@ public class UserService {
             return false;
     }
 
+    /**
+     * update the given user date in DB
+     *
+     * @param user
+     * @return the updated user
+     */
     public User edit(User user) {
 
         currentUser.setFirstName(user.getFirstName());
@@ -80,28 +107,34 @@ public class UserService {
         return userRepository.save(currentUser);
     }
 
+    /**
+     * fetch the user with the given email from DB
+     *
+     * @param email
+     * @return user if exist in DB, otherwise null.
+     */
     public User findOne(String email) {
         return userRepository.findById(email).orElse(null);
     }
 
-    public boolean isUserPresent(String email) {
 
-        User u = userRepository.findById(email).orElse(null);
-        if (u != null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+    /**
+     * to get the current user
+     *
+     * @return user
+     */
     public User getCurrentUser() {
         return currentUser;
     }
 
+    /**
+     * to set the current user variable
+     *
+     * @param currentUser
+     */
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
-
 
 
 }
