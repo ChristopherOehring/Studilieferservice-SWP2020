@@ -40,9 +40,9 @@ public class GroupController {
 
     /**
      * Adds a member to the Database of this Microservice.
-     * Can be reached with a POST request at /api/group-service/member
+     * Can be reached with a POST request at /api/group-service/user
      *
-     * @param member A member in JsonFormat.
+     * @param user A member in JsonFormat.
      *             Example:
      *             {
      *             "email":"max.mustermann@tu-ilmenau.de",
@@ -52,18 +52,18 @@ public class GroupController {
      *             }
      * @return returns the added member
      */
-    @PostMapping(path = "/member")
-    public ResponseEntity<?> addMember(@RequestBody User member) {
+    @PostMapping(path = "/user")
+    public ResponseEntity<?> addUser(@RequestBody User user) {
         System.out.println("success");
-        if(member.isValidEmailAddress(member.getEmail()) && member.isValidName(member.getFirstName()) && member.isValidName(member.getLastName())) {
-            if (userService.findUser(member.getEmail()).isPresent()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+member.getEmail()+" already saved as "+member.getUserName()+" with the name "+member.getFirstName()+" "+member.getLastName());
+        if(user.isValidEmailAddress(user.getEmail()) && user.isValidName(user.getFirstName()) && user.isValidName(user.getLastName())) {
+            if (userService.findUser(user.getEmail()).isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+user.getEmail()+" already saved as "+user.getUserName()+" with the name "+user.getFirstName()+" "+user.getLastName());
             }
-            userService.save(member);
-            return ResponseEntity.status(HttpStatus.CREATED).body(member);
+            userService.save(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(user);
         }
         //TODO causes 500, fix it
-        else if (!member.isValidEmailAddress(member.getEmail()) || !member.isValidName(member.getFirstName()) || !member.isValidName(member.getLastName())){
+        else if (!user.isValidEmailAddress(user.getEmail()) || !user.isValidName(user.getFirstName()) || !user.isValidName(user.getLastName())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have to fill in both your first name and last name, also you may only use letters, dashes and spaces. Also, check your email address whether it matches the right from");
         }
         else {
@@ -73,14 +73,14 @@ public class GroupController {
 
     /**
      * Removes a member from the Database
-     * Can be reached with a DELETE request at /api/group-service/member
+     * Can be reached with a DELETE request at /api/group-service/user
      *
      * @param email the email adress of the member
      * @return returns "Operation successfull" if there was no error
      * , even if there was no member with that id //TODO isn't that supposed to be a bug?? ~ Manu 6/04/20
      */
-    @DeleteMapping(path = "/member")
-    public ResponseEntity<?> removeMember(@RequestBody String email) {
+    @DeleteMapping(path = "/user")
+    public ResponseEntity<?> removeUser(@RequestBody String email) {
         if(userService.findUser(email).isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email address "+email+" found!");
         }
@@ -90,25 +90,25 @@ public class GroupController {
     }
 
     /**
-     * Can be reached with a GET request at /api/group-service/member
+     * Can be reached with a GET request at /api/group-service/user
      *
      * @param email the email of the member that should be returned as <b>raw text</b>
      * @return the member with that email, if there is one, null otherwise
      */
     @GetMapping(path = "/member")
-    public ResponseEntity<?> getMember(@RequestBody GetUserBody email) {
+    public ResponseEntity<?> getUser(@RequestBody GetUserBody email) {
         Optional<User> userOptional = userService.findUser(email.getValue());
         if (userOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email address "+email+" found!");
         return ResponseEntity.status(HttpStatus.OK).body(userOptional.get());
     }
 
     /**
-     * Can be reached with a GET request at /api/group-service/allMembers
+     * Can be reached with a GET request at /api/group-service/allUsers
      *
      * @return returns all Members in the database of the group-manager Microservice
      */
-    @GetMapping(path = "/allMembers")
-    public ResponseEntity<?> getAllMembers() {
+    @GetMapping(path = "/allUsers")
+    public ResponseEntity<?> getAllUsers() {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
     }
 
