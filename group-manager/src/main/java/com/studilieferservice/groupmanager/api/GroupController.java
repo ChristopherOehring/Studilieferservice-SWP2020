@@ -9,6 +9,8 @@ import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.GroupService;
 import com.studilieferservice.groupmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.UUID;
 // TODO: 5/31/20 Should you be able to create multiple groups with the same name?
 /**
  * Provides a api for the group-service at /api/group-service
- * @version 1.1 6/02/20
+ * @version 1.2 6/04/20
  */
 @RequestMapping("/api/group-service")
 @RestController
@@ -51,9 +53,22 @@ public class GroupController {
      * @return returns the added member
      */
     @PostMapping(path = "/member")
-    public User addMember(@RequestBody User member) {
+    public ResponseEntity<?> addMember(@RequestBody User member) {
         System.out.println("success");
-        return userService.save(member);
+        if(member.isValidEmailAddress(member.getEmail()) && member.isValidName(member.getFirstName()) && member.isValidName(member.getLastName())) {
+            if (userService.findUser(member.getEmail()).isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+member.getEmail()+" already saved as "+member.getUserName()+" with the name "+member.getFirstName()+" "+member.getLastName());
+            }
+            userService.save(member);
+            return ResponseEntity.status(HttpStatus.CREATED).body(member);
+        }
+        //TODO causes 500, fix it
+        else if (!member.isValidEmailAddress(member.getEmail()) || !member.isValidName(member.getFirstName()) || !member.isValidName(member.getLastName())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have to fill in both your first name and last name, also you may only use letters, dashes and spaces. Also, check your email address whether it matches the right from");
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something wrong, check your input values");
+        }
     }
 
     /**
@@ -62,13 +77,16 @@ public class GroupController {
      *
      * @param email the email adress of the member
      * @return returns "Operation successfull" if there was no error
-     * , even if there was no member with that id //TODO isn't that supposed to be a bug??
+     * , even if there was no member with that id //TODO isn't that supposed to be a bug?? ~ Manu 6/04/20
      */
     @DeleteMapping(path = "/member")
-    public String removeMember(@RequestBody String email) {
+    public ResponseEntity<?> removeMember(@RequestBody String email) {
+        if(userService.findUser(email).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email address "+email+" found!");
+        }
         System.out.println(email);
         userService.deleteUserById(email);
-        return "operation successful";
+        return ResponseEntity.status(HttpStatus.OK).body("Deleted user with email address "+email+" successfully!");
     }
 
     /**
@@ -78,10 +96,10 @@ public class GroupController {
      * @return the member with that email, if there is one, null otherwise
      */
     @GetMapping(path = "/member")
-    public User getMember(@RequestBody GetUserBody email) {
+    public ResponseEntity<?> getMember(@RequestBody GetUserBody email) {
         Optional<User> userOptional = userService.findUser(email.getValue());
-        if (userOptional.isEmpty()) return null;
-        return userOptional.get();
+        if (userOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email address "+email+" found!");
+        return ResponseEntity.status(HttpStatus.OK).body(userOptional.get());
     }
 
     /**
@@ -90,8 +108,8 @@ public class GroupController {
      * @return returns all Members in the database of the group-manager Microservice
      */
     @GetMapping(path = "/allMembers")
-    public List<User> getAllMembers() {
-        return userService.getAllUsers();
+    public ResponseEntity<?> getAllMembers() {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
     }
 
 //Groups
@@ -106,17 +124,18 @@ public class GroupController {
      *             "groupName":"SWP",
      *             "email":"max.mustermann@tu-ilmenau.de"
      *             }
-     * @return The group, if it was successfully created, null if no user with the owner email could be found
+     * @return The group, if it was successfully created, error message, if no user with the owner email could be found
      */
     @PostMapping(path = "/group")
-    public Gruppe createGroup(@RequestBody CreateGroupBody body) {
+    public ResponseEntity<?> createGroup(@RequestBody CreateGroupBody body) {
         Optional<User> ownerOptional = userService.findUser(body.getOwnerEmail());
-        if (ownerOptional.isEmpty()) return null;
+        if (ownerOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User "+body.getOwnerEmail()+" not found");
         Gruppe group = new Gruppe();
         group.setId(UUID.randomUUID().toString());
         group.setGroupName(body.getGroupName());
         group.setOwner(ownerOptional.get());
-        return groupService.save(group);
+        groupService.save(group);
+        return ResponseEntity.status(HttpStatus.CREATED).body(group);
     }
 
     /**
@@ -130,8 +149,12 @@ public class GroupController {
      * @return returns true if the operation was successful
      */
     @DeleteMapping(path = "/group")
-    public boolean removeGroup(@RequestBody DeleteGroupBody body){
-        return groupService.deleteById(body.getValue());
+    public ResponseEntity<?> removeGroup(@RequestBody DeleteGroupBody body){
+        if(groupService.findById(body.getValue()).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No group with group id "+body.getValue()+" found!");
+        }
+        groupService.deleteById(body.getValue());
+        return ResponseEntity.status(HttpStatus.OK).body("Deleted group "+body.getValue());
     }
 
     /**
@@ -140,8 +163,8 @@ public class GroupController {
      * @return list of all groups in the database of this service
      */
     @GetMapping(path = "/group")
-    public List<Gruppe> getAllGroups() {
-        return groupService.findAll();
+    public ResponseEntity<?> getAllGroups() {
+        return ResponseEntity.status(HttpStatus.OK).body(groupService.findAll());
     }
 
     /**
@@ -154,15 +177,21 @@ public class GroupController {
      *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
      *      *                  "email":"max.mustermann@tu-ilmenau.de"
      *      *             }
-     * @return returns the group, including its new member
+     * @return returns the group, including its new member, if group and user are present
      */
     @PutMapping(path = "/group/add")
-    public Gruppe addMember(@RequestBody GroupAndUserBody body) {
-        Gruppe group = groupService.findById(body.getGroupId()).get();
-        User user = userService.findUser(body.getEmail()).get();
-        
-        group.addMember(user);
-        return groupService.save(group);
+    public ResponseEntity<?> addMember(@RequestBody GroupAndUserBody body) {
+        Optional<Gruppe> groupOptional = groupService.findById(body.getGroupId());
+        if (groupOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Group not found!");
+        Gruppe group = groupOptional.get();
+        if (userService.findUser(body.getEmail()).isPresent()) {
+            User user = userService.findUser(body.getEmail()).get();
+
+            group.addMember(user);
+            groupService.save(group);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully added user "+body.getEmail()+" to the group");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such user was found in the repository. Try adding user "+body.getEmail()+" to the repository first");
     }
 
     /**
@@ -177,12 +206,18 @@ public class GroupController {
      * @return the group, as it was saved in the database
      */
     @PutMapping(path = "/group/remove")
-    public Gruppe removeMember(@RequestBody GroupAndUserBody body) {
-        Gruppe group = groupService.findById(body.getGroupId()).get();
-        User user = userService.findUser(body.getEmail()).get();
+    public ResponseEntity<?> removeMember(@RequestBody GroupAndUserBody body) {
+        Optional<Gruppe> groupOptional = groupService.findById(body.getGroupId());
+        if(groupOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Group not found!");
+        Gruppe group = groupOptional.get();
+        if(userService.findUser(body.getEmail()).isPresent()) {
+            User user = userService.findUser(body.getEmail()).get();
 
-        group.removeMember(user);
-        return groupService.save(group);
+            group.removeMember(user);
+            groupService.save(group);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully removed member "+body.getEmail()+"from the group");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found in this group!");
     }
 
     /**
@@ -197,12 +232,18 @@ public class GroupController {
      * @return the group, as it was saved in the database
      */
     @PutMapping(path = "/group/promote")
-    public Gruppe promote(@RequestBody GroupAndUserBody body){
-        Gruppe group = groupService.findById(body.getGroupId()).get();
-        User user = userService.findUser(body.getEmail()).get();
-    
-        group.promote(user);
-        return groupService.save(group);
+    public ResponseEntity<?> promote(@RequestBody GroupAndUserBody body){
+        Optional<Gruppe> groupOptional = groupService.findById(body.getGroupId());
+        if(groupOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Group not found!");
+        Gruppe group = groupOptional.get();
+        if(userService.findUser(body.getEmail()).isPresent()) {
+            User user = userService.findUser(body.getEmail()).get();
+
+            group.promote(user);
+            groupService.save(group);
+            return ResponseEntity.status(HttpStatus.OK).body("Promoted user "+body.getEmail());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found in this group!");
     }
 
     /**
@@ -217,13 +258,19 @@ public class GroupController {
      * @return the group, as it was saved in the database
      */
     @PutMapping(path = "/group/demote")
-    public Gruppe demote(@RequestBody GroupAndUserBody body){
-        Gruppe group = groupService.findById(body.getGroupId()).get();
-        User user = userService.findUser(body.getEmail()).get();
+    public ResponseEntity<?> demote(@RequestBody GroupAndUserBody body){
+        Optional<Gruppe> groupOptional = groupService.findById(body.getGroupId());
+        if(groupOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Group not found!");
+        Gruppe group = groupOptional.get();
+        if(userService.findUser(body.getEmail()).isPresent()) {
+            User user = userService.findUser(body.getEmail()).get();
 
-        group.demote(user);
-        return groupService.save(group);
+            group.demote(user);
+            groupService.save(group);
+            return ResponseEntity.status(HttpStatus.OK).body("Demoted user "+body.getEmail());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found in this group!");
     }
     
-    // TODO: 5/31/20 as of now, admins cant be removed here, Should this be possible?
+    // TODO: 5/31/20 as of now, admins cant be removed here, Should this be possible? - IMO only the owner should be able to remove admins ~ Manu 6/04/20
 }
