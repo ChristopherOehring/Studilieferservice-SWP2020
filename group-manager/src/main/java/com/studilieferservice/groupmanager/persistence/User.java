@@ -42,8 +42,11 @@ public class User {
         else if(!isValidName(firstName) || !isValidName(lastName)) {
             System.out.println("You have to fill in both your first name and last name, also you may only use letters, dashes and spaces");
         }
-        else {
+        else if (!isValidEmailAddress(email)){
             System.out.println("This is no valid email address");
+        }
+        else {
+            System.out.println("Something wrong");
         }
     }
 
@@ -81,6 +84,7 @@ public class User {
     //Adresse ist erlaubt, wenn @ enthalten und nach @ mind. 1 zeichen und danach 1 punkt und noch mal mind. 1 zeichen
     //erlaubtes Email Format: https://help.xmatters.com/ondemand/trial/valid_email_format.htm
     public boolean isValidEmailAddress(String address) {
+        if(address==null) return false;
         int countAT = StringUtils.countOccurrencesOf(address, "@");
 
         if (countAT==1 && address.indexOf("@")>1) {
@@ -147,11 +151,13 @@ public class User {
     //Name darf nur Buchstaben, Striche und Leerzeichen (für Doppelnamen) enthalten, darf nicht leer sein
     public boolean isValidName(String name) {
         //darf weder am Anfang noch am Ende ein "-" haben, auch nicht zwei -- nacheinander
-        if(name.charAt(0)=='-'||name.charAt(name.length()-1)=='-' || name.contains("--")) {
-            return false;
-        }
-        if(!name.isBlank()) {
-            return name.matches("[a-zA-Z -]*");
+        if(name!=null) {
+            if (name.charAt(0) == '-' || name.charAt(name.length() - 1) == '-' || name.contains("--")) {
+                return false;
+            }
+            if (!name.isBlank()) {
+                return name.matches("[a-zA-Z -]*");
+            }
         }
         return false;
     }
