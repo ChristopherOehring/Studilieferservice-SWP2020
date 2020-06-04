@@ -1,5 +1,31 @@
+# Use postgres/example user/password credentials
 version: '3'
+
 services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: group-manager
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+    - 9002:8080
+    environment:
+      ADMINER_DESIGN: ng9
+#brade, pappu687
+# Hell-Pastell: esterka, ng9
+# DarkMode: galkaev
+# Colorful blue and green: lucas-sandery
+# Simple white to black scale: nette
+# very minimal: pepa-linha
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     ports:
