@@ -6,11 +6,13 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 // Useless for now as Users are saved in a string -> no! not anymore!!!
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Table(name = "nutzer")
 public class User {
 
     @Id
