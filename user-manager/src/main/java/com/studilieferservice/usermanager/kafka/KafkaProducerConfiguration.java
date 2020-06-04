@@ -23,7 +23,7 @@ public class KafkaProducerConfiguration {
 
     @Bean
     public NewTopic userTopic() {
-        return new NewTopic("userTopic", 4, (short) 1);
+        return new NewTopic("userTopic", 1, (short) 1);
     }
 
 

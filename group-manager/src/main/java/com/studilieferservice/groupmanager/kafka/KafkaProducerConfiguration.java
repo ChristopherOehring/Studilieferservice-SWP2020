@@ -7,6 +7,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -23,7 +24,7 @@ public class KafkaProducerConfiguration {
 
     @Bean
     public NewTopic groups() {
-        return new NewTopic("groupTopic", 4, (short) 1);
+        return new NewTopic("groupTopic", 1, (short) 1);
     }
 
 

@@ -4,10 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.UserService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+@Component
+@EnableKafka
 public class UserConsumer {
     private final UserService userService;
 
