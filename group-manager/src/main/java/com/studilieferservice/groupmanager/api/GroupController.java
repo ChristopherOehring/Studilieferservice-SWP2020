@@ -38,7 +38,7 @@ public class GroupController {
 
     /**
      * Adds a member to the Database of this Microservice.
-     * Can be reached with a POST request at /api/group-service/member
+     * Can be reached with a POST request at /api/group-service/user
      *
      * @param member A member in JsonFormat.
      *             Example:
@@ -50,35 +50,35 @@ public class GroupController {
      *             }
      * @return returns the added member
      */
-    @PostMapping(path = "/member")
-    public User addMember(@RequestBody User member) {
+    @PostMapping(path = "/user")
+    public User addUser(@RequestBody User member) {
         System.out.println("success");
         return userService.save(member);
     }
 
     /**
      * Removes a member from the Database
-     * Can be reached with a DELETE request at /api/group-service/member
+     * Can be reached with a DELETE request at /api/group-service/user
      *
      * @param email the email adress of the member
      * @return returns "Operation successfull" if there was no error
      * , even if there was no member with that id //TODO isn't that supposed to be a bug??
      */
-    @DeleteMapping(path = "/member")
-    public String removeMember(@RequestBody String email) {
+    @DeleteMapping(path = "/user")
+    public String addUser(@RequestBody String email) {
         System.out.println(email);
         userService.deleteUserById(email);
         return "operation successful";
     }
 
     /**
-     * Can be reached with a GET request at /api/group-service/member
+     * Can be reached with a GET request at /api/group-service/user
      *
      * @param email the email of the member that should be returned as <b>raw text</b>
      * @return the member with that email, if there is one, null otherwise
      */
-    @GetMapping(path = "/member")
-    public User getMember(@RequestBody GetUserBody email) {
+    @GetMapping(path = "/user")
+    public User getUser(@RequestBody GetUserBody email) {
         Optional<User> userOptional = userService.findUser(email.getValue());
         if (userOptional.isEmpty()) return null;
         return userOptional.get();
@@ -87,9 +87,9 @@ public class GroupController {
     /**
      * Can be reached with a GET request at /api/group-service/allMembers
      *
-     * @return returns all Members in the database of the group-manager Microservice
+     * @return returns all Users in the database of the group-manager Microservice
      */
-    @GetMapping(path = "/allMembers")
+    @GetMapping(path = "/allUsers")
     public List<User> getAllMembers() {
         return userService.getAllUsers();
     }
