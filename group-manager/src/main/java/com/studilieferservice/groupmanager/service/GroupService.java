@@ -2,12 +2,15 @@ package com.studilieferservice.groupmanager.service;
 
 import com.studilieferservice.groupmanager.persistence.Gruppe;
 import com.studilieferservice.groupmanager.persistence.JpaGroupRepository;
+import com.studilieferservice.groupmanager.persistence.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.studilieferservice.groupmanager.service.GroupEventType.*;
 
@@ -18,6 +21,9 @@ import static com.studilieferservice.groupmanager.service.GroupEventType.*;
  * findAll: gets you all groups with group ID, group name and all users
  * findById: no difference to findGroup - maybe we will remove one of these methods later on
  * deleteById: removes a group from the repository when given the group ID of the specific group
+ * findAllWhereOwner: returns all groups where the user of the given email is the Owner
+ * findAllWhereAdmin: returns all groups where the user of the given email is an Admin
+ * findAllWhereMember: returns only the groups where the user of the given email is a Member (not those where he is Admin)
  */
 @Service
 public class GroupService {
@@ -68,5 +74,41 @@ public class GroupService {
 
     public Optional<Gruppe> findById(String id) {
         return groupRepository.findById(id);
+    }
+
+    public List<Gruppe> findAllWhereOwner(String email) throws InvalidParameterException{
+        Optional<User> userOptional = userService.getUserById(email);
+        if(userOptional.isEmpty()) throw new InvalidParameterException();
+        User user = userOptional.get();
+
+        List<Gruppe> result = groupRepository.findAll();
+        result = result.stream()
+                .filter(g -> g.isOwner(user))
+                .collect(Collectors.toList());
+        return result;
+    }
+
+    public List<Gruppe> findAllWhereAdmin(String email) throws InvalidParameterException{
+        Optional<User> userOptional = userService.getUserById(email);
+        if(userOptional.isEmpty()) throw new InvalidParameterException();
+        User user = userOptional.get();
+
+        List<Gruppe> result = groupRepository.findAll();
+        result = result.stream()
+                .filter(g -> g.getAdmins().contains(user))
+                .collect(Collectors.toList());
+        return result;
+    }
+
+    public List<Gruppe> findAllWhereMember(String email) throws InvalidParameterException{
+        Optional<User> userOptional = userService.getUserById(email);
+        if(userOptional.isEmpty()) throw new InvalidParameterException();
+        User user = userOptional.get();
+
+        List<Gruppe> result = groupRepository.findAll();
+        result = result.stream()
+                .filter(g -> g.getMembers().contains(user))
+                .collect(Collectors.toList());
+        return result;
     }
 }

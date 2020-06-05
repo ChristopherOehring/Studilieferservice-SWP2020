@@ -21,11 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 /**
- * provides a web-controller at /web/group
+ * provides a web-controller at /web
  * A web controller returns html documents and is meant to be consumed via browser
  */
 
-@RequestMapping("/web/group")
+@RequestMapping("/web")
 @Controller
 public class WebController {
 
@@ -109,5 +109,13 @@ public class WebController {
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("http://localhost:8070/shoppingList/" + groupId);
         return redirectView;
+    }
+
+    @GetMapping("/myGroups/{userId}")
+    public String myGroups(Model model, @PathVariable("userId") String email) {
+        model.addAttribute("groupsWhereMember", groupService.findAllWhereMember(email));
+        model.addAttribute("groupsWhereAdmin", groupService.findAllWhereAdmin(email));
+        model.addAttribute("groupsWhereOwner", groupService.findAllWhereOwner(email));
+        return "myGroups";
     }
 }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/style.css" th:href="@{/style.css}"/>
+    <title>MyGroups</title>
+</head>
+<body>
+    <div class="columnLeft">
+        <div class="title">
+            MyGroups
+        </div>
+        <th:block th:each="gruppe: ${groupsWhereOwner}">
+            <div class="element">
+                <b><li th:text="*{gruppe.groupName}"> </li></b>
+            </div>
+        </th:block>
+        <th:block th:each="gruppe: ${groupsWhereAdmin}">
+            <div class="element">
+                <b><li th:text="*{gruppe.groupName}"> </li></b>
+            </div>
+        </th:block>
+        <th:block th:each="gruppe: ${groupsWhereMember}">
+            <div class="element">
+                <b><li th:text="*{gruppe.groupName}"> </li></b>
+            </div>
+        </th:block>
+    </div>
+</body>
+</html>
