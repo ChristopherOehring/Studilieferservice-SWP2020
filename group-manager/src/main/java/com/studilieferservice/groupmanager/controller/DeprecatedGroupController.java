@@ -68,7 +68,7 @@ public class DeprecatedGroupController {
         //Owner o = new Owner("test@testmail.com","Testo", "Testson"); //RIP Testo Testson
         User owner = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName(), body.getUserName());
         gruppe.setOwner(owner);
-        if (userService.findUser(owner.getEmail()).isEmpty()) {
+        if (userService.getUserById(owner.getEmail()).isEmpty()) {
             userService.save(owner);
         }
         return groupService.save(gruppe);
@@ -152,7 +152,7 @@ public class DeprecatedGroupController {
             }
             User u = new User(body.getUserID(), body.getUserFirstName(), body.getUserLastName(), body.getUserName());
             g.addMember(u);
-            if (userService.findUser(body.getUserID()).isEmpty()) {
+            if (userService.getUserById(body.getUserID()).isEmpty()) {
                 userService.save(u);
                 return "User added to repository and to group";
             }

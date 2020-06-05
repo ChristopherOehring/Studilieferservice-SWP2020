@@ -11,9 +11,8 @@ import java.util.Optional;
 /**
  * just a normal service for handling JpaRepositories
  * save: saves User to the repository
- * findUser: give it an UserID (String) and you get the User with first- and lastname (if this user exists)
  * getAllUsers: gets you all users
- * getUserById: no difference to findUser - why is it here?
+ * getUserById: give it an UserID (String) and you get the User with first- and lastname (if this user exists)
  * deleteUserById: removes an user from the repository when given the e-mail-address of the specific user
  */
 @Service
@@ -29,16 +28,12 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Optional<User> findUser(String id){
+    public Optional<User> getUserById(String id){
         return userRepository.findById(id);
     }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
-    }
-
-    public Optional<User> getUserById(String id) {
-        return userRepository.findById(id);
     }
 
     public void deleteUserById(String id) {
