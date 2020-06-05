@@ -1,4 +1,4 @@
-package com.studilieferservice.groupmanager.controller;
+package com.studilieferservice.groupmanager.controller.bodys;
 
 public class CreationForm {
     public String groupName;

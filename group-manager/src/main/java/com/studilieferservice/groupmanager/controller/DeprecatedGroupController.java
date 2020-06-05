@@ -1,5 +1,6 @@
 package com.studilieferservice.groupmanager.controller;
 
+import com.studilieferservice.groupmanager.controller.bodys.PutUserBody;
 import com.studilieferservice.groupmanager.persistence.Gruppe;
 import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.GroupService;
