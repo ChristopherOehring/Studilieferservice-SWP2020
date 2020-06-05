@@ -1,9 +1,9 @@
-package com.studilieferservice.groupmanager.api;
+package com.studilieferservice.groupmanager.controller;
 
-import com.studilieferservice.groupmanager.api.bodys.DeleteGroupBody;
-import com.studilieferservice.groupmanager.api.bodys.GetUserBody;
-import com.studilieferservice.groupmanager.api.bodys.CreateGroupBody;
-import com.studilieferservice.groupmanager.api.bodys.GroupAndUserBody;
+import com.studilieferservice.groupmanager.controller.bodys.DeleteGroupBody;
+import com.studilieferservice.groupmanager.controller.bodys.GetUserBody;
+import com.studilieferservice.groupmanager.controller.bodys.CreateGroupBody;
+import com.studilieferservice.groupmanager.controller.bodys.GroupAndUserBody;
 import com.studilieferservice.groupmanager.persistence.Gruppe;
 import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.GroupService;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

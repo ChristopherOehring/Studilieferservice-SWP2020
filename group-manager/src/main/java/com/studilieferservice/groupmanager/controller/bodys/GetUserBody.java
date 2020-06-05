@@ -1,11 +1,11 @@
-package com.studilieferservice.groupmanager.api.bodys;
+package com.studilieferservice.groupmanager.controller.bodys;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DeleteGroupBody {
+public class GetUserBody {
     private String value;
 
-    public DeleteGroupBody(@JsonProperty("groupId") String value){
+    public GetUserBody(@JsonProperty("email") String value){
             this.value = value;
         }
 

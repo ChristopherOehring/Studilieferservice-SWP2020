@@ -1,4 +1,4 @@
-package com.studilieferservice.groupmanager.api;
+package com.studilieferservice.groupmanager.controller;
 
 import com.studilieferservice.groupmanager.persistence.Gruppe;
 import com.studilieferservice.groupmanager.persistence.User;
