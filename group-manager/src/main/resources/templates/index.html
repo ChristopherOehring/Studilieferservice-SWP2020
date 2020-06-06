@@ -3,61 +3,175 @@
 
 <head>
     <meta charset="utf-8">
+    <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link rel="stylesheet" type="text/css" href="../static/style.css" th:href="@{/style.css}"/>
     <title>StudiLieferservice</title>
 </head>
 
 <body>
-    <div class="header">
-        <div class="logo">REWE</div>
-        <div class="logoAdd">StudiLieferservice</div>
-        <div class="headerTitle">Gruppenwahl</div>
+
+<h1>Groups</h1>
+
+<!-- ##############################################################################################-->
+<!-- ##############################################################################################-->
+
+
+<!-- ##################-->
+<!-- #### Column 1 ####-->
+<!-- ##################-->
+<div class="col1">
+
+    <!-- Subheading -->
+    <div class="subtitle">
+        <h2>My Groups</h2>
     </div>
 
-    <div class="columnLeft">
-        <div class="title">
-            Verfügbare Gruppen
+    <!-- Searchbar -->
+    <div class="col1Search">
+        <label for="myGroupSearch"></label>
+        <input type="text" name="myGroupSearch" id="myGroupSearch" placeholder="Search">
+    </div>
+
+    <!-- List -->
+    <th:block th:each="gruppe: ${groupList}">
+        <div class="list">
+            <!-- FIXME delete Demo Objects -->
+            <li>
+                <input id="radio_1" class="radio isHidden" name="test" type="radio">
+                <label for="radio_1" class="label">Test1</label>
+            </li>
+            <li>
+                <input id="radio_2" class="radio isHidden" name="test" type="radio">
+                <label for="radio_2" class="label">Test2</label>
+            </li>
+            <li>
+                <input id="radio_3" class="radio isHidden" name="test" type="radio">
+                <label for="radio_3" class="label">Test2</label>
+            </li>
+
+            <!-- List element -->
+            <li>
+                <input th:id="*{gruppe.id}" class="radio isHidden" name="listElement" type="radio">
+                <label th:for="*{gruppe.id}" class="label" th:text=*{gruppe.groupName}></label>
+            </li>
+
         </div>
 
-        <th:block th:each="gruppe: ${groupList}">
-            <div class="element">
-                <b><li th:text="*{gruppe.groupName}"> </li></b>
-
-                <form th:action="@{/web/group/getList}" method="GET">
-                    <input type="submit" value="Shopping List" />
-                    <input type="hidden" name="id" th:value="${gruppe.id}" />
-                </form>
+        <!-- Submit Button -->
+        <form th:action="@{/web/group/getList}" method="GET"> <!-- TODO adjust th:action -->
+            <div class="submitBox">
+                <input type="submit" value="continue" class="submitButton"/>
             </div>
-        </th:block>
+            <input type="hidden" name="id" th:value="${gruppe.id}" />
+        </form>
+    </th:block>
+
+</div>
+
+<!-- ##############################################################################################-->
+<!-- ##############################################################################################-->
+
+
+<!-- #################-->
+<!-- #### Column 2####-->
+<!-- #################-->
+
+<div class="col2">
+    <div class="subtitle">
+        <h2>Join Requests</h2>
     </div>
 
-    <div class="columnRight">
-        <div class="title">
-            Neue Gruppe erstellen
+    <th:block th:each="gruppe: ${requestList}"> <!-- TODO change request List to required keyword-->
+        <div class="reqList">
+
+
+            <li th:text>
+                <!-- TODO insert code -->
+            </li>
         </div>
+    </th:block>
+</div>
 
-        <div class="element">
-            <form th:action="@{/web/group/save-group}" th:object="${creationForm}" method="POST">
-                <div class="form-row">
-                    <div class="col-md-6 form-group">
-                        <label for="groupname">group name:</label> &emsp;
-                        <input type="text" class="form-control" id="groupname" th:field="*{groupName}">
-                    </div>
+<!-- #################-->
+<!-- #### Column 3 ###-->
+<!-- #################-->
 
-                    <div class="col-md-6 form-group">
-                        <label for="users">users:</label> &emsp;&emsp;&emsp;&emsp;
-                        <input type="text" class="form-control" id="users" th:field="*{users}">
-                    </div>
+<!-- ##############################################################################################-->
+<!-- ##############################################################################################-->
 
-                    <input type="submit" value="Hinzufügen">
-                </div>
-            </form>
+<div class="col3">
+    <div class="subtitle">
+        <h2>All Groups</h2>
+    </div>
+
+    <div class="col3Search">
+        <label for="allGroupSearch"></label>
+        <input type="text" name="allGroupSearch" id="allGroupSearch" placeholder="Search">
+    </div>
+
+    <th:block th:each="gruppe: ${groupList}">
+        <div class="list">
+
+            <!-- FIXME delete Demo Objects -->
+
+            <li>
+                <input id="radio_11" class="radio isHidden" name="test" type="radio">
+                <label for="radio_11" class="label">Test1</label>
+            </li>
+            <li>
+                <input id="radio_22" class="radio isHidden" name="test" type="radio">
+                <label for="radio_22" class="label">Test2</label>
+            </li>
+            <li>
+                <input id="radio_33" class="radio isHidden" name="test" type="radio">
+                <label for="radio_33" class="label">Test2</label>
+            </li>
+
+
+            <li>
+                <input th:id="*{gruppe.id}" class="radio isHidden" name="listElement" type="radio">
+                <label th:for="*{gruppe.id}" class="label" th:text=*{gruppe.groupName}></label>
+            </li>
+
         </div>
+        <form th:action="@{/web/group/getList}" method="GET"> <!-- TODO adjust th:action -->
+            <div class="submitBox">
+                <input type="submit" value="ask" class="submitButton"/>
+            </div>
+            <input type="hidden" name="id" th:value="${gruppe.id}" />
+        </form>
+    </th:block>
+</div>
+
+<!-- ##############################################################################################-->
+<!-- ##############################################################################################-->
+
+
+<!-- #################-->
+<!-- #### Column 4 ###-->
+<!-- #################-->
+
+<div class="col4">
+    <div class="subtitle">
+        <h2>Create new Group</h2>
     </div>
 
-    <div class="footer">
-        Impressum
+    <div class="createGroup">
+        <form th:action="@{/web/group/save-group}" th:object="${creationForm}" method="POST">
+            <div class="inputGroupName">
+                <input type="text" id="groupname" th:field="*{groupName}" placeholder="Groupname">
+            </div>
+
+            <input type="hidden" id="users" th:field="*{users}">
+
+            <div class="addGroup">
+                <input type="submit" value="add" class="submitButton">
+            </div>
+        </form>
     </div>
+</div>
+
 </body>
 
 </html>
