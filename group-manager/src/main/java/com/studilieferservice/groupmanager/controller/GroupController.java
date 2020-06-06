@@ -94,7 +94,7 @@ public class GroupController {
      * @param email the email of the member that should be returned as <b>raw text</b>
      * @return the member with that email, if there is one, null otherwise
      */
-    @GetMapping(path = "/member")
+    @GetMapping(path = "/user")
     public ResponseEntity<?> getUser(@RequestBody GetUserBody email) {
         Optional<User> userOptional = userService.getUserById(email.getValue());
         if (userOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email address "+email+" found!");
