@@ -12,8 +12,6 @@ public class GroupPayload {
     private List<String> userList;
 
     private List<String> adminList;
-    
-    private long version;
 
     public GroupPayload(String id, String groupName, String owner, List<String> userList,
                         List<String> adminList, long version) {
@@ -22,7 +20,6 @@ public class GroupPayload {
         this.owner = owner;
         this.userList = userList;
         this.adminList = adminList;
-        this.version = version;
     }
 
     public String getOwner() {
@@ -63,13 +60,5 @@ public class GroupPayload {
 
     public void setAdminList(List<String> adminList) {
         this.adminList = adminList;
-    }
-
-    public long getVersion() {
-        return version;
-    }
-
-    public void setVersion(long version) {
-        this.version = version;
     }
 }

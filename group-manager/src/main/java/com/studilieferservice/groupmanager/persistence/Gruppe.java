@@ -61,7 +61,7 @@ public class Gruppe {
         this.groupName = groupName;
     }
 
-    // TODO: 5/31/20 user -> member         aye, all is fixed ~ Manu 6/02/20
+
     public boolean addMember(User user) {
         if(owner.equals(user) || adminList.contains(user) || memberList.contains(user)) return false;
         version++;

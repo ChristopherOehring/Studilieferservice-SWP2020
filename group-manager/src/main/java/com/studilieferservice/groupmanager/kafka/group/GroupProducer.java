@@ -41,7 +41,7 @@ public class GroupProducer {
     @EventListener
     public void produceGroupEvent(GroupEvent event){
         GroupPayload payload = conversionService.convert(event.getGroup(), GroupPayload.class);
-        String message = createKafkaMessage(payload, event.getType());
+        String message = createKafkaMessage(event.getGroup().getVersion(), payload, event.getType());
         if(StringUtils.isEmpty(message)){
             System.out.println("Cannot send empty message");
             return;
@@ -52,14 +52,14 @@ public class GroupProducer {
     }
 
 
-    private String createKafkaMessage(GroupPayload payload, GroupEventType type) {
+    private String createKafkaMessage(Long version, GroupPayload payload, GroupEventType type) {
 
         GroupKafkaMessage message = new GroupKafkaMessage(
                 UUID.randomUUID().toString(),
                 payload.getId(),
                 ZonedDateTime.now(ZoneOffset.UTC).withNano(0).format(DateTimeFormatter.ISO_DATE_TIME),
                 type.name(),
-                payload.getVersion(),
+                version,
                 payload
         );
 
