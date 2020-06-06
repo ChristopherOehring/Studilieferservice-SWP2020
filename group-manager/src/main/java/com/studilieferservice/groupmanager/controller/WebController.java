@@ -41,7 +41,7 @@ public class WebController {
 
     /**
      * get request on .../index invokes the index.html of the group-manager
-     * @param model is used by thymeleaf in the html page to
+     * @param model is used by thymeleaf in the html page
      * @return returns "index" which results in invocation of the index.html
      */
     @GetMapping("/index")
@@ -111,11 +111,29 @@ public class WebController {
         return redirectView;
     }
 
+    /**
+     * can be used to display all the groups related to a user
+     * @param model is used by thymeleaf in the html page
+     * @param email the email address of the user
+     * @return returns "myGroups" which results in the invocation of the "myGroups" template
+     */
     @GetMapping("/myGroups/{userId}")
     public String myGroups(Model model, @PathVariable("userId") String email) {
         model.addAttribute("groupsWhereMember", groupService.findAllWhereMember(email));
         model.addAttribute("groupsWhereAdmin", groupService.findAllWhereAdmin(email));
         model.addAttribute("groupsWhereOwner", groupService.findAllWhereOwner(email));
         return "myGroups";
+    }
+
+    /**
+     * can be used to display all the groups related to a user
+     * @param model is used by thymeleaf in the html page
+     * @param email the email address of the user
+     * @return returns "otherGroups" which results in the invocation of the "otherGroups" template
+     */
+    @GetMapping("otherGroups/{userId}")
+    public String otherGroups(Model model, @PathVariable("userId") String email) {
+        model.addAttribute("otherGroups", groupService.findAllOther(email));
+        return "otherGroups";
     }
 }

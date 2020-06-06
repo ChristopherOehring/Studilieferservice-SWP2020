@@ -111,4 +111,16 @@ public class GroupService {
                 .collect(Collectors.toList());
         return result;
     }
+
+    public List<Gruppe> findAllOther(String email) throws InvalidParameterException{
+        Optional<User> userOptional = userService.getUserById(email);
+        if(userOptional.isEmpty()) throw new InvalidParameterException();
+        User user = userOptional.get();
+        List<Gruppe> result = groupRepository.findAll();
+
+        result = result.stream()
+                .filter(g -> g.getPermissions(user) == null)
+                .collect(Collectors.toList());
+        return result;
+    }
 }
