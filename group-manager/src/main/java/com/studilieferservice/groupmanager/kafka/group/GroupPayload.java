@@ -14,7 +14,7 @@ public class GroupPayload {
     private List<String> adminList;
 
     public GroupPayload(String id, String groupName, String owner, List<String> userList,
-                        List<String> adminList, long version) {
+                        List<String> adminList) {
         this.id = id;
         this.groupName = groupName;
         this.owner = owner;
