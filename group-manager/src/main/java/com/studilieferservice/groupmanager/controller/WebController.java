@@ -5,6 +5,7 @@ import com.studilieferservice.groupmanager.persistence.Gruppe;
 import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.GroupService;
 import com.studilieferservice.groupmanager.service.UserService;
+import org.apache.zookeeper.Op;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -65,7 +67,7 @@ public class WebController {
         gruppe.setGroupName(form.getGroupName());
         gruppe.setId(UUID.randomUUID().toString());
 
-        String[] users = form.getUsers()
+        String[] users = form.getUser()
                 .replace(" ", "")
                 .split(",");
 
@@ -135,5 +137,50 @@ public class WebController {
     public String otherGroups(Model model, @PathVariable("userId") String email) {
         model.addAttribute("otherGroups", groupService.findAllOther(email));
         return "otherGroups";
+    }
+
+    /**
+     * Meant to be used by a webpage to create a new group.
+     * @param model is used by thymeleaf in the html page
+     * @return A form to create a group
+     */
+    @GetMapping("/groupCreator")
+    public String groupCreator(Model model) {
+        model.addAttribute("creationForm", new CreationForm());
+        return "groupCreator";
+    }
+
+    /**
+     * called by through a browser by the creationForm from groupCreator(...)
+     * @param form the object containing the input from the form
+     * @return redirects back to the groupCreator page
+     */
+    @PostMapping("/newGroup")
+    public String newGroup(@ModelAttribute CreationForm form) {
+        System.out.println(form);
+        Gruppe group = new Gruppe();
+        group.setGroupName(form.getGroupName());
+
+        Optional<User> userOptional = userService.getUserById(form.getUser());
+        //TODO: how do we handle this error?
+        if (userOptional.isEmpty()) return "Error: Group owner could not be found in the database of this service";
+        User user = userOptional.get();
+        group.setOwner(user);
+        groupService.save(group);
+
+        //TODO: and where do we go afterwards?
+        return "redirect:groupCreator";
+    }
+
+    @GetMapping("/groupUsers/{groupId}")
+    public String getMembers(Model model, @PathVariable("groupId") String groupId) {
+        Optional<Gruppe> gruppeOptional = groupService.findById(groupId);
+        if (gruppeOptional.isEmpty()) return "Error: group could not be found";
+        Gruppe group = gruppeOptional.get();
+
+        model.addAttribute("owner", group.getOwner());
+        model.addAttribute("admins", group.getAdmins());
+        model.addAttribute("members", group.getMembers());
+        return "groupUsers";
     }
 }

@@ -2,7 +2,7 @@ package com.studilieferservice.groupmanager.controller.bodys;
 
 public class CreationForm {
     public String groupName;
-    public String users;
+    public String user;
 
     public String getGroupName() {
 
@@ -13,11 +13,19 @@ public class CreationForm {
         this.groupName = groupName;
     }
 
-    public String getUsers() {
-        return users;
+    public String getUser() {
+        return user;
     }
 
-    public void setUsers(String users) {
-        this.users = users;
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "CreationForm{" +
+                "groupName='" + groupName + '\'' +
+                ", user='" + user + '\'' +
+                '}';
     }
 }
