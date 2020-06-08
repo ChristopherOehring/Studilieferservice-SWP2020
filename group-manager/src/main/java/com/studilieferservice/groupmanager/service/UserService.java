@@ -28,11 +28,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Optional<User> getUserById(String id){
+    public Optional<User> findById(String id){
         return userRepository.findById(id);
     }
 
-    public List<User> getAllUsers() {
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 

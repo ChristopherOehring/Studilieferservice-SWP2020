@@ -77,7 +77,7 @@ public class GroupService {
     }
 
     public List<Gruppe> findAllWhereOwner(String email) throws InvalidParameterException{
-        Optional<User> userOptional = userService.getUserById(email);
+        Optional<User> userOptional = userService.findById(email);
         if(userOptional.isEmpty()) throw new InvalidParameterException();
         User user = userOptional.get();
 
@@ -89,7 +89,7 @@ public class GroupService {
     }
 
     public List<Gruppe> findAllWhereAdmin(String email) throws InvalidParameterException{
-        Optional<User> userOptional = userService.getUserById(email);
+        Optional<User> userOptional = userService.findById(email);
         if(userOptional.isEmpty()) throw new InvalidParameterException();
         User user = userOptional.get();
 
@@ -101,7 +101,7 @@ public class GroupService {
     }
 
     public List<Gruppe> findAllWhereMember(String email) throws InvalidParameterException{
-        Optional<User> userOptional = userService.getUserById(email);
+        Optional<User> userOptional = userService.findById(email);
         if(userOptional.isEmpty()) throw new InvalidParameterException();
         User user = userOptional.get();
 
@@ -113,7 +113,7 @@ public class GroupService {
     }
 
     public List<Gruppe> findAllOther(String email) throws InvalidParameterException{
-        Optional<User> userOptional = userService.getUserById(email);
+        Optional<User> userOptional = userService.findById(email);
         if(userOptional.isEmpty()) throw new InvalidParameterException();
         User user = userOptional.get();
         List<Gruppe> result = groupRepository.findAll();

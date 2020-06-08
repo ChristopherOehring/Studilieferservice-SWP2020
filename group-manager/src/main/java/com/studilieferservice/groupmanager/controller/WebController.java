@@ -161,7 +161,7 @@ public class WebController {
         Gruppe group = new Gruppe();
         group.setGroupName(form.getGroupName());
 
-        Optional<User> userOptional = userService.getUserById(form.getUser());
+        Optional<User> userOptional = userService.findById(form.getUser());
         //TODO: how do we handle this error?
         if (userOptional.isEmpty()) return "Error: Group owner could not be found in the database of this service";
         User user = userOptional.get();

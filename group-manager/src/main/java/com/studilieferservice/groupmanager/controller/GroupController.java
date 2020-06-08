@@ -55,7 +55,7 @@ public class GroupController {
     public ResponseEntity<?> addUser(@RequestBody User user) {
         System.out.println("success");
         if(user.isValidEmailAddress(user.getEmail()) && user.isValidName(user.getFirstName()) && user.isValidName(user.getLastName())) {
-            if (userService.getUserById(user.getEmail()).isPresent()) {
+            if (userService.findById(user.getEmail()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+user.getEmail()+" already saved as "+user.getUserName()+" with the name "+user.getFirstName()+" "+user.getLastName());
             }
             userService.save(user);
@@ -80,7 +80,7 @@ public class GroupController {
      */
     @DeleteMapping(path = "/user")
     public ResponseEntity<?> removeUser(@RequestBody String email) {
-        if(userService.getUserById(email).isEmpty()) {
+        if(userService.findById(email).isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email address "+email+" found!");
         }
         System.out.println(email);
@@ -96,7 +96,7 @@ public class GroupController {
      */
     @GetMapping(path = "/user")
     public ResponseEntity<?> getUser(@RequestBody GetUserBody email) {
-        Optional<User> userOptional = userService.getUserById(email.getValue());
+        Optional<User> userOptional = userService.findById(email.getValue());
         if (userOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email address "+email+" found!");
         return ResponseEntity.status(HttpStatus.OK).body(userOptional.get());
     }
@@ -108,7 +108,7 @@ public class GroupController {
      */
     @GetMapping(path = "/allUsers")
     public ResponseEntity<?> getAllUsers() {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
     }
 
 //Groups
@@ -127,7 +127,7 @@ public class GroupController {
      */
     @PostMapping(path = "/group")
     public ResponseEntity<?> createGroup(@RequestBody CreateGroupBody body) {
-        Optional<User> ownerOptional = userService.getUserById(body.getOwnerEmail());
+        Optional<User> ownerOptional = userService.findById(body.getOwnerEmail());
         if (ownerOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User "+body.getOwnerEmail()+" not found");
         Gruppe group = new Gruppe();
         group.setId(UUID.randomUUID().toString());
@@ -183,8 +183,8 @@ public class GroupController {
         Optional<Gruppe> groupOptional = groupService.findById(body.getGroupId());
         if (groupOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Group not found!");
         Gruppe group = groupOptional.get();
-        if (userService.getUserById(body.getEmail()).isPresent()) {
-            User user = userService.getUserById(body.getEmail()).get();
+        if (userService.findById(body.getEmail()).isPresent()) {
+            User user = userService.findById(body.getEmail()).get();
 
             group.addMember(user);
             groupService.save(group);
@@ -209,8 +209,8 @@ public class GroupController {
         Optional<Gruppe> groupOptional = groupService.findById(body.getGroupId());
         if(groupOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Group not found!");
         Gruppe group = groupOptional.get();
-        if(userService.getUserById(body.getEmail()).isPresent()) {
-            User user = userService.getUserById(body.getEmail()).get();
+        if(userService.findById(body.getEmail()).isPresent()) {
+            User user = userService.findById(body.getEmail()).get();
 
             group.removeMember(user);
             groupService.save(group);
@@ -235,8 +235,8 @@ public class GroupController {
         Optional<Gruppe> groupOptional = groupService.findById(body.getGroupId());
         if(groupOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Group not found!");
         Gruppe group = groupOptional.get();
-        if(userService.getUserById(body.getEmail()).isPresent()) {
-            User user = userService.getUserById(body.getEmail()).get();
+        if(userService.findById(body.getEmail()).isPresent()) {
+            User user = userService.findById(body.getEmail()).get();
 
             group.promote(user);
             groupService.save(group);
@@ -261,8 +261,8 @@ public class GroupController {
         Optional<Gruppe> groupOptional = groupService.findById(body.getGroupId());
         if(groupOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Group not found!");
         Gruppe group = groupOptional.get();
-        if(userService.getUserById(body.getEmail()).isPresent()) {
-            User user = userService.getUserById(body.getEmail()).get();
+        if(userService.findById(body.getEmail()).isPresent()) {
+            User user = userService.findById(body.getEmail()).get();
 
             group.demote(user);
             groupService.save(group);
