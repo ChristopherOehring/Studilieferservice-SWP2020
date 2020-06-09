@@ -148,18 +148,6 @@ public class WebController {
     }
 
     /**
-     * can be used to display all the groups related to a user
-     * @param model is used by thymeleaf in the html page
-     * @param email the email address of the user
-     * @return returns "otherGroups" which results in the invocation of the "otherGroups" template
-     */
-    @GetMapping("otherGroups/{userId}")
-    public String otherGroups(Model model, @PathVariable("userId") String email) {
-        model.addAttribute("otherGroups", groupService.findAllOther(email));
-        return "otherGroups";
-    }
-
-    /**
      * called by through a browser by the creationForm from groupCreator(...)
      * @param form the object containing the input from the form
      * @return redirects back to the groupCreator page
