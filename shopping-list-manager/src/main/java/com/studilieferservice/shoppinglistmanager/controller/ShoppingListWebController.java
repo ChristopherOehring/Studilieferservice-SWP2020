@@ -39,12 +39,12 @@ public class ShoppingListWebController {
     @GetMapping("/{groupId}")
     public String getShoppingListByGroupId(@PathVariable String groupId, Model model) {
 
-        model.addAttribute("shoppingList", shoppingListService.getShoppingListByGroupId(groupId));
+        model.addAttribute("shoppingList", shoppingListService.getAllShoppingListsByGroupId(groupId));
         model.addAttribute("item", new Item());
 
         return "list";
     }
-
+/*
     /**
      * Web request (POST) for "/addItem": adds an item to the shopping list that is currently being displayed.
      * @param item the {@link Item} that will be added to the {@link ShoppingList}
@@ -52,7 +52,7 @@ public class ShoppingListWebController {
      * @return a redirection to {@link #getShoppingListByGroupId(String, Model) getShoppingListByGroupId} with the current group-ID
      */
     //HttpServletRequest is used in here for getting values from hidden fields (groupId)
-    @PostMapping("/addItem")
+ /*   @PostMapping("/addItem")
     public String addItem(Item item, HttpServletRequest request) {
 
         ShoppingList shoppingList = shoppingListService.getShoppingListByGroupId(request.getParameter("groupId"));
@@ -66,5 +66,5 @@ public class ShoppingListWebController {
         itemService.createItem(item);
 
         return "redirect:" + shoppingList.getGroupId();
-    }
+    } */
 }

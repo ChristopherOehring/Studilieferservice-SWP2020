@@ -1,10 +1,11 @@
 package com.studilieferservice.shoppinglistmanager.item;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.studilieferservice.shoppinglistmanager.shoppinglist.ShoppingList;
+import com.studilieferservice.shoppinglistmanager.relation.ItemShoppingList;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Item {
@@ -16,27 +17,22 @@ public class Item {
     @NotNull
     private String name;
 
-    //maybe could be manyToMany later when items are unique as well (need to implement product-manager for that)
-    @ManyToOne
-    @JsonBackReference //to avoid recursion in json
-    private ShoppingList shoppingList;
+    @NotNull
+    private double price;
+
+    //actually a ManyToMany relation
+    @OneToMany(mappedBy = "item")
+    private List<ItemShoppingList> shoppingLists = new ArrayList<>();
 
     public Item() {}
 
-    public Item(String name) {
+    public Item(String name, double price) {
         this.name = name;
+        this.price = price;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public ShoppingList getShoppingList() {
-        return shoppingList;
-    }
-
-    public void setShoppingList(ShoppingList shoppingList) {
-        this.shoppingList = shoppingList;
     }
 
     public String getName() {
@@ -47,10 +43,32 @@ public class Item {
         this.name = name;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public List<ItemShoppingList> getShoppingLists() {
+        return shoppingLists;
+    }
+
+//    public void addShoppingList(ShoppingList shoppingList) {
+//        shoppingLists.add(shoppingList);
+//        shoppingList.getItems().add(this);
+//    }
+
+//    public void removeShoppingList(ShoppingList shoppingList) {
+//        shoppingList.getItems().remove(this);
+//        shoppingLists.remove(shoppingList);
+//    }
+
     @Override
     public String toString() {
         return String.format(
-                "Item [id=%d, name='%s', shoppingListId='%d', shoppingListGroupName='%s', shoppingListGroupId='%s']",
-                id, name, shoppingList.getId(), shoppingList.getGroupName(), shoppingList.getGroupId());
+                "Item [id='%s', name='%s', price='%s'€]", //%1$,.2f
+                id, name, price);
     }
 }
