@@ -4,9 +4,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 // TODO: 5/31/20 Fix the version, so that it only goes up by one if something actually changes. (not important)
-@Entity(name = "gruppe")
+@Entity(name = "Gruppe")
+@Table(name = "gruppe")
 public class Gruppe {
     /**
      * basic structure for groups
@@ -16,6 +18,7 @@ public class Gruppe {
      */
 
     @Id
+    @Column(name = "group_id")
     private String id;
 
     @NotNull
@@ -29,6 +32,13 @@ public class Gruppe {
 
     @ManyToMany
     private List<User> adminList = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "group",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    List<Invite> invites = new ArrayList<>();
     
     private long version;
 
@@ -60,7 +70,6 @@ public class Gruppe {
         version++;
         this.groupName = groupName;
     }
-
 
     public boolean addMember(User user) {
         if(owner.equals(user) || adminList.contains(user) || memberList.contains(user)) return false;
@@ -152,5 +161,53 @@ public class Gruppe {
 
     public User getOwner() {
         return owner;
+    }
+
+    public List<Invite> getInvites() {
+        return invites;
+    }
+
+    public void setInvites(List<Invite> invites) {
+        this.invites = invites;
+    }
+
+    public boolean addInvite(Invite invite){
+        return invites.add(invite);
+    }
+
+    public boolean removeInvite(Invite invite) {
+        return invites.remove(invite);
+    }
+
+    @Override
+    public String toString() {
+        return "Gruppe{" +
+                "id='" + id + '\'' +
+                ", groupName='" + groupName + '\'' +
+                ", owner=" + owner +
+                ", memberList=" + memberList +
+                ", adminList=" + adminList +
+                ", invites=" + invites +
+                ", version=" + version +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Gruppe gruppe = (Gruppe) o;
+        return version == gruppe.version &&
+                id.equals(gruppe.id) &&
+                groupName.equals(gruppe.groupName) &&
+                owner.equals(gruppe.owner) &&
+                Objects.equals(memberList, gruppe.memberList) &&
+                Objects.equals(adminList, gruppe.adminList) &&
+                Objects.equals(invites, gruppe.invites);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, groupName, owner, memberList, adminList, invites, version);
     }
 }

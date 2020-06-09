@@ -5,10 +5,10 @@ import com.studilieferservice.groupmanager.persistence.Gruppe;
 import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.GroupService;
 import com.studilieferservice.groupmanager.service.UserService;
-import org.apache.zookeeper.Op;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -33,25 +33,53 @@ public class WebController {
 
     private final GroupService groupService;
     private final UserService userService;
+    private String groupManagerSrc;
 
 
     @Autowired
-    public WebController(GroupService groupService, UserService userService){
+    public WebController(GroupService groupService,
+                         UserService userService,
+                         final @Value("${group-manager-src}") String groupManagerSrc) {
         this.groupService = groupService;
         this.userService = userService;
+        this.groupManagerSrc = groupManagerSrc;
     }
 
     /**
-     * get request on .../index invokes the index.html of the group-manager
+     * get request on .../index invokes the userMenu.html of the group-manager
      * @param model is used by thymeleaf in the html page
-     * @return returns "index" which results in invocation of the index.html
+     * @return returns "index" which results in invocation of the userMenu.html
      */
     @GetMapping("/index")
     public String index(Model model) {
         model.addAttribute("groupList", groupService.findAll());
         model.addAttribute("creationForm", new CreationForm());
-        return "index";
+        model.addAttribute("groupManagerSrc", groupManagerSrc);
+        return "userMenu";
     }
+
+    @GetMapping("/userMenu/{userEmail}")
+    public String userMenu(Model model,
+                        @PathVariable("userEmail") String email) {
+
+        Optional<User> optionalUser = userService.findById(email);
+        if(optionalUser.isEmpty()) System.out.println("Error 404: user \"" + email + "\" not found");
+        User user = optionalUser.get();
+
+        model.addAttribute("creationForm", new CreationForm());
+
+        model.addAttribute("groupsWhereMember", groupService.findAllWhereMember(email));
+        model.addAttribute("groupsWhereAdmin", groupService.findAllWhereAdmin(email));
+        model.addAttribute("groupsWhereOwner", groupService.findAllWhereOwner(email));
+
+        model.addAttribute("invites", user.getInvites());
+        System.out.println(user.getInvites());
+        model.addAttribute("user", email);
+
+        model.addAttribute("groupManagerSrc", groupManagerSrc);
+        return "userMenu";
+    }
+
 
     /**
      * Meant to be used by a webpage to create a new group. Will redirect to the index afterwards.
@@ -117,37 +145,12 @@ public class WebController {
      * can be used to display all the groups related to a user
      * @param model is used by thymeleaf in the html page
      * @param email the email address of the user
-     * @return returns "myGroups" which results in the invocation of the "myGroups" template
-     */
-    @GetMapping("/myGroups/{userId}")
-    public String myGroups(Model model, @PathVariable("userId") String email) {
-        model.addAttribute("groupsWhereMember", groupService.findAllWhereMember(email));
-        model.addAttribute("groupsWhereAdmin", groupService.findAllWhereAdmin(email));
-        model.addAttribute("groupsWhereOwner", groupService.findAllWhereOwner(email));
-        return "myGroups";
-    }
-
-    /**
-     * can be used to display all the groups related to a user
-     * @param model is used by thymeleaf in the html page
-     * @param email the email address of the user
      * @return returns "otherGroups" which results in the invocation of the "otherGroups" template
      */
     @GetMapping("otherGroups/{userId}")
     public String otherGroups(Model model, @PathVariable("userId") String email) {
         model.addAttribute("otherGroups", groupService.findAllOther(email));
         return "otherGroups";
-    }
-
-    /**
-     * Meant to be used by a webpage to create a new group.
-     * @param model is used by thymeleaf in the html page
-     * @return A form to create a group
-     */
-    @GetMapping("/groupCreator")
-    public String groupCreator(Model model) {
-        model.addAttribute("creationForm", new CreationForm());
-        return "groupCreator";
     }
 
     /**
@@ -168,7 +171,7 @@ public class WebController {
         group.setOwner(user);
         groupService.save(group);
 
-        //TODO: and where do we go afterwards?
+//TODO: and where do we go afterwards?
         return "redirect:groupCreator";
     }
 

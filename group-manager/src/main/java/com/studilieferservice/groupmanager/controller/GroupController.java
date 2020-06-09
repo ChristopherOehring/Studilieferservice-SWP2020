@@ -5,14 +5,17 @@ import com.studilieferservice.groupmanager.controller.bodys.GetUserBody;
 import com.studilieferservice.groupmanager.controller.bodys.CreateGroupBody;
 import com.studilieferservice.groupmanager.controller.bodys.GroupAndUserBody;
 import com.studilieferservice.groupmanager.persistence.Gruppe;
+import com.studilieferservice.groupmanager.persistence.Invite;
 import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.GroupService;
+import com.studilieferservice.groupmanager.service.InviteService;
 import com.studilieferservice.groupmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,11 +31,13 @@ import java.util.UUID;
 public class GroupController {
     private final GroupService groupService;
     private final UserService userService;
+    private final InviteService inviteService;
 
     @Autowired
-    public GroupController(GroupService groupService, UserService userService) {
+    public GroupController(GroupService groupService, UserService userService, InviteService inviteService) {
         this.groupService = groupService;
         this.userService = userService;
+        this.inviteService = inviteService;
     }
 
 //Users
@@ -270,6 +275,43 @@ public class GroupController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found in this group!");
     }
-    
+
+    @PostMapping(path = "/invite")
+    public ResponseEntity addInvite(@RequestBody GroupAndUserBody body) {
+        Optional<User> optionalUser = userService.findById(body.getEmail());
+        if(optionalUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found!");
+        User user = optionalUser.get();
+
+        Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
+        if (optionalGruppe.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No group with id "+body.getGroupId()+" was found!");
+        Gruppe gruppe = optionalGruppe.get();
+
+        Invite invite = new Invite(gruppe, user);
+        inviteService.addInvite(invite);
+
+        System.out.println(Arrays.toString(user.getInvites().toArray()));
+        return ResponseEntity.status(HttpStatus.OK).body("Added Invite from " + gruppe.getGroupName() + " to " + user.getUserName());
+    }
+
+    @DeleteMapping(path = "/invite")
+    public ResponseEntity removeInvite(@RequestBody GroupAndUserBody body) {
+        Optional<User> optionalUser = userService.findById(body.getEmail());
+        if(optionalUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found!");
+        User user = optionalUser.get();
+
+        Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
+        if (optionalGruppe.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No group with id "+body.getGroupId()+" was found!");
+        Gruppe gruppe = optionalGruppe.get();
+
+        Optional<Invite> optionalInvite =
+                user.getInvites().stream()
+                        .filter(invite -> invite.getGroup().equals(gruppe) && invite.getUser().equals(user))
+                        .findFirst();
+        if (optionalInvite.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No corresponding invite was found!");
+        inviteService.removeInvite(optionalInvite.get());
+
+        System.out.println(Arrays.toString(user.getInvites().toArray()));
+        return ResponseEntity.status(HttpStatus.OK).body("Removed Invite from " + gruppe.getGroupName() + " to " + user.getUserName());
+    }
     // TODO: 5/31/20 as of now, admins cant be removed here, Should this be possible? - IMO only the owner should be able to remove admins ~ Manu 6/04/20
 }

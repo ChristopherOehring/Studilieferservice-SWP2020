@@ -43,7 +43,7 @@ h1{   /*h1 is the heading "Groups"*/
     position: fixed;
     width: 20%;
     height: var(--colHeight);
-    left: 2.5%;
+    left: 10%;
     top: var(--colTopMargin);
 }
 
@@ -51,7 +51,7 @@ h1{   /*h1 is the heading "Groups"*/
     position: fixed;
     width: 20%;
     height: var(--colHeight);
-    left: 27.5%;
+    left: 40%;
     top: var(--colTopMargin);
 }
 
@@ -59,15 +59,7 @@ h1{   /*h1 is the heading "Groups"*/
     position: fixed;
     width: 20%;
     height: var(--colHeight);
-    right: 27.5%;
-    top: var(--colTopMargin);
-}
-
-.col4{ /*Create new Group - Column*/
-    position: fixed;
-    width: 20%;
-    height: var(--colHeight);
-    right: 2.5%;
+    right: 10%;
     top: var(--colTopMargin);
 }
 

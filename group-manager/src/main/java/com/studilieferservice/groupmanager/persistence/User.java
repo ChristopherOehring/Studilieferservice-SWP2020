@@ -4,18 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 // Useless for now as Users are saved in a string -> no! not anymore!!!
 
-@Entity
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Entity(name = "Nutzer")
 @Table(name = "nutzer")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
     @Id
+    @Column(name = "email")
     private String email;
 
     private String firstName;
@@ -23,6 +25,13 @@ public class User {
     private String lastName;
 
     private String userName;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    List<Invite> invites = new ArrayList<>();
 
     /**
      * just another constructor for creating users
@@ -53,11 +62,9 @@ public class User {
     }
 
     /**
-     * It looks like this constructor isn't used, but it is necessary, because a default constructor is needed (InstantiationException: No default constructor for entity)
+     * Default constructor required by jpa
      */
-    public User() {
-
-    }
+    public User() {    }
 
     public String getEmail() {
         return email;
@@ -193,5 +200,45 @@ public class User {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public List<Invite> getInvites() {
+        return invites;
+    }
+
+    public boolean addInvite(Invite invite){
+        return invites.add(invite);
+    }
+
+    public boolean removeInvite(Invite invite) {
+        return invites.remove(invite);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", userName='" + userName + '\'' +
+                ", invites=" + invites +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return email.equals(user.email) &&
+                firstName.equals(user.firstName) &&
+                lastName.equals(user.lastName) &&
+                Objects.equals(userName, user.userName) &&
+                invites.equals(user.invites);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, firstName, lastName, userName, invites);
     }
 }
