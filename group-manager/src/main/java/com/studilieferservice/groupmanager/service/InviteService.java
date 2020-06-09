@@ -28,7 +28,6 @@ public class InviteService {
     }
 
     public void removeInvite(Invite invite){
-
         User user = invite.getUser();
         user.removeInvite(invite);
         userService.save(user);

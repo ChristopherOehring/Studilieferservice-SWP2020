@@ -1,5 +1,6 @@
 package com.studilieferservice.groupmanager.persistence;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.util.StringUtils;
@@ -26,8 +27,12 @@ public class User {
 
     private String lastName;
 
+    /**
+     * the user's screen name
+     */
     private String userName;
 
+    @JsonIgnore
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -36,7 +41,7 @@ public class User {
     List<Invite> invites = new ArrayList<>();
 
     /**
-     * just another constructor for creating users
+     * The constructor for creating users
      * @param email user-id, which has to be a valid email address
      * @param firstName user's first name
      * @param lastName user's last name

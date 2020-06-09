@@ -47,13 +47,15 @@ public class GroupController {
      * Can be reached with a POST request at /api/group-service/user
      *
      * @param user A member in JsonFormat.
-     *             Example:
-     *             {
-     *             "email":"max.mustermann@tu-ilmenau.de",
-     *             "firstname":"Max",
-     *             "lastname":"Mustermann",
-     *             "username": "Moritz"
-     *             }
+     * <pre>
+    Example:
+    {
+        "email":"max.mustermann@tu-ilmenau.de",
+        "firstname":"Max",
+        "lastname":"Mustermann",
+        "username": "Moritz"
+    }
+     * </pre>
      * @return returns the added member
      */
     @PostMapping(path = "/user")
@@ -81,8 +83,9 @@ public class GroupController {
      *
      * @param email the email adress of the member
      * @return returns "Operation successfull" if there was no error
-     * , even if there was no member with that id //TODO isn't that supposed to be a bug?? ~ Manu 6/04/20
+     * , even if there was no member with that id
      */
+    //TODO isn't that supposed to be a bug?? ~ Manu 6/04/20
     @DeleteMapping(path = "/user")
     public ResponseEntity<?> removeUser(@RequestBody String email) {
         if(userService.findById(email).isEmpty()) {
@@ -119,15 +122,17 @@ public class GroupController {
 //Groups
 
     /**
-     * Can be used to create a group
-     * Can be reached with a POST request at /api/group-service/group
+     * Can be used to create a group. <br>
+     * Can be reached with a POST request at /api/group-service/group.
      *
      * @param body A GroupCreationBody wich contains the groupName and the email of the owner
-     *             Example:
-     *             {
-     *             "groupName":"SWP",
-     *             "email":"max.mustermann@tu-ilmenau.de"
-     *             }
+    <pre>
+        Example:
+            {
+                "groupName":"SWP",
+                "email":"max.mustermann@tu-ilmenau.de"
+            }
+    </pre>
      * @return The group, if it was successfully created, error message, if no user with the owner email could be found
      */
     @PostMapping(path = "/group")
@@ -143,13 +148,15 @@ public class GroupController {
     }
 
     /**
-     * Can be Used to delete a group
+     * Can be Used to delete a group <br>
      * Can be reached with a DELETE request at /api/group-service/group
      * @param body contains the "groupId" as json
-     *             Example:
-     *             {
-     *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163"
-     *             }
+    <pre>
+        Example:
+            {
+                "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163"
+            }
+    </pre>
      * @return returns true if the operation was successful
      */
     @DeleteMapping(path = "/group")
@@ -162,7 +169,7 @@ public class GroupController {
     }
 
     /**
-     * Can be used to get all groups
+     * Can be used to get all groups <br>
      * Can be reached with a GET request at /api/group-service/group
      * @return list of all groups in the database of this service
      */
@@ -172,15 +179,10 @@ public class GroupController {
     }
 
     /**
-     * Can be used to add a user (from the database) to the list of members of a specific Group
-     * Can be reached with a PUT request at /api/group-service/group/add
+     * Can be used to add a user (from the database) to the list of members of a specific Group <br>
+     * Can be reached with a PUT request at /api/group-service/group/add <br>
      * Parameters are sent via a JSON body in the http request
-     * @param body A GroupAndUserBody, wich contains the groupId and the identifying email of the user
-     *      *             Example:
-     *      *             {
-     *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
-     *      *                  "email":"max.mustermann@tu-ilmenau.de"
-     *      *             }
+     * @param body A {@link GroupAndUserBody}, which contains the groupId and the identifying email of the user
      * @return returns the group, including its new member, if group and user are present
      */
     @PutMapping(path = "/group/add")
@@ -199,14 +201,9 @@ public class GroupController {
     }
 
     /**
-     * Removes a user from a group
+     * Removes a user from a group <br>
      * Can be reached with a PUT request at /api/group-service/group/remove
-     * @param body A GroupAndUserBody, wich contains the groupId and the identifying email of the user
-     *      *             Example:
-     *      *             {
-     *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
-     *      *                  "email":"max.mustermann@tu-ilmenau.de"
-     *      *             }
+     * @param body A {@link GroupAndUserBody}, which contains the groupId and the identifying email of the user
      * @return the group, as it was saved in the database
      */
     @PutMapping(path = "/group/remove")
@@ -225,14 +222,9 @@ public class GroupController {
     }
 
     /**
-     * Promotes a member of a group to admin
+     * Promotes a member of a group to admin <br>
      * Can be reached with a PUT request at /api/group-service/group/promote
-     * @param body A GroupAndUserBody, wich contains the groupId and the identifying email of the user
-     *      *             Example:
-     *      *             {
-     *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
-     *      *                  "email":"max.mustermann@tu-ilmenau.de"
-     *      *             }
+     * @param body A {@link GroupAndUserBody}, which contains the groupId and the identifying email of the user
      * @return the group, as it was saved in the database
      */
     @PutMapping(path = "/group/promote")
@@ -251,14 +243,9 @@ public class GroupController {
     }
 
     /**
-     * Demotes a admin of a group to member
+     * Demotes a admin of a group to member <br>
      * Can be reached with a PUT request at /api/group-service/group/promote
-     * @param body A GroupAndUserBody, which contains the groupId and the identifying email of the user
-     *      *             Example:
-     *      *             {
-     *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
-     *      *                  "email":"max.mustermann@tu-ilmenau.de"
-     *      *             }
+     * @param body A {@link GroupAndUserBody}, which contains the groupId and the identifying email of the user
      * @return A ResponseEntity, indicating whether the demotion was successful
      */
     @PutMapping(path = "/group/demote")
@@ -277,18 +264,13 @@ public class GroupController {
     }
 
     /**
-     * Creates an Invite
+     * Creates an Invite <br>
      * Can be reached with a POST request at /api/group-service/invite
-     * @param body A GroupAndUserBody, which contains the groupId and the identifying email of the user
-     *      *             Example:
-     *      *             {
-     *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
-     *      *                  "email":"max.mustermann@tu-ilmenau.de"
-     *      *             }
+     * @param body A {@link GroupAndUserBody}, which contains the groupId and the identifying email of the user
      * @return A ResponseEntity, indicating whether the Creation of the Invite was successfully created
      */
     @PostMapping(path = "/invite")
-    public ResponseEntity addInvite(@RequestBody GroupAndUserBody body) {
+    public ResponseEntity<?> addInvite(@RequestBody GroupAndUserBody body) {
         Optional<User> optionalUser = userService.findById(body.getEmail());
         if(optionalUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found!");
         User user = optionalUser.get();
@@ -305,18 +287,13 @@ public class GroupController {
     }
 
     /**
-     * Deletes an Invite
+     * Deletes an Invite <br>
      * Can be reached with a DELETE request at /api/group-service/invite
-     * @param body A GroupAndUserBody, which contains the groupId and the identifying email of the user
-     *      *             Example:
-     *      *             {
-     *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
-     *      *                  "email":"max.mustermann@tu-ilmenau.de"
-     *      *             }
+     * @param body A {@link GroupAndUserBody}, which contains the groupId and the identifying email of the user
      * @return A ResponseEntity, indicating whether the Deletion was successfully created
      */
     @DeleteMapping(path = "/invite")
-    public ResponseEntity removeInvite(@RequestBody GroupAndUserBody body) {
+    public ResponseEntity<?> removeInvite(@RequestBody GroupAndUserBody body) {
         Optional<User> optionalUser = userService.findById(body.getEmail());
         if(optionalUser.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found!");
         User user = optionalUser.get();

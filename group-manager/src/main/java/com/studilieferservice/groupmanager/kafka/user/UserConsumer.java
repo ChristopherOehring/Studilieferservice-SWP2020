@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
- * This Component consumes KafkaMessages on the topic: "usersTopic"
+ * This Component consumes KafkaMessages on the topic: "usersTopic" <br>
  * These messages are created in the user-manager
  */
 

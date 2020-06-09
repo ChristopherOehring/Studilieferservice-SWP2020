@@ -1,5 +1,6 @@
 package com.studilieferservice.groupmanager.persistence;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.studilieferservice.groupmanager.service.GroupService;
 
 import javax.persistence.*;
@@ -15,10 +16,12 @@ public class Invite {
     @EmbeddedId
     private InviteId id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("groupId")
     private Gruppe group;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("email")
     private User user;

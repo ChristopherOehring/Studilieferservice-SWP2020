@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * Has to be implemented to enable the use of
  * {@link org.springframework.core.convert.ConversionService#convert(java.lang.Object, java.lang.Class)}
- * to convert Groups to groupPayloads
+ * to convert objects of {@link Gruppe} to objects of {@link Gruppe}
  */
 
 @Component

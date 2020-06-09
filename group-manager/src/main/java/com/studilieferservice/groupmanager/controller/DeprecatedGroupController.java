@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import java.util.*;
 
 /**
+ * @deprecated
  * Rest-Controller: provides a rest api at /api/group
  * @version 1.0
  */
@@ -25,6 +26,7 @@ import java.util.*;
     * Nutzer können danach per Id hinzugefügt werden
     !So etwas solle soweit möglich per GroupService geregelt werden!
  */
+
 
 @RequestMapping("api/group")
 @RestController
@@ -46,13 +48,15 @@ public class DeprecatedGroupController {
 
     /**
      * Creating a group via POST at api/group/{name} with only one user in the beginning, determined by a body in JSON-format like that:
+     * <pre>
      *      {
      *           "id":"group-id",
      *           "user":"user-mail-address",
      *           "firstname":"some first name",
      *           "lastname":"some last name"
      *      }
-     * Requesting user is promoted to owner and admin
+     * </pre>
+     * The requested user is promoted to owner and admin.
      * There is always only one owner and never less
      * @param name Name of the Group you want to create
      * @return new group gets saved as a new group in GroupRepository with a randomly generated UUID

@@ -4,7 +4,7 @@ import com.studilieferservice.groupmanager.persistence.Gruppe;
 import org.springframework.context.ApplicationEvent;
 
 /**
- * This Event is created everyTime
+ * This Event is created every time a group is created or modified
  */
 public class GroupEvent extends ApplicationEvent {
 

@@ -1,5 +1,7 @@
 package com.studilieferservice.groupmanager.persistence;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -10,22 +12,26 @@ import java.util.Objects;
 
 // TODO: 6/09/20 Rethink the way GroupEvents are created, as groupService.save() is not necessary to make changes persistent
 
+// TODO: rename this to Group to stick with naming conventions through out the projects
+
 /**
- * basic structure for groups
- *      String id: group id, is randomly chosen when creating a new group
- *      String groupname: name of the group, has to be set when creating a new group
- *      Users are saved in lists of type User
- *      invites contains all outgoing invites from this group
+ * The Structure that represents groups
  */
 
 @Entity(name = "Gruppe")
 @Table(name = "gruppe")
 public class Gruppe {
 
+    /**
+     * The identifying UUID for this group, as a String
+     */
     @Id
     @Column(name = "group_id")
     private String id;
 
+    /**
+     * The display name of this group
+     */
     @NotNull
     private String groupName;
 
@@ -38,6 +44,10 @@ public class Gruppe {
     @ManyToMany
     private List<User> adminList = new ArrayList<>();
 
+    /**
+     * All outgoing invites of this group
+     */
+    @JsonIgnore
     @OneToMany(
             mappedBy = "group",
             cascade = CascadeType.ALL,

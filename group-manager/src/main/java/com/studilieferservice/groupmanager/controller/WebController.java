@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * provides a web-controller at /web
+ * provides a web-controller at /web <br>
  * A web controller returns html documents and is meant to be consumed via browser
  */
 
@@ -96,8 +96,7 @@ public class WebController {
      * @param form contains all necessary information to create a group
      * @return redirects to /index
      * @throws JSONException Throws exception if the String body is not a valid JSON,
-     * which should only happen if the group-name in the form is somehow invalid.
-     * (I dont know if this is even possible)
+     * which should only happen if the group-name in the form invalid.
      */
     @PostMapping("/save-group")
     public String saveGroupSubmission(@ModelAttribute CreationForm form) throws JSONException {
@@ -137,6 +136,7 @@ public class WebController {
     /**
      * redirects to the shopping list
      * @param request contains the group id in field "id"
+     * @return a RedirectView that redirects to the shoppingList
      */
     @GetMapping("/getList")
     public RedirectView getList(HttpServletRequest request){
@@ -149,7 +149,7 @@ public class WebController {
     }
 
     /**
-     * called by through a browser by the creationForm from groupCreator(...)
+     * called through a browser by the creationForm from groupCreator(...)
      * @param form the object containing the input from the form
      * @return redirects back to the groupCreator page
      */

@@ -15,6 +15,7 @@ public class PutUserBody {
      * @param userId User-ID in the form of an email-address
      * @param firstname User's first name
      * @param lastname User's last name
+     * @param username the screen name of the user
      */
     public PutUserBody(@JsonProperty("id")String id,
                        @JsonProperty("user") String userId,
