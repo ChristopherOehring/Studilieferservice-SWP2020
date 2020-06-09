@@ -1,7 +1,9 @@
 package com.studilieferservice.groupmanager.api;
 
 import com.studilieferservice.groupmanager.persistence.Gruppe;
+import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.GroupService;
+import com.studilieferservice.groupmanager.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,24 +14,35 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.UUID;
+
+/**
+ * provides a web-controller at /web/group
+ * A web controller returns html documents and is meant to be consumed via browser
+ */
 
 @RequestMapping("/web/group")
 @Controller
 public class WebController {
 
     private final GroupService groupService;
+    private final UserService userService;
+
 
     @Autowired
-    public WebController(GroupService groupService){
+    public WebController(GroupService groupService, UserService userService){
         this.groupService = groupService;
+        this.userService = userService;
     }
 
+    /**
+     * get request on .../index invokes the index.html of the group-manager
+     * @param model is used by thymeleaf in the html page to
+     * @return returns "index" which results in invocation of the index.html
+     */
     @GetMapping("/index")
     public String index(Model model) {
         model.addAttribute("groupList", groupService.findAll());
@@ -37,6 +50,14 @@ public class WebController {
         return "index";
     }
 
+    /**
+     * Meant to be used by a webpage to create a new group. Will redirect to the index afterwards.
+     * @param form contains all necessary information to create a group
+     * @return redirects to /index
+     * @throws JSONException Throws exception if the String body is not a valid JSON,
+     * which should only happen if the group-name in the form is somehow invalid.
+     * (I dont know if this is even possible)
+     */
     @PostMapping("/save-group")
     public String saveGroupSubmission(@ModelAttribute CreationForm form) throws JSONException {
         Gruppe gruppe = new Gruppe();
@@ -47,8 +68,11 @@ public class WebController {
                 .replace(" ", "")
                 .split(",");
 
+        //TODO fixen ^^ -> firstname/lastname have to be replaced later on, also it might not be the best idea just to add a new user without saving in the user-repository
         for(String s: users){
-            gruppe.addUser(s);
+            User u = new User(s, "fistname", "lastname", "username");
+            gruppe.addMember(u);
+            userService.save(u);
         }
 
         groupService.save(gruppe);
@@ -63,6 +87,7 @@ public class WebController {
 
         JSONObject jsonObject= new JSONObject(body);
 
+        //Raw use of parameterized class. Intellij doesnt like this:
         HttpEntity request = new HttpEntity(jsonObject.toString(), headers);
 
         RestTemplate restTemplate = new RestTemplate();
@@ -71,14 +96,10 @@ public class WebController {
         return "redirect:index";
     }
 
-    private ModelAndView build(List<Gruppe> gruppen) {
-
-        var result = new ModelAndView("index");
-        result.addObject("groupList", gruppen);
-        System.out.println(gruppen);
-        return result;
-    }
-
+    /**
+     * redirects to the shopping list
+     * @param request contains the group id in field "id"
+     */
     @GetMapping("/getList")
     public RedirectView getList(HttpServletRequest request){
 

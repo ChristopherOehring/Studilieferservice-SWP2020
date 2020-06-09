@@ -1,39 +1,74 @@
 version: '3'
+
 services:
-#  zookeeper:
-#    image: confluentinc/cp-zookeeper:latest
-#    ports:
-#      - 2181:2181
-#    environment:
-#      ZOOKEEPER_CLIENT_PORT: 2181
-#      ZOOKEEPER_TICK_TIME: 2000
+  db:
+    image: library/postgres:latest
+    environment:
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: db_pwd
+      POSTGRES_DB: docker
+      # Single database
+      # - POSTGRES_DB=db
+      # Configure multiple databases here
+      # Note: does not allow names containing "-"
+      POSTGRES_MULTIPLE_DATABASES: groupManager,userManager
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
 
-#  kafka:
-#    image: confluentinc/cp-kafka:latest
-#    ports:
-#      - 5000:5000
-#    depends_on:
-#      - zookeeper
-#    environment:
-#      KAFKA_BROKER_ID: 1
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:5000
-#      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  adminer:
+    image: library/adminer:latest
+    restart: always
+    ports:
+    - 9002:8080
+    environment:
+      ADMINER_DESIGN: ng9
+# brade, pappu687
+# Hell-Pastell: esterka, ng9
+# DarkMode: galkaev
+# Colorful blue and green: lucas-sandery
+# Simple white to black scale: nette
+# very minimal: pepa-linha
 
-#  composer:
-#    image: studi-lieferservice/composer-service:latest
-#    ports:
-#      - 9000:8000
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - 2181:2181
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    logging:
+      driver: none
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - 5000:5000
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:5000
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    logging:
+      driver: none
+
+  composer:
+    image: studi-lieferservice/composer-service:latest
+    ports:
+      - 9000:8000
   group-manager:
     image: studi-lieferservice/group-manager:latest
     ports:
       - 9010:8010
-  shopping-list-manager:
-    image: studi-lieferservice/shopping-list-manager:latest
-    ports:
-      - 9070:8070
+#  shopping-list-manager:
+#    image: studi-lieferservice/shopping-list-manager:latest
+#    ports:
+#      - 9070:8070
   user-manager:
     image: studi-lieferservice/user-manager:latest
     ports:
