@@ -89,10 +89,20 @@
     </div>
     <div class="list">
         <th:block th:each="invite: ${invites}">
-            <input th:id="*{invite.id}" class="radio isHidden" name="listElement" type="radio">
-            <label th:for="*{invite.getId()}" class="label" th:text="*{invite.groupName}"></label>
+            <li>
+                <input th:id="*{invite.id}" class="radio isHidden" name="listElement" type="radio">
+                <label th:for="*{invite.getId()}" class="label" th:text="*{invite.groupName}"></label>
+            </li>
         </th:block>
     </div>
+
+    <form th:action="@{/web/acceptInvite}" method="GET"> <!-- TODO adjust th:action -->
+        <div class="submitBox">
+            <input type="submit" value="continue" class="submitButton"/>
+        </div>
+        <input type="hidden" name="groupId" th:value="${invites.get(0).id}" />
+        <input type="hidden" name="email" th:value="${user}" />
+    </form>
 </div>
 
 <!-- #################-->
@@ -106,14 +116,14 @@
     <div class="subtitle">
         <h2>Create new Group</h2>
     </div>
-
+    owner: <th th:text="${user}"></th>
     <div class="createGroup">
-        <form th:action="@{/web/group/save-group}" th:object="${creationForm}" method="POST">
+        <form th:action="@{/web/save-group}" th:object="${creationForm}" method="POST">
             <div class="inputGroupName">
                 <input type="text" id="groupname" th:field="*{groupName}" placeholder="Groupname">
             </div>
 
-            <input type="hidden" id="users" th:field="*{user}">
+            <input type="hidden" id="user" name="user" th:value="${user}">
 
             <div class="addGroup">
                 <input type="submit" value="add" class="submitButton">
