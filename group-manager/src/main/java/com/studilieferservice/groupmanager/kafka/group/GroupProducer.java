@@ -16,6 +16,35 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+/**
+ * This Component creates kafka messages on the topic: "groupTopic"
+ * These Messages are based on GroupEvents
+ * Every Message contains a {@link GroupKafkaMessage} which, among other things, contains a {@link GroupPayload}
+ * The resulting JSON looks a little like this:
+ *  {
+ *      "id":"3ec50b55-f6e6-4b0d-b821-b8751d282aa3",
+ *      "key":"65c57e94-e417-4578-85d5-cb2bbd7085fd",
+ *      "time":"2020-06-09T03:57:21Z",
+ *      "type":"UPDATE",
+ *      "version":3,
+ *      "payload":{
+ *          "id":"65c57e94-e417-4578-85d5-cb2bbd7085fd",
+ *          "groupName":"test",
+ *          "owner":"max.mustermann@tu-ilmenau.de",
+ *          "userList":[],
+ *          "adminList":[]
+ *      }
+ *  }
+ *
+ * The values contain the following information:
+ *      id: A UUID that identifies this message
+ *      key: The UUID that identifies the Group
+ *      time: the time at which this message was sent
+ *      type: The type of operation this message indicates (namely: UPDATE or DELETION
+ *      version: the version of the group that can be found in this message
+ *      payload: A representation of the relevant values of the group
+ */
+
 @Component
 public class GroupProducer {
 

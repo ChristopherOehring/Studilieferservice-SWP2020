@@ -6,6 +6,9 @@ import com.studilieferservice.groupmanager.persistence.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Should be used to add Invites to the Database
+ */
 @Service
 public class InviteService {
 

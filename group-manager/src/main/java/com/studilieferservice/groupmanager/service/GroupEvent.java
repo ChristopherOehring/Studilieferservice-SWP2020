@@ -3,6 +3,9 @@ package com.studilieferservice.groupmanager.service;
 import com.studilieferservice.groupmanager.persistence.Gruppe;
 import org.springframework.context.ApplicationEvent;
 
+/**
+ * This Event is created everyTime
+ */
 public class GroupEvent extends ApplicationEvent {
 
     private final Gruppe group;

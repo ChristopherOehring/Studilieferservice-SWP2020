@@ -253,13 +253,13 @@ public class GroupController {
     /**
      * Demotes a admin of a group to member
      * Can be reached with a PUT request at /api/group-service/group/promote
-     * @param body A GroupAndUserBody, wich contains the groupId and the identifying email of the user
+     * @param body A GroupAndUserBody, which contains the groupId and the identifying email of the user
      *      *             Example:
      *      *             {
      *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
      *      *                  "email":"max.mustermann@tu-ilmenau.de"
      *      *             }
-     * @return the group, as it was saved in the database
+     * @return A ResponseEntity, indicating whether the demotion was successful
      */
     @PutMapping(path = "/group/demote")
     public ResponseEntity<?> demote(@RequestBody GroupAndUserBody body){
@@ -276,6 +276,17 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found in this group!");
     }
 
+    /**
+     * Creates an Invite
+     * Can be reached with a POST request at /api/group-service/invite
+     * @param body A GroupAndUserBody, which contains the groupId and the identifying email of the user
+     *      *             Example:
+     *      *             {
+     *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
+     *      *                  "email":"max.mustermann@tu-ilmenau.de"
+     *      *             }
+     * @return A ResponseEntity, indicating whether the Creation of the Invite was successfully created
+     */
     @PostMapping(path = "/invite")
     public ResponseEntity addInvite(@RequestBody GroupAndUserBody body) {
         Optional<User> optionalUser = userService.findById(body.getEmail());
@@ -293,6 +304,17 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body("Added Invite from " + gruppe.getGroupName() + " to " + user.getUserName());
     }
 
+    /**
+     * Deletes an Invite
+     * Can be reached with a DELETE request at /api/group-service/invite
+     * @param body A GroupAndUserBody, which contains the groupId and the identifying email of the user
+     *      *             Example:
+     *      *             {
+     *      *                  "groupId":"81fce800-3cf9-4583-8ed6-56326c1d3163",
+     *      *                  "email":"max.mustermann@tu-ilmenau.de"
+     *      *             }
+     * @return A ResponseEntity, indicating whether the Deletion was successfully created
+     */
     @DeleteMapping(path = "/invite")
     public ResponseEntity removeInvite(@RequestBody GroupAndUserBody body) {
         Optional<User> optionalUser = userService.findById(body.getEmail());

@@ -6,6 +6,9 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * This is a composite key, used to model a Invitation to a Group
+ */
 @Entity(name = "Invite")
 @Table(name = "invite")
 public class Invite {

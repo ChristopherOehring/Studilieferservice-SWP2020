@@ -10,6 +10,11 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+/**
+ * This Component consumes KafkaMessages on the topic: "usersTopic"
+ * These messages are created in the user-manager
+ */
+
 @Component
 @EnableKafka
 public class UserConsumer {

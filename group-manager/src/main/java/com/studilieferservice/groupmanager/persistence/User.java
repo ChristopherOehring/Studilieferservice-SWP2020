@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-// Useless for now as Users are saved in a string -> no! not anymore!!!
+/**
+ * This is how users are represented in this microservice
+ */
 
 @Entity(name = "Nutzer")
 @Table(name = "nutzer")

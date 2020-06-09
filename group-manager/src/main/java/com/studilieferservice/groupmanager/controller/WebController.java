@@ -28,6 +28,8 @@ import java.util.UUID;
  * A web controller returns html documents and is meant to be consumed via browser
  */
 
+// TODO Figure out how to properly handle errors here
+
 @RequestMapping("/web")
 @Controller
 public class WebController {
@@ -49,18 +51,11 @@ public class WebController {
     }
 
     /**
-     * get request on .../index invokes the userMenu.html of the group-manager
+     * get request on .../userMenu/{userEmail} invokes the userMenu.html of the group-manager
      * @param model is used by thymeleaf in the html page
-     * @return returns "index" which results in invocation of the userMenu.html
+     * @param email the PathVariable userEmail contains the email of the user who's menu should be displayed
+     * @return returns "userMenu" which results in invocation of the userMenu.html
      */
-    @GetMapping("/index")
-    public String index(Model model) {
-        model.addAttribute("groupList", groupService.findAll());
-        model.addAttribute("creationForm", new CreationForm());
-        model.addAttribute("groupManagerSrc", groupManagerSrc);
-        return "userMenu";
-    }
-
     @GetMapping("/userMenu/{userEmail}")
     public String userMenu(Model model,
                         @PathVariable("userEmail") String email) {
@@ -83,6 +78,12 @@ public class WebController {
         return "userMenu";
     }
 
+    /**
+     * get request on .../groupMenu/{userEmail} invokes the userMenu.html of the group-manager
+     * @param model is used by thymeleaf in the html page
+     * @param groupId the PathVariable groupId contains the id of the group who's menu should be displayed
+     * @return returns "userMenu" which results in invocation of the userMenu.html
+     */
     @GetMapping("/groupMenu/{groupId}")
     public String groupMenu(Model model, @PathVariable("groupId") String groupId) {
         model.addAttribute("groupId", groupId);
@@ -169,6 +170,11 @@ public class WebController {
         return "redirect:groupMenu/" + group.getId();
     }
 
+    /**
+     * this method is invoked when creating a new invite
+     * @param body is used by thymeleaf in the html page
+     * @return redirects to the groupMenu
+     */
     @PostMapping("/invite")
     public String addInvite(@RequestBody GroupAndUserBody body) {
         Optional<User> optionalUser = userService.findById(body.getEmail());
@@ -184,6 +190,11 @@ public class WebController {
         return "redirect:groupMenu";//fixme
     }
 
+    /**
+     * used to accept an invite
+     * @param body is used by thymeleaf in the html page
+     * @return redirects to the userMenu
+     */
     @PutMapping("/acceptInvite")
     public String acceptInvite(@RequestBody GroupAndUserBody body) {
         Optional<User> optionalUser = userService.findById(body.getEmail());
@@ -200,6 +211,11 @@ public class WebController {
         return "redirect:userMenu";
     }
 
+    /**
+     * used to decline an invite
+     * @param body is used by thymeleaf in the html page
+     * @return redirects to the userMenu
+     */
     @PutMapping("/declineInvite")
     public String declineInvite(@RequestBody GroupAndUserBody body) {
         Optional<User> optionalUser = userService.findById(body.getEmail());

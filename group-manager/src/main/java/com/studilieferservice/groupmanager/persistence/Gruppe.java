@@ -7,15 +7,20 @@ import java.util.List;
 import java.util.Objects;
 
 // TODO: 5/31/20 Fix the version, so that it only goes up by one if something actually changes. (not important)
+
+// TODO: 6/09/20 Rethink the way GroupEvents are created, as groupService.save() is not necessary to make changes persistent
+
+/**
+ * basic structure for groups
+ *      String id: group id, is randomly chosen when creating a new group
+ *      String groupname: name of the group, has to be set when creating a new group
+ *      Users are saved in lists of type User
+ *      invites contains all outgoing invites from this group
+ */
+
 @Entity(name = "Gruppe")
 @Table(name = "gruppe")
 public class Gruppe {
-    /**
-     * basic structure for groups
-     *      String id: group id, is randomly chosen when creating a new group
-     *      String groupname: name of the group, has to be set when creating a new group
-     *      Users are saved in a list of type User
-     */
 
     @Id
     @Column(name = "group_id")

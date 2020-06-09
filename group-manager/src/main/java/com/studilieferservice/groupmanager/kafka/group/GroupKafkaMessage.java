@@ -3,6 +3,9 @@ package com.studilieferservice.groupmanager.kafka.group;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.studilieferservice.groupmanager.kafka.KafkaMessage;
 
+/**
+ * This contains the basic elements of a {@link KafkaMessage} and a {@link GroupPayload}
+ */
 public class GroupKafkaMessage extends KafkaMessage<GroupPayload> {
     public GroupKafkaMessage(@JsonProperty("id") String id,
                              @JsonProperty("key")String key,

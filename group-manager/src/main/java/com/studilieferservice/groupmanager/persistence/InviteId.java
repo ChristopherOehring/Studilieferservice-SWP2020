@@ -5,6 +5,10 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * The Key for the {@link Invite} Entity
+ */
+
 @Embeddable
 public class InviteId implements Serializable {
 

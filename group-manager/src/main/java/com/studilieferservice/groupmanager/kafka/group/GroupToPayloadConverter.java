@@ -7,6 +7,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+/**
+ * Has to be implemented to enable the use of
+ * {@link org.springframework.core.convert.ConversionService#convert(java.lang.Object, java.lang.Class)}
+ * to convert Groups to groupPayloads
+ */
+
 @Component
 public class GroupToPayloadConverter implements Converter<Gruppe, GroupPayload> {
     @Override
