@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/groupMembersStyle.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="memberTitleBox">
+        <h2>Member</h2>
+    </div>
+
+    <th:block th:each="member: ${memberList}">
+        <div class="element">
+
+            <li>Person1</li>
+            <li>Person2</li>
+            <li>Person3</li>
+
+            <li th:text="*{member.name}"> </li>
+        </div>
+    </th:block>
+
+</body>
+</html>

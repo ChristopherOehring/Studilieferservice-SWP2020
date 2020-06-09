@@ -1,0 +1,51 @@
+:root{
+    /*## COLORS ###*/
+    --primary: #363636;
+    --secondary: #474747;
+    --lineColor: #909090;
+
+    /*## FONTS ##*/
+    --headingFont: "Patua One";
+    --secondaryFont: "Roboto";
+
+    /*## STANDARD STRUCTURE ##*/
+    --colTopMargin: 20%;
+    --colHeight: 80%;
+}
+
+body{
+    margin: 0px;
+    background-color: var(--primary);
+    max-width: 300px;
+}
+
+.memberTitleBox{ /*box around header for positioning*/
+    /*positioning*/
+    text-align: center;
+    
+
+    /*line*/
+    border-bottom: 1px solid var(--lineColor);
+}
+
+h2{ /*"MEMBERS"*/
+    /*font*/
+    font-family: var(--secondaryFont);
+    color: white;
+}
+
+.element{ /*box around all members for positioning*/
+    margin-top: 1rem;
+}
+
+li{ /* the actual Member */
+    /*font*/
+    color: white;
+    font-family: var(--secondaryFont);
+
+    /*positioning*/
+    margin-top: 1rem;
+    background-color: var(--secondary);
+    padding: 0.5rem;
+    padding-left: 2rem;
+}
