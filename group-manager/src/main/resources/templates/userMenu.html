@@ -17,71 +17,82 @@
 <!-- ##############################################################################################-->
 
 
-<!-- ##################-->
-<!-- #### Column 1 ####-->
-<!-- ##################-->
-<div class="col1">
-    <div class="subtitle">
-        <h2>My Groups</h2>
-    </div>
+<!-- ##################
+     #### Column 1 ####
+     #### MY GOUPS ####
+     ##################-->
+     <div class="col1">
 
-    <!-- Searchbar -->
-    <div class="col1Search">
-        <label for="myGroupSearch"></label>
-        <input type="text" name="myGroupSearch" id="myGroupSearch" placeholder="Search">
+        <!-- Subheading -->
+        <div class="subtitle">
+            <h2>My Groups</h2>
+        </div>
+    
+        <!-- Searchbar -->
+        <div class="col1Search">
+            <input type="text" name="myGroupSearch" id="myGroupSearch" placeholder="Search">
+        </div>
+    
+        <div class="groupList">
+            <form  th:action="@{/web/group/getList}" method="GET" >
+                <div class="listBox">
+                    
+                    <!-- Explanation:
+                            - th:each iterates over the groupList with variable gruppe
+                            - th:field and th:for belongs together for design puposes
+                            - th:value shows, what is sent to controller when submited
+                            - th:text is the output-text-label what is displayed
+                    -->
+                    <li th:each="gruppe : ${groupList}">
+                        <input type="radio" th:field="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                        <label th:for="${gruppe.id}" th:text="${gruppe.groupName}">No Groups Available</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="a1" value="Gruppe1" name="list">
+                        <label for="a1">Gruppe1</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="a2" value="Gruppe2" name="list">
+                        <label for="a2">Gruppe2</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="a3" value="Gruppe3" name="list">
+                        <label for="a3">Gruppe3</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="a4" value="Gruppe4" name="list">
+                        <label for="a4">Gruppe4</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="a5" value="Gruppe5" name="list">
+                        <label for="a5">Gruppe5</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="a6" value="Gruppe6" name="list">
+                        <label for="a6">Gruppe6</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="a7" value="Gruppe7" name="list">
+                        <label for="a7">Gruppe7</label>
+                    </li>
+    
+                </div>
+                <div class="submitBox">
+                    <input type="submit" value="continue" class="submitButton"/>
+                </div>
+                
+            </form>
+        </div>
     </div>
-
-    <!-- List -->
-    <div class="list">
-        <!-- FIXME delete Demo Objects -->
-        <li>
-            <input id="radio_1" class="radio isHidden" name="listElement" type="radio">
-            <label for="radio_1" class="label">Test1</label>
-        </li>
-        <li>
-            <input id="radio_2" class="radio isHidden" name="listElement" type="radio">
-            <label for="radio_2" class="label">Test2</label>
-        </li>
-        <li>
-            <input id="radio_3" class="radio isHidden" name="listElement" type="radio">
-            <label for="radio_3" class="label">Test2</label>
-        </li>
-
-        <li>
-            <th:block th:each="gruppe: ${groupsWhereOwner}">
-                <input th:id="*{gruppe.id}" class="radio isHidden" name="listElement" type="radio">
-                <label th:for="*{gruppe.id}" class="label" th:text="*{gruppe.groupName}"></label>
-            </th:block>
-        </li>
-        <li>
-            <th:block th:each="gruppe: ${groupsWhereAdmin}">
-                <input th:id="*{gruppe.id}" class="radio isHidden" name="listElement" type="radio">
-                <label th:for="*{gruppe.id}" class="label" th:text="*{gruppe.groupName}"></label>
-            </th:block>
-        </li>
-        <li>
-            <th:block th:each="gruppe: ${groupsWhereMember}">
-                <input th:id="*{gruppe.id}" class="radio isHidden" name="listElement" type="radio">
-                <label th:for="*{gruppe.getId()}" class="label" th:text="*{gruppe.groupName}"></label>
-            </th:block>
-        </li>
-        <!-- Submit Button -->
-        <form th:action="@{/web/group/getList}" method="GET"> <!-- TODO adjust th:action -->
-            <div class="submitBox">
-                <input type="submit" value="continue" class="submitButton"/>
-            </div>
-            <input type="hidden" name="id" th:value="${user}" />
-        </form>
-    </div>
-</div>
 
 <!-- ##############################################################################################-->
 <!-- ##############################################################################################-->
 
 
-<!-- #################-->
-<!-- #### Column 2####-->
-<!-- #################-->
+<!-- ####################
+     ####  Column 2  ####
+     #### INVITATION ####
+     ####################-->
 
 <div class="col2">
     <div class="subtitle">
@@ -105,12 +116,17 @@
     </form>
 </div>
 
-<!-- #################-->
-<!-- #### Column 3 ###-->
-<!-- #################-->
+
 
 <!-- ##############################################################################################-->
 <!-- ##############################################################################################-->
+
+
+
+<!-- ###################
+     #### Column 3  ####
+     #### NEW GROUP ####
+     ###################-->
 
 <div class="col3">
     <div class="subtitle">
