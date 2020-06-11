@@ -38,8 +38,8 @@
                 <div class="listBox">
                     
                     <!-- Explanation:
-                            - th:each iterates over the groupList with variable gruppe
-                            - th:field and th:for belongs together for design puposes
+                            - th:each iterates over the groupList with variable "gruppe"
+                            - th:field and th:for belongs together for design purposes
                             - th:value shows, what is sent to controller when submited
                             - th:text is the output-text-label what is displayed
                     -->
@@ -47,6 +47,8 @@
                         <input type="radio" th:field="${gruppe.id}" th:value="${gruppe.id}" name="list" />
                         <label th:for="${gruppe.id}" th:text="${gruppe.groupName}">No Groups Available</label>
                     </li>
+
+                    <!-- TODO Delete Dummy Groups -->
                     <li>
                         <input type="radio" id="a1" value="Gruppe1" name="list">
                         <label for="a1">Gruppe1</label>
