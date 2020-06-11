@@ -4,47 +4,104 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../static/style.css" th:href="@{/style.css}"/>
+    <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <title>StudiLieferservice</title>
 </head>
 
 <body>
-    <div class="header">
-        <div class="logo">REWE</div>
-        <div class="logoAdd">StudiLieferservice</div>
-        <div class="headerTitle">Einkaufsliste</div>
-    </div>
 
-    <div class="columnLeft">
+    <div class="OuterBox">
         <div class="title">
-            Gruppe: <td th:text="${shoppingList.groupName}">Gruppenname</td>
+            <h1>
+                Shopping List
+            </h1>
         </div>
 
-        <div class="element">
-            <h3>Positionen:</h3>
-            <tr th:each="item : ${shoppingList.items}">
-                <p><b>- <td th:text="${item.name}"></td></b></p>
-            </tr>
+        <div class="items">
+            <table>
+                <tr th:each="article : ${getShoppingListByGroupId}">
+                    <td th:text="${article.name}">Noch keine Produkte hinzugefügt</td>
+                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
+                    <td th:text="${article.amoud}"></td>
+                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
+                </tr>
+                <!-- /* -->
+                <tr>
+                    <td>Apple</td>
+                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
+                    <td>5</td>
+                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
+                </tr>                
+                <tr>
+                    <td>Apple</td>
+                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
+                    <td>5</td>
+                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
+                </tr>                
+                <tr>
+                    <td>Apple</td>
+                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
+                    <td>5</td>
+                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
+                </tr>                
+                <tr>
+                    <td>Apple</td>
+                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
+                    <td>5</td>
+                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
+                </tr>                
+                <tr>
+                    <td>Apple</td>
+                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
+                    <td>5</td>
+                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
+                </tr>                
+                <tr>
+                    <td>Apple</td>
+                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
+                    <td>5</td>
+                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
+                </tr>                
+                <tr>
+                    <td>Apple</td>
+                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
+                    <td>5</td>
+                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
+                </tr>                
+                <tr>
+                    <td>Apple</td>
+                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
+                    <td>5</td>
+                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
+                </tr>                
+                
+                <!-- */ -->
+            </table>
         </div>
+
+        <div class="addProduct">
+            <input type="button" value="add products" class="addProductButton">
+        </div>
+
+        <div class="line"></div>
+
+        <div class="sum">
+            <p>50€</p>
+        </div>
+
     </div>
+            <div class="element">
+                <form th:action="@{/shoppingList/addItem}" th:object="${item}"  method="POST">
+                    <label for="productname">Produkte hinzufügen: </label>
+                    <input type="text" id="productname" th:field="*{name}" placeholder="Produkt" >
+                    <input type="hidden" name= "groupId"   th:value="${shoppingList.groupId}" />
+                    <input type="submit" value="Hinzufügen">
+                </form>
+            </div>
 
-    <div class="columnRight">
-        <div class="title">
-            Artikel hinzufügen
-        </div>
-
-        <div class="element">
-            <form th:action="@{/shoppingList/addItem}" th:object="${item}"  method="POST">
-                <label for="productname">Produkte hinzufügen: </label>
-                <input type="text" id="productname" th:field="*{name}" placeholder="Produkt" >
-                <input type="hidden" name= "groupId"   th:value="${shoppingList.groupId}" />
-                <input type="submit" value="Hinzufügen">
-            </form>
-        </div>
-    </div>
-
-    <div class="footer">
-        Impressum
-    </div>
 </body>
 
 </html>
