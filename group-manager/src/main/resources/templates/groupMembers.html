@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/groupMembersStyle.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <script src="../static/js/main.js"></script>
     <title>Dashboard</title>
 </head>
 <body>
@@ -15,9 +16,9 @@
     <th:block th:each="member: ${memberList}">
         <div class="element">
 
-            <li>Person1</li>
-            <li>Person2</li>
-            <li>Person3</li>
+            <li><img src="../imgs/crown-3-128.png" alt=" ">&emsp; Person1</li>
+            <li><img src="../imgs/crown-3-128.png" alt=" ">&emsp; Person2</li>
+            <li><img src="../imgs/crown-3-128.png" alt=" ">&emsp; Person3</li>
 
             <li th:text="*{member.name}"> </li>
         </div>

@@ -49,3 +49,7 @@ li{ /* the actual Member */
     padding: 0.5rem;
     padding-left: 2rem;
 }
+
+img{
+    width: 1rem;
+}
