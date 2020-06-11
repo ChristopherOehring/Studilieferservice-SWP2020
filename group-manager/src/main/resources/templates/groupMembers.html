@@ -13,16 +13,48 @@
         <h2>Member</h2>
     </div>
 
-    <th:block th:each="member: ${memberList}">
-        <div class="element">
+    <table>
+        <tr th:each="member: ${memberList}">
+            <td>
+                <img th:if="memer.isAdmin" src="../imgs/crown-3-128.png" alt=" ">
+            </td>
+            <td>
+                <p th:text="${member.name}"></p>
+            </td>
+            <td>
+                <img th:if="member.hasSubmitted" src="../imgs/checkmark-128.png" alt="">
+            </td>
+        </tr>
 
-            <li><img src="../imgs/crown-3-128.png" alt=" ">&emsp; Person1</li>
-            <li><img src="../imgs/crown-3-128.png" alt=" ">&emsp; Person2</li>
-            <li><img src="../imgs/crown-3-128.png" alt=" ">&emsp; Person3</li>
 
-            <li th:text="*{member.name}"> </li>
-        </div>
-    </th:block>
+            <!-- TODO DELETE PLACEHOLDER -->
+        <tr>
+            <td><img th:if="memer.isAdmin" src="../imgs/crown-3-128.png" alt=" "></td>
+            <td>Person1</td>
+            <td><img th:if="member.hasSubmitted" src="../imgs/checkmark-128.png" alt=""></td>
+        </tr>
+        <tr>
+            <td><img th:if="memer.isAdmin" src="../imgs/crown-3-128.png" alt=" "></td>
+            <td>Alibaba</td>
+            <td><img th:if="member.hasSubmitted" src="../imgs/checkmark-128.png" alt=""></td>
+        </tr>
+        <tr>
+            <td><img th:if="memer.isAdmin" src="../imgs/crown-3-128.png" alt=" "></td>
+            <td>Die Schöne</td>
+            <td><img th:if="member.hasSubmitted" src="../imgs/checkmark-128.png" alt=""></td>
+        </tr>
+        <tr>
+            <td><img th:if="memer.isAdmin" src="../imgs/crown-3-128.png" alt=" "></td>
+            <td>Das Biest</td>
+            <td><img th:if="member.hasSubmitted" src="../imgs/checkmark-128.png" alt=""></td>
+        </tr>
+        <tr>
+            <td><img th:if="memer.isAdmin" src="../imgs/crown-3-128.png" alt=" "></td>
+            <td>Lorem ipsum</td>
+            <td><img th:if="member.hasSubmitted" src="../imgs/checkmark-128.png" alt=""></td>
+        </tr>
+
+    </table>
 
 </body>
 </html>

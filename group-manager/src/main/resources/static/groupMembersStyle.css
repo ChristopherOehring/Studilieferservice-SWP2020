@@ -34,20 +34,19 @@ h2{ /*"MEMBERS"*/
     color: white;
 }
 
-.element{ /*box around all members for positioning*/
-    margin-top: 1rem;
+table{
+    border-spacing: 0rem 1rem;
+    width: 100%;
 }
 
-li{ /* the actual Member */
-    /*font*/
-    color: white;
-    font-family: var(--secondaryFont);
-
-    /*positioning*/
-    margin-top: 1rem;
+td{
+    text-align: center;
     background-color: var(--secondary);
     padding: 0.5rem;
-    padding-left: 2rem;
+
+    /*fonts*/
+    color: white;
+    font-family: var(--secondaryFont);
 }
 
 img{
