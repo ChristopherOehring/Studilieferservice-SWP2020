@@ -1,5 +1,6 @@
 package com.studilieferservice.shoppinglistmanager.relation;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
@@ -8,13 +9,15 @@ import java.util.Objects;
 //holds composite entity identifier (ShoppingList and Item)
 public class ItemShoppingListPK implements Serializable {
 
+    @Column(name = "shopping_list_id")
     private Long shoppingListId;
 
-    private Long itemId;
+    @Column(name = "item_id")
+    private String itemId;
 
     public ItemShoppingListPK() { }
 
-    public ItemShoppingListPK(Long shoppingListId, Long itemId) {
+    public ItemShoppingListPK(Long shoppingListId, String itemId) {
         this.shoppingListId = shoppingListId;
         this.itemId = itemId;
     }
@@ -28,12 +31,12 @@ public class ItemShoppingListPK implements Serializable {
         this.shoppingListId = shoppingListId;
     }
 
-    public Long getItemId() {
+    public String getItemId() {
         return itemId;
     }
 
     //private so only hibernate can access the method
-    private void setItemId(Long itemId) {
+    private void setItemId(String itemId) {
         this.itemId = itemId;
     }
 

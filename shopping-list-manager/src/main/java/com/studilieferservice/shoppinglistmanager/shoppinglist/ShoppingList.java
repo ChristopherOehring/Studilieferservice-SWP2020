@@ -73,10 +73,11 @@ public class ShoppingList {
         return items;
     }
 
-    public void addItem(Item item, int amount) {
-        ItemShoppingList relation = new ItemShoppingList(this, item, amount);
+    public void addItem(Item item, int amount, ItemShoppingList relation) {
+        //ItemShoppingList relation = new ItemShoppingList(this, item, amount);
         items.add(relation);
-        item.getShoppingLists().add(relation);
+        System.out.println(relation.toString());
+        //item.getShoppingLists().add(relation);
     }
 
     public void removeItem(Item item) {

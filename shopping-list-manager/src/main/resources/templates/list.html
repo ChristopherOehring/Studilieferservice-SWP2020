@@ -22,10 +22,10 @@
 
         <div class="items">
             <table>
-                <tr th:each="article : ${getShoppingListByGroupId}">
-                    <td th:text="${article.name}">Noch keine Produkte hinzugefügt</td>
+                <tr th:each="item : ${getShoppingListByGroupId}">
+                    <td th:text="${item.name}">Noch keine Produkte hinzugefügt</td>
                     <td><input type="image" src="../static/icons/minus.png" alt=""></td>
-                    <td th:text="${article.amoud}"></td>
+                    <td th:text="${item.amount}"></td>
                     <td><input type="image" src="../static/icons/plus.png" alt=""></td>
                 </tr>
                 <!-- /* -->

@@ -170,11 +170,13 @@ public class ShoppingListRestController {
      */
     @PostMapping("/addProduct")
     public ResponseEntity<?> addItemToShoppingList(@RequestBody AddItemToShoppingListBody body) {
-        //System.out.println(body.item.toString()+" "+body.shoppingList.toString()+" "+body.amount);
-        Item i = itemService.getItemByName(body.item.getName());
-        ShoppingList sl =  shoppingListService.getShoppingListByUserAndGroup(body.shoppingList.getUser(), body.shoppingList.getGroup());
-        sl.addItem(i, body.amount);
+        System.out.println(body.item.toString()+" "+body.shoppingList.toString()+" "+body.amount);
+        shoppingListService.addItemToShoppingList(body.shoppingList, body.item, body.amount);
 
-        return ResponseEntity.status(HttpStatus.OK).body("Added Item to ShoppingList: "+body.item.toString());
+        //Item i = itemService.getItem(body.item.getName());
+        //ShoppingList sl =  shoppingListService.getShoppingListByUserAndGroup(body.shoppingList.getUser(), body.shoppingList.getGroup());
+        //sl.addItem(i, body.amount);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Added Item to ShoppingList: "+body.item.toString());
     }
 }

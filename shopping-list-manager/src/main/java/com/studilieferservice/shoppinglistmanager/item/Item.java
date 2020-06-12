@@ -1,6 +1,8 @@
 package com.studilieferservice.shoppinglistmanager.item;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.studilieferservice.shoppinglistmanager.relation.ItemShoppingList;
+import com.studilieferservice.shoppinglistmanager.shoppinglist.ShoppingList;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,11 +12,11 @@ import java.util.List;
 @Entity
 public class Item {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    //private Long id;
 
-    @NotNull
+    @Id
     private String name;
 
     @NotNull
@@ -26,20 +28,20 @@ public class Item {
 
     public Item() {}
 
-    public Item(String name, double price) {
+    public Item(@JsonProperty("name") String name, @JsonProperty("price") double price) {
         this.name = name;
         this.price = price;
     }
 
-    public Long getId() {
-        return id;
-    }
+    //public Long getId() {
+    //    return id;
+    //}
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -55,6 +57,10 @@ public class Item {
         return shoppingLists;
     }
 
+    public void addSL (ItemShoppingList itemshoppingList) {
+        shoppingLists.add(itemshoppingList);
+    }
+
 //    public void addShoppingList(ShoppingList shoppingList) {
 //        shoppingLists.add(shoppingList);
 //        shoppingList.getItems().add(this);
@@ -68,7 +74,7 @@ public class Item {
     @Override
     public String toString() {
         return String.format(
-                "Item [id='%s', name='%s', price='%s'€]", //%1$,.2f
-                id, name, price);
+                "Item [name='%s', price='%s'€]", //%1$,.2f    id='%s',
+                /*id,*/ name, price);
     }
 }

@@ -17,13 +17,13 @@ public class ItemService {
         itemRepository.save(item);
     }
 
-    public Item getItem(Long id) {
-        return itemRepository.findById(id).orElseThrow();
+    public Item getItem(String name) {
+        return itemRepository.findById(name).orElseThrow();
     }
 
-    public Item getItemByName(String name) {
-        return itemRepository.findByName(name);
-    }
+    //public Item getItemByName(String name) {
+    //    return itemRepository.findByName(name);
+    //}
 
     public void deleteItem(Item item) {
         itemRepository.delete(item);

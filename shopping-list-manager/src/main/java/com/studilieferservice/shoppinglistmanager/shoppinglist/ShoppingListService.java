@@ -2,6 +2,8 @@ package com.studilieferservice.shoppinglistmanager.shoppinglist;
 
 import com.studilieferservice.shoppinglistmanager.group.Group;
 import com.studilieferservice.shoppinglistmanager.group.GroupService;
+import com.studilieferservice.shoppinglistmanager.item.Item;
+import com.studilieferservice.shoppinglistmanager.item.ItemService;
 import com.studilieferservice.shoppinglistmanager.relation.ItemShoppingList;
 import com.studilieferservice.shoppinglistmanager.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +16,14 @@ public class ShoppingListService {
 
     private final ShoppingListRepository shoppingListRepository;
     private final GroupService groupService;
+    private final ItemService itemService;
 
     @Autowired
-    public ShoppingListService(ShoppingListRepository shoppingListRepository, GroupService groupService) {
+    public ShoppingListService(ShoppingListRepository shoppingListRepository,
+                               GroupService groupService, ItemService itemService) {
         this.shoppingListRepository = shoppingListRepository;
         this.groupService = groupService;
+        this.itemService = itemService;
     }
 
     public void createShoppingList(ShoppingList shoppingList) {
@@ -42,6 +47,23 @@ public class ShoppingListService {
         return shoppingListRepository.findByUserAndGroup(user, group);
     }
 
+    public void addItemToShoppingList(ShoppingList shoppingList, Item item, int amount) {
+        ShoppingList sl = shoppingListRepository.findByUserAndGroup(shoppingList.getUser(), shoppingList.getGroup());
+        Item i = itemService.getItem(item.getName());
+
+        ItemShoppingList relation = new ItemShoppingList(sl, i, amount);
+
+
+        sl.addItem(i, amount, relation);
+        System.out.println(sl.toString());
+        item.addSL(relation);
+
+        itemService.createItem(i);
+        shoppingListRepository.save(sl);
+
+        System.out.println(sl.toString());
+    }
+
     public String getCompleteShoppingListAsJSON(String groupId) {
         String group = String.format("\"id\": \"%s\",\n\"name\": \"%s\",\n",
                 groupId, groupService.getGroup(groupId).getId());
@@ -52,7 +74,7 @@ public class ShoppingListService {
 
             StringBuilder items = new StringBuilder();
             for (ItemShoppingList i : s.getItems()) {
-                items.append("\t\t{\n\t\t\"id\": \"").append(i.getItem().getId()).
+                items.//append("\t\t{\n\t\t\"id\": \"").append(i.getItem().getId()).
                         append("\",\n\t\t\"name\": \"").append(i.getItem().getName()).
                         append("\",\n\t\t\"price\": \"").append(i.getItem().getPrice()).
                         append("\",\n\t\t\"amount\": \"").append(i.getAmount()).

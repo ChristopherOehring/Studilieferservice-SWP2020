@@ -5,20 +5,21 @@ import com.studilieferservice.shoppinglistmanager.shoppinglist.ShoppingList;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 //relation between ShoppingList and Item
-public class ItemShoppingList {
+public class ItemShoppingList implements Serializable {
 
     @EmbeddedId
     private ItemShoppingListPK id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("shoppingListId")
+    @MapsId("shopping_list_id")
     private ShoppingList shoppingList;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("itemId")
+    @MapsId("item_id")
     private Item item;
 
     @NotNull
@@ -30,7 +31,15 @@ public class ItemShoppingList {
         this.shoppingList = shoppingList;
         this.item = item;
         this.amount = amount;
-        this.id = new ItemShoppingListPK(shoppingList.getId(), item.getId());
+        this.id = new ItemShoppingListPK(shoppingList.getId(), item.getName());
+    }
+
+    public ItemShoppingListPK getId() {
+        return id;
+    }
+
+    public void setId(ItemShoppingListPK id) {
+        this.id = id;
     }
 
     public ShoppingList getShoppingList() {
