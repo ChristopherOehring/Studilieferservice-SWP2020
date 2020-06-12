@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * This is how users are represented in this microservice
  */
-
+//todo add version
 @Entity(name = "Nutzer")
 @Table(name = "nutzer")
 @JsonIgnoreProperties(ignoreUnknown = true)

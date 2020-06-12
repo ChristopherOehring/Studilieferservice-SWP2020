@@ -43,11 +43,18 @@
                             - th:value shows, what is sent to controller when submited
                             - th:text is the output-text-label what is displayed
                     -->
-                    <li th:each="gruppe : ${groupList}">
+                    <li th:each="gruppe : ${groupsWhereOwner}">
                         <input type="radio" th:field="${gruppe.id}" th:value="${gruppe.id}" name="list" />
                         <label th:for="${gruppe.id}" th:text="${gruppe.groupName}">No Groups Available</label>
                     </li>
-
+                    <li th:each="gruppe : ${groupsWhereAdmin}">
+                        <input type="radio" th:field="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                        <label th:for="${gruppe.id}" th:text="${gruppe.groupName}">No Groups Available</label>
+                    </li>
+                    <li th:each="gruppe : ${groupsWhereMember}">
+                        <input type="radio" th:field="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                        <label th:for="${gruppe.id}" th:text="${gruppe.groupName}">No Groups Available</label>
+                    </li>
                     <!-- TODO Delete Dummy Groups -->
                     <li>
                         <input type="radio" id="a1" value="Gruppe1" name="list">
