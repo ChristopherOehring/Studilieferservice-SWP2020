@@ -59,9 +59,14 @@ public class WebController {
     @GetMapping("/userMenu/{userEmail}")
     public String userMenu(Model model,
                         @PathVariable("userEmail") String email) {
-
+        email = email.replace("%40", "@");
+        System.out.println(email);
         Optional<User> optionalUser = userService.findById(email);
-        if(optionalUser.isEmpty()) System.out.println("Error 404: user \"" + email + "\" not found");
+        if(optionalUser.isEmpty()) {
+            System.out.println("Error 404: user \"" + email + "\" not found");
+            model.addAttribute("subject", "user: \"" + email + "\"");
+            return "error";
+        }
         User user = optionalUser.get();
 
         model.addAttribute("creationForm", new CreationForm());
@@ -105,7 +110,9 @@ public class WebController {
         group.setId(UUID.randomUUID().toString());
 
         Optional<User> optionalUser = userService.findById(form.getUser());
-        if(optionalUser.isEmpty()) System.out.println("No user with email "+form.getUser()+" was found!");
+        if(optionalUser.isEmpty()) {
+            return "redirect:error";
+        };
         User user = optionalUser.get();
 
         group.setOwner(user);
