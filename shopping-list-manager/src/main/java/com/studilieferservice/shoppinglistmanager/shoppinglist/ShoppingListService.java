@@ -5,6 +5,7 @@ import com.studilieferservice.shoppinglistmanager.group.GroupService;
 import com.studilieferservice.shoppinglistmanager.item.Item;
 import com.studilieferservice.shoppinglistmanager.item.ItemService;
 import com.studilieferservice.shoppinglistmanager.relation.ItemShoppingList;
+import com.studilieferservice.shoppinglistmanager.relation.ItemShoppingListService;
 import com.studilieferservice.shoppinglistmanager.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,16 @@ public class ShoppingListService {
     private final ShoppingListRepository shoppingListRepository;
     private final GroupService groupService;
     private final ItemService itemService;
+    private final ItemShoppingListService itemShoppingListService;
 
     @Autowired
     public ShoppingListService(ShoppingListRepository shoppingListRepository,
-                               GroupService groupService, ItemService itemService) {
+                               GroupService groupService, ItemService itemService,
+                               ItemShoppingListService itemShoppingListService) {
         this.shoppingListRepository = shoppingListRepository;
         this.groupService = groupService;
         this.itemService = itemService;
+        this.itemShoppingListService = itemShoppingListService;
     }
 
     public void createShoppingList(ShoppingList shoppingList) {
@@ -52,44 +56,37 @@ public class ShoppingListService {
         Item i = itemService.getItem(item.getName());
 
         ItemShoppingList relation = new ItemShoppingList(sl, i, amount);
+        itemShoppingListService.createItemShoppingList(relation);
 
-
-        sl.addItem(i, amount, relation);
-        System.out.println(sl.toString());
-        item.addSL(relation);
-
-        itemService.createItem(i);
+        sl.addItem(relation);
         shoppingListRepository.save(sl);
-
-        System.out.println(sl.toString());
     }
 
     public String getCompleteShoppingListAsJSON(String groupId) {
-        String group = String.format("\"id\": \"%s\",\n\"name\": \"%s\",\n",
-                groupId, groupService.getGroup(groupId).getId());
+        String group = String.format("\t\"id\": \"%s\",\n\t\"name\": \"%s\",\n\t",
+                groupId, groupService.getGroup(groupId).getName());
 
-        StringBuilder users = new StringBuilder("\"members\": [\n");
+        StringBuilder users = new StringBuilder("\"members\": [");
         List<ShoppingList> shoppingLists = groupService.getGroup(groupId).getShoppingLists();
         for (ShoppingList s : shoppingLists) {
 
             StringBuilder items = new StringBuilder();
             for (ItemShoppingList i : s.getItems()) {
-                items.//append("\t\t{\n\t\t\"id\": \"").append(i.getItem().getId()).
-                        append("\",\n\t\t\"name\": \"").append(i.getItem().getName()).
-                        append("\",\n\t\t\"price\": \"").append(i.getItem().getPrice()).
-                        append("\",\n\t\t\"amount\": \"").append(i.getAmount()).
-                        append("\"\n\t\t}, ");
+                items.append("\n\t\t\t\t{\n\t\t\t\t\t\"name\": \"").append(i.getItem().getName()).
+                        append("\",\n\t\t\t\t\t\"price\": \"").append(i.getItem().getPrice()).
+                        append("\",\n\t\t\t\t\t\"amount\": \"").append(i.getAmount()).
+                        append("\"\n\t\t\t\t}, ");
             }
             if (items.length() > 0)
                 items.setLength(items.length() - 2);
 
-            users.append("\t{\n\t\"id\": \"").append(s.getUser().getId()).
-                    append("\",\n\t\"name\": \"").append(s.getUser().getName()).
-                    append("\",\n\t\"items\": [\n").append(items).
-                    append("\n\t]\n\t}, ");
+            users.append("\n\t\t{\n\t\t\t\"id\": \"").append(s.getUser().getId()).
+                    append("\",\n\t\t\t\"name\": \"").append(s.getUser().getName()).
+                    append("\",\n\t\t\t\"items\": [").append(items).
+                    append("\n\t\t\t]\n\t\t}, ");
         }
         users.setLength(users.length() - 2);
-        users.append("\n]");
+        users.append("\n\t]");
 
         return "{\n"+group+users+"\n}";
     }

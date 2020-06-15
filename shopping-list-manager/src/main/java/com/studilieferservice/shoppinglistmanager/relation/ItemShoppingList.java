@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 @Entity
 //relation between ShoppingList and Item
+//the relation is single-sided, only ShoppingList knows of its Item entities
 public class ItemShoppingList implements Serializable {
 
     @EmbeddedId

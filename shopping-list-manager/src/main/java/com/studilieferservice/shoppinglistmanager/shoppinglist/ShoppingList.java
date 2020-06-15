@@ -27,7 +27,7 @@ public class ShoppingList {
     @JsonBackReference("group") //to avoid recursion in JSON
     private Group group;
 
-    //actually a ManyToMany relation
+    //actually a single-sided ManyToMany relation
     @OneToMany(mappedBy = "shoppingList")
     private List<ItemShoppingList> items = new ArrayList<>();
 
@@ -73,11 +73,8 @@ public class ShoppingList {
         return items;
     }
 
-    public void addItem(Item item, int amount, ItemShoppingList relation) {
-        //ItemShoppingList relation = new ItemShoppingList(this, item, amount);
-        items.add(relation);
-        System.out.println(relation.toString());
-        //item.getShoppingLists().add(relation);
+    public void addItem(ItemShoppingList itemShoppingList) {
+        items.add(itemShoppingList);
     }
 
     public void removeItem(Item item) {
@@ -87,7 +84,6 @@ public class ShoppingList {
             if (relation.getShoppingList().equals(this) &&
                     relation.getItem().equals(item)) {
                 iterator.remove();
-                relation.getItem().getShoppingLists().remove(relation);
                 relation.setShoppingList(null);
                 relation.setItem(null);
             }
