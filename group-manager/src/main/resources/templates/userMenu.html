@@ -3,9 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-    <link rel="stylesheet" type="text/css" href="../static/style.css" th:href="@{/style.css}"/>
+    <link rel="stylesheet" media="screen" data-rd-options="include" type="text/css" href="../static/groupmanager/style.css" th:href="@{/groupmanager/style.css}"/>
     <title>StudiLieferservice</title>
 </head>
 
@@ -44,15 +42,7 @@
                             - th:text is the output-text-label what is displayed
                     -->
                     <li th:each="gruppe : ${groupsWhereOwner}">
-                        <input type="radio" th:field="${gruppe.id}" th:value="${gruppe.id}" name="list" />
-                        <label th:for="${gruppe.id}" th:text="${gruppe.groupName}">No Groups Available</label>
-                    </li>
-                    <li th:each="gruppe : ${groupsWhereAdmin}">
-                        <input type="radio" th:field="${gruppe.id}" th:value="${gruppe.id}" name="list" />
-                        <label th:for="${gruppe.id}" th:text="${gruppe.groupName}">No Groups Available</label>
-                    </li>
-                    <li th:each="gruppe : ${groupsWhereMember}">
-                        <input type="radio" th:field="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                        <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
                         <label th:for="${gruppe.id}" th:text="${gruppe.groupName}">No Groups Available</label>
                     </li>
                     <!-- TODO Delete Dummy Groups -->

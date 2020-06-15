@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,6 +51,11 @@ public class WebController {
         this.inviteService = inviteService;
     }
 
+    @GetMapping("/test")
+    public String test(Model model) {
+        return "test";
+    }
+
     /**
      * get request on .../userMenu/{userEmail} invokes the userMenu.html of the group-manager
      * @param model is used by thymeleaf in the html page
@@ -58,7 +64,11 @@ public class WebController {
      */
     @GetMapping("/userMenu/{userEmail}")
     public String userMenu(Model model,
-                        @PathVariable("userEmail") String email) {
+                        @PathVariable("userEmail") String email,
+                           final HttpServletResponse response){
+
+        response.addHeader("x-uic-stylesheet", "/groupmanager/style.css");
+
         email = email.replace("%40", "@");
         System.out.println(email);
         Optional<User> optionalUser = userService.findById(email);
@@ -104,15 +114,16 @@ public class WebController {
      * which should only happen if the group-name in the form invalid.
      */
     @PostMapping("/save-group")
-    public String saveGroupSubmission(@ModelAttribute CreationForm form) throws JSONException {
+    public String saveGroupSubmission(Model model, @ModelAttribute CreationForm form) throws JSONException {
         Gruppe group = new Gruppe();
         group.setGroupName(form.getGroupName());
         group.setId(UUID.randomUUID().toString());
 
         Optional<User> optionalUser = userService.findById(form.getUser());
         if(optionalUser.isEmpty()) {
-            return "redirect:error";
-        };
+            model.addAttribute("subject", "user: \"" + form.getUser() + "\"");
+            return "error";
+        }
         User user = optionalUser.get();
 
         group.setOwner(user);
@@ -155,20 +166,24 @@ public class WebController {
         return redirectView;
     }
 
+    /*
     /**
      * called through a browser by the creationForm from groupCreator(...)
      * @param form the object containing the input from the form
      * @return redirects back to the groupCreator page
      */
-    @PostMapping("/newGroup")
-    public String newGroup(@ModelAttribute CreationForm form) {
+    /*@PostMapping("/newGroup")
+    public String newGroup(@ModelAttribute CreationForm form, Model model) {
         System.out.println(form);
         Gruppe group = new Gruppe();
         group.setGroupName(form.getGroupName());
 
         Optional<User> userOptional = userService.findById(form.getUser());
         //TODO: how do we handle this error?
-        if (userOptional.isEmpty()) return "Error: Group owner could not be found in the database of this service";
+        if (userOptional.isEmpty()) {
+            model.addAttribute("subject", "user: \"" + form.getUser() + "\"");
+            return "error";
+        }
         User user = userOptional.get();
         group.setOwner(user);
         groupService.save(group);
@@ -176,6 +191,7 @@ public class WebController {
 //TODO: and where do we go afterwards?
         return "redirect:groupMenu/" + group.getId();
     }
+    /*
 
     /**
      * this method is invoked when creating a new invite
