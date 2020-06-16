@@ -14,6 +14,6 @@ When started via Docker-Compose you can administer the database at:
 * http://localhost:9002/
   * System:      postgreSQL
   * Server:      db
-  * User:        postgres
-  * Password:    password
+  * User:        db_user
+  * Password:    db_pwd
   * Database:    postgres

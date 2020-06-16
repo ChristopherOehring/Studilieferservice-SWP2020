@@ -3,7 +3,9 @@ package com.studilieferservice.groupmanager.persistence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotNull;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,6 +18,8 @@ import java.util.Objects;
 
 /**
  * The Structure that represents groups
+ * @author Manuel Jirsak
+ * @author Christopher Oehring
  */
 
 @Entity(name = "Gruppe")
@@ -56,6 +60,26 @@ public class Gruppe {
     List<Invite> invites = new ArrayList<>();
     
     private long version;
+
+    private String deliveryPlace;
+
+    private String deliverDate;
+
+    public String getDeliveryPlace() {
+        return deliveryPlace;
+    }
+
+    public void setDeliveryPlace(String deliveryPlace) {
+        this.deliveryPlace = deliveryPlace;
+    }
+
+    public String getDeliverDate() {
+        return deliverDate;
+    }
+
+    public void setDeliverDate(String deliverDate) {
+        this.deliverDate = deliverDate;
+    }
 
     public long getVersion() {
         return version;
@@ -224,5 +248,22 @@ public class Gruppe {
     @Override
     public int hashCode() {
         return Objects.hash(id, groupName, owner, memberList, adminList, invites, version);
+    }
+
+    public boolean isValidDate(String date) {
+        if(!date.matches("[0-9][0-9]'.[0-9][0-9]'.[0-9][0-9][0-9][0-9]")) {
+            return false;
+        }
+        int day = Integer.parseInt(date.substring(0,2));
+        int month = Integer.parseInt(date.substring(3,5));
+        int year = Integer.parseInt(date.substring(6,10));
+        if (day >31 || month >12 || (day>29 && month==2) || (day>30 && month==4) || (day>30 && month==6) || (day>30 && month==9) || (day>30 && month==11)) return false;
+        if (year < 2020) return false;
+        if((day==29 && month==2) && year%4==0) {
+            if(year%100==0) {
+                return year % 400 == 0;
+            }
+        }
+        return true;
     }
 }
