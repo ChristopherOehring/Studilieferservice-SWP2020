@@ -7,19 +7,18 @@
     <script th:src="@{webjars/jquery/jquery.min.js}"></script>
     <script th:src="@{webjars/bootstrap/bootstrap.min.js}"></script>
 
+    <link rel="stylesheet" href="../../static/css/registerForm.css">
+
     <title>Registration</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">SWP-09 </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+
 
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="/register">Register <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/register">Register</a>
                 </li>
 
                 <li class="nav-item">
@@ -38,64 +37,69 @@
         </div>
     </nav>
 
+    <h1>Register</h1>
+
     <div class="stylepadding">
         <form th:action="@{/register}" th:object="${user}" method="POST">
-            <div class="form-group" >
-                <label for="firstName" class="form-control-label">First Name</label> <input
-                    type="text" class="form-control" th:field="*{firstName}" id="firstName" />
+            <div class="box" >
+                <input class="input" type="text" th:field="*{firstName}" id="firstName" placeholder=" " />
+                <label for="firstName" class="label">First Name</label> 
                 <div class="text text-danger" th:if="${#fields.hasErrors('firstName')}"
                      th:errors="*{firstName}"></div>
             </div>
 
-            <div class="form-group" >
-                <label for="lastName" class="form-control-label">Last Name</label> <input
-                    type="text" class="form-control" th:field="*{lastName}" id="lastName" />
+            <div class="box" >
+                <input type="text" class="input" th:field="*{lastName}" id="lastName" placeholder=" " />
+                <label for="lastName" class="label">Last Name</label> 
                 <div class="text text-danger" th:if="${#fields.hasErrors('lastName')}"
                      th:errors="*{lastName}"></div>
             </div>
 
-            <div class="form-group" >
-                <label for="userName" class="form-control-label">User Name</label> <input
-                type="text" class="form-control" th:field="*{userName}" id="userName" />
+            <div class="box" >
+                <input type="text" class="input" th:field="*{userName}" id="userName" placeholder=" " />
+                <label for="userName" class="label">User Name</label> 
                 <div class="text text-danger" th:if="${#fields.hasErrors('userName')}"
                      th:errors="*{userName}"></div>
             </div>
 
-            <div class="form-group" >
-                <label for="street" class="form-control-label">Street</label> <input
-                    type="text" class="form-control" th:field="*{street}" id="street" />
+            <div class="box" >
+                <input type="text" class="input" th:field="*{street}" id="street" placeholder=" " />
+                <label for="street" class="label">Street</label> 
                 <div class="text text-danger" th:if="${#fields.hasErrors('street')}"
                      th:errors="*{street}"></div>
             </div>
-            <div class="form-group" >
-                <label for="city" class="form-control-label">City</label> <input
-                    type="text" class="form-control" th:field="*{city}" id="city" />
+
+            <div class="box" >
+                <input type="text" class="input" th:field="*{city}" id="city" placeholder=" "/>
+                <label for="city" class="label">City</label> 
                 <div class="text text-danger" th:if="${#fields.hasErrors('city')}"
                      th:errors="*{city}"></div>
             </div>
-            <div class="form-group" >
-                <label for="zip" class="form-control-label">ZIP</label> <input
-                    type="text" class="form-control" th:field="*{zip}" id="zip" />
+
+            <div class="box" >
+                <input type="text" class="input" th:field="*{zip}" id="zip" placeholder=" "/>
+                <label for="zip" class="label">ZIP</label> 
                 <div class="text text-danger" th:if="${#fields.hasErrors('zip')}"
                      th:errors="*{zip}"></div>
             </div>
 
-            <div class="form-group">
-                <label for="email" class="form-control-label">Email</label> <input
-                    type="text" class="form-control" th:field="*{email}" id="email" />
+            <div class="box">
+                <input type="text" class="input" th:field="*{email}" id="email" placeholder=" " />
+                <label for="email" class="label">Email</label> 
                 <div class="text text-danger" th:if="${#fields.hasErrors('email')}"
                      th:errors="*{email}"></div>
             </div>
 
-            <div class="form-group">
-                <label for="password" class="form-control-label">Password</label> <input
-                    type="password" class="form-control" th:field="*{password}"
-                    id="password" />
+            <div class="box">
+                <input type="password" class="input" th:field="*{password}" id="password" placeholder=" "/>
+                <label for="password" class="label">Password</label> 
                 <div class="text text-danger"
                      th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
             </div >
 
-            <input type="submit" value="Submit" class="btn btn-primary"/>
+            <div class="submit">
+                <input type="submit" value="Submit" id="submit"/>
+            </div>
         </form>
     </div>
 
