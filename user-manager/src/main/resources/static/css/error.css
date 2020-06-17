@@ -1,0 +1,59 @@
+/*###################
+  #### VARIABLES ####
+  ###################*/
+
+  :root{
+    /*## COLORS ###*/
+    --primary: #363636;
+    --secondary: #474747;
+    --lineColor: #909090;
+
+    /*## FONTS ##*/
+    --headingFont: "Patua One";
+    --secondaryFont: "Roboto";
+
+}
+body{
+    margin: 0px;
+    background-color: var(--primary);
+}
+
+.navbar{
+    text-align: center;
+    margin-top: 3rem;
+    margin-right: 2rem;
+}
+
+nav{
+    color: white;
+}
+
+.header{
+    display: inline;
+}
+
+li{
+    display: inline;
+    list-style-type: none;
+}
+
+a:link, a:visited {
+    background-color: var(--secondary);
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+  
+a:hover, a:active {
+    background-color: white;
+    color: var(--primary);
+}
+
+.jumbotron{
+    text-align: center;
+    margin-top: 10%;
+    color: white;
+    background-color: transparent;
+}
