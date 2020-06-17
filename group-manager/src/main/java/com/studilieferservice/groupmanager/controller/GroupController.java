@@ -1,5 +1,6 @@
 package com.studilieferservice.groupmanager.controller;
 
+import com.studilieferservice.groupmanager.api.bodys.GroupDeliveryBody;
 import com.studilieferservice.groupmanager.controller.bodys.DeleteGroupBody;
 import com.studilieferservice.groupmanager.controller.bodys.GetUserBody;
 import com.studilieferservice.groupmanager.controller.bodys.CreateGroupBody;
@@ -25,6 +26,8 @@ import java.util.UUID;
 /**
  * Provides a api for the group-service at /api/group-service
  * @version 1.2 6/04/20
+ * @author Christopher Oehring
+ * @author Manuel Jirsak
  */
 @RequestMapping("/api/group-service")
 @RestController
@@ -313,4 +316,21 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body("Removed Invite from " + gruppe.getGroupName() + " to " + user.getUserName());
     }
     // TODO: 5/31/20 as of now, admins cant be removed here, Should this be possible? - IMO only the owner should be able to remove admins ~ Manu 6/04/20
+
+    @PostMapping(path = "/deliveryData")
+    public ResponseEntity<?> setDeliveryData(@RequestBody GroupDeliveryBody body) {
+        Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
+        if (optionalGruppe.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No group with id "+body.getGroupId()+" was found!");
+        Gruppe gruppe = optionalGruppe.get();
+        if(gruppe.isValidDate(body.getDate())) {
+            gruppe.setDeliverDate(body.getDate());
+        }
+        //TODO some testing for delivery place
+        if(gruppe.isValidDate(body.getPlace())) {
+            gruppe.setDeliveryPlace(body.getPlace());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(gruppe);
+    }
+
+
 }
