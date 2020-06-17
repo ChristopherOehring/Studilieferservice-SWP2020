@@ -3,9 +3,7 @@ package com.studilieferservice.groupmanager.persistence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotNull;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,24 +59,35 @@ public class Gruppe {
     
     private long version;
 
-    private String deliveryPlace;
+    private String deliveryCity; //city to deliver to
+    private String zipCode; //zip code of city
+    private String deliveryStreet; //street and house number to deliver to
+    private String deliveryHouseNumber;
 
-    private String deliverDate;
+    private String deliveryDate;
 
-    public String getDeliveryPlace() {
-        return deliveryPlace;
+    public List<String> getDeliveryPlace() {
+        List<String> place = new ArrayList<>();
+        place.add(deliveryCity);
+        place.add(zipCode);
+        place.add(deliveryStreet);
+        place.add(deliveryHouseNumber);
+        return place;
     }
 
-    public void setDeliveryPlace(String deliveryPlace) {
-        this.deliveryPlace = deliveryPlace;
+    public void setDeliveryPlace(List<String> deliveryPlace) {
+        this.deliveryCity = deliveryPlace.get(0);
+        this.zipCode = deliveryPlace.get(1);
+        this.deliveryStreet = deliveryPlace.get(2);
+        this.deliveryHouseNumber = deliveryPlace.get(3);
     }
 
-    public String getDeliverDate() {
-        return deliverDate;
+    public String getDeliveryDate() {
+        return deliveryDate;
     }
 
-    public void setDeliverDate(String deliverDate) {
-        this.deliverDate = deliverDate;
+    public void setDeliveryDate(String deliveryDate) {
+        this.deliveryDate = deliveryDate;
     }
 
     public long getVersion() {
@@ -251,7 +260,7 @@ public class Gruppe {
     }
 
     public boolean isValidDate(String date) {
-        if(!date.matches("[0-9][0-9]'.[0-9][0-9]'.[0-9][0-9][0-9][0-9]")) {
+        if(!date.matches("[0-9][0-9]\\.[0-9][0-9]\\.[0-9][0-9][0-9][0-9]")) {
             return false;
         }
         int day = Integer.parseInt(date.substring(0,2));

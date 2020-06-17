@@ -66,12 +66,13 @@ public class GroupController {
         System.out.println("success");
         if(user.isValidEmailAddress(user.getEmail()) && user.isValidName(user.getFirstName()) && user.isValidName(user.getLastName())) {
             if (userService.findById(user.getEmail()).isPresent()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+user.getEmail()+" already saved as "+user.getUserName()+" with the name "+user.getFirstName()+" "+user.getLastName());
+                User user1 = userService.findById(user.getEmail()).get();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+user1.getEmail()+" already saved as "+user1.getUserName()+" with the name "+user1.getFirstName()+" "+user1.getLastName());
             }
             userService.save(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         }
-        //TODO causes 500, fix it
+        //TODO causes 500, fix it   -   I guess it is fixed... ~ Manu 6/17/20
         else if (!user.isValidEmailAddress(user.getEmail()) || !user.isValidName(user.getFirstName()) || !user.isValidName(user.getLastName())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have to fill in both your first name and last name, also you may only use letters, dashes and spaces. Also, check your email address whether it matches the right from");
         }
@@ -322,13 +323,34 @@ public class GroupController {
         Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
         if (optionalGruppe.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No group with id "+body.getGroupId()+" was found!");
         Gruppe gruppe = optionalGruppe.get();
+        if(body.getDate()==null || body.getPlace().get(0)==null || body.getPlace().get(1)==null || body.getPlace().get(2)==null || body.getPlace().get(3)==null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Some entries are null");
+        }
+        if(body.getDate().isEmpty() || body.getPlace().get(0).isBlank() || body.getPlace().get(1).isBlank() || body.getPlace().get(2).isBlank() || body.getPlace().get(3).isBlank()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing data in date or place");
+        }
+        if(!gruppe.isValidDate(body.getDate())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Delivery date is invalid! - "+body.getPlace().get(0)+", "+body.getPlace().get(1)+", "+body.getPlace().get(2)+", "+body.getPlace().get(3)+", "+"  -  "+body.getDate());
+        }
+        if(gruppe.getDeliveryPlace().equals(body.getPlace()) && gruppe.getDeliveryDate().equals(body.getDate())) {
+            return ResponseEntity.status(HttpStatus.OK).body("Nothing changed");
+        }
+        if(!body.getPlace().get(0).isBlank() && !body.getPlace().get(1).isBlank() && !body.getPlace().get(2).isBlank() && !body.getPlace().get(3).isBlank()) {
+            if(body.getPlace().get(0).matches("[a-z A-Z]*") && body.getPlace().get(1).matches("[0-9]*") && body.getPlace().get(2).matches("[a-z A-Z]*") && body.getPlace().get(3).matches("[0-9]*[a-zA-Z]?")) {
+                gruppe.setDeliveryPlace(body.getPlace());
+            }
+            else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not update delivery data - Check that your address details are correct: City and street only contains letters, zip code only contains letters and house number contains numbers and maximum one letter");
+            }
+        }
         if(gruppe.isValidDate(body.getDate())) {
-            gruppe.setDeliverDate(body.getDate());
+            gruppe.setDeliveryDate(body.getDate());
         }
-        //TODO some testing for delivery place
-        if(gruppe.isValidDate(body.getPlace())) {
-            gruppe.setDeliveryPlace(body.getPlace());
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not update delivery data - Check that your date matches the valid form of DD/MM/YYYY");
         }
+        //gruppe.setDeliveryDate(body.getDate());
+        groupService.save(gruppe);
         return ResponseEntity.status(HttpStatus.OK).body(gruppe);
     }
 

@@ -253,4 +253,18 @@ public class WebController {
 
         return "redirect:userMenu";
     }
+
+    //JUST FOR DEBUG
+    @GetMapping("/test2")
+    public String testSite(Model model) {
+        return "groupMenu";
+    }
+
+    @GetMapping("/test3/{userEmail}")
+    public String testSite2(Model model, @PathVariable("userEmail") String email) {
+        return "userMenu";
+    }
+
+    //stürzt ab wenn nutzer keine invites hat
+    //save-group keine WebPage, sondern nur Weiterleitung
 }
