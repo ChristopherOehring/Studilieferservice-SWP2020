@@ -9,14 +9,11 @@ import com.studilieferservice.groupmanager.service.GroupService;
 import com.studilieferservice.groupmanager.service.InviteService;
 import com.studilieferservice.groupmanager.service.UserService;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,7 +74,7 @@ public class WebController {
         if(optionalUser.isEmpty()) {
             System.out.println("Error 404: user \"" + email + "\" not found");
             model.addAttribute("subject", "user: \"" + email + "\"");
-            return "error";
+            return "error404";
         }
         User user = optionalUser.get();
 
@@ -124,7 +121,7 @@ public class WebController {
         Optional<User> optionalUser = userService.findById(form.getUser());
         if(optionalUser.isEmpty()) {
             model.addAttribute("subject", "user: \"" + form.getUser() + "\"");
-            return "error";
+            return "error404";
         }
         User user = optionalUser.get();
 
