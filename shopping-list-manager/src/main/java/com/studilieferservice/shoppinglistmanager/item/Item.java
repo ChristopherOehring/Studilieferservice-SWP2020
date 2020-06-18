@@ -1,11 +1,13 @@
 package com.studilieferservice.shoppinglistmanager.item;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Item {
 
     @Id
