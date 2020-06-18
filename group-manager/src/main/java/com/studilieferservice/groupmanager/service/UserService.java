@@ -13,6 +13,9 @@ import java.util.Optional;
  * getAllUsers: gets you all users<br>
  * getUserById: give it an UserID (String) and you get the User with first- and lastname (if this user exists)<br>
  * deleteUserById: removes an user from the repository when given the e-mail-address of the specific user<br>
+ * @author Christopher Oehring
+ * @author Manuel Jirsak
+ * @version 1.1 6/18/20
  */
 @Service
 public class UserService {

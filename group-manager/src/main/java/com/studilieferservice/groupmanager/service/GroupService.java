@@ -16,6 +16,9 @@ import static com.studilieferservice.groupmanager.service.GroupEventType.*;
 
 /**
  * This is a service for database Operations regarding Groups
+ * @author Christopher Oehring
+ * @author Manuel Jirsak
+ * @version 1.1 6/18/20
  */
 @Service
 public class GroupService {

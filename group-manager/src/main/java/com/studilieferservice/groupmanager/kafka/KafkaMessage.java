@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * A template for Kafka Messages
  * @param <P> The Payload Class
+ * @author Christopher Oehring
+ * @version 1.1 6/18/20
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -47,7 +47,8 @@ import java.util.UUID;
      version: the version of the group that can be found in this message
      payload: A representation of the relevant values of the group
  * </pre>
-
+ * @author Christopher Oehring
+ * @version 1.1 6/18/20
  */
 
 @Component

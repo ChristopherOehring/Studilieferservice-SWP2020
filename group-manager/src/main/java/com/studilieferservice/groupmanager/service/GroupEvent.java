@@ -5,6 +5,8 @@ import org.springframework.context.ApplicationEvent;
 
 /**
  * This Event is created every time a group is created or modified
+ * @author Christopher Oehring
+ * @version 1.1 6/18/20
  */
 public class GroupEvent extends ApplicationEvent {
 

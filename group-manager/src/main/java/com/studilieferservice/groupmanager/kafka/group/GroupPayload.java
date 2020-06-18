@@ -4,6 +4,8 @@ import java.util.List;
 
 /**
  * This class is a representation of the relevant information of a {@link com.studilieferservice.groupmanager.persistence.Gruppe}, for use in a {@link GroupKafkaMessage}
+ * @author Christopher Oehring
+ * @version 1.1 6/18/20
  */
 
 public class GroupPayload {

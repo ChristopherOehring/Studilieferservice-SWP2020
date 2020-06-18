@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
  * Has to be implemented to enable the use of
  * {@link org.springframework.core.convert.ConversionService#convert(java.lang.Object, java.lang.Class)}
  * to convert objects of {@link Gruppe} to objects of {@link Gruppe}
+ * @author Christopher Oehring
+ * @version 1.1 6/18/20
  */
 
 @Component

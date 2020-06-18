@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * Should be used to add Invites to the Database
+ * @author Christopher Oehring
+ * @version 1.1 6/18/20
  */
 @Service
 public class InviteService {
