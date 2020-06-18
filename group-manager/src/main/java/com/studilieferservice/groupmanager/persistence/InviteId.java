@@ -7,6 +7,8 @@ import java.util.Objects;
 
 /**
  * The Key for the {@link Invite} Entity
+ * @author Christopher Oehring
+ * @version 1.1 6/18/20
  */
 
 @Embeddable

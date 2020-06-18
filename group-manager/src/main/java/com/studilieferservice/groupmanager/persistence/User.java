@@ -12,6 +12,9 @@ import java.util.Objects;
 
 /**
  * This is how users are represented in this microservice
+ * @author Manuel Jirsak
+ * @author Christopher Oehring
+ * @version 1.6 6/18/20
  */
 //todo add version
 @Entity(name = "Nutzer")

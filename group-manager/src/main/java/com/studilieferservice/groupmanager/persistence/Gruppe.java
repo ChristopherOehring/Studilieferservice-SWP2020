@@ -18,6 +18,7 @@ import java.util.Objects;
  * The Structure that represents groups
  * @author Manuel Jirsak
  * @author Christopher Oehring
+ * @version 1.6 6/18/20
  */
 
 @Entity(name = "Gruppe")

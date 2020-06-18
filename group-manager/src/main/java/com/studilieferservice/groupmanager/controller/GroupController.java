@@ -1,6 +1,6 @@
 package com.studilieferservice.groupmanager.controller;
 
-import com.studilieferservice.groupmanager.api.bodys.GroupDeliveryBody;
+import com.studilieferservice.groupmanager.controller.bodys.GroupDeliveryBody;
 import com.studilieferservice.groupmanager.controller.bodys.DeleteGroupBody;
 import com.studilieferservice.groupmanager.controller.bodys.GetUserBody;
 import com.studilieferservice.groupmanager.controller.bodys.CreateGroupBody;
@@ -24,8 +24,8 @@ import java.util.UUID;
 // TODO: 5/31/20 Should we have a method to remove admins, or do they need to be demoted first?
 // TODO: 5/31/20 Should you be able to create multiple groups with the same name?
 /**
- * Provides a api for the group-service at /api/group-service
- * @version 1.4 6/18/20 //TODO shouldn't it be version "2".4, as it is the completely rewritten version of the prototype?
+ * Provides an api for the group-service at /api/group-service
+ * @version 1.4 6/18/20 //TODO: 6/18/20 shouldn't it be version "2".4, as it is the completely rewritten version of the prototype? ~ Manu
  * @author Christopher Oehring
  * @author Manuel Jirsak
  */
@@ -343,7 +343,7 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.OK).body("Nothing changed");
         }
         if(!body.getPlace().get(0).isBlank() && !body.getPlace().get(1).isBlank() && !body.getPlace().get(2).isBlank() && !body.getPlace().get(3).isBlank()) {
-            if(body.getPlace().get(0).matches("[a-z A-Z]*") && body.getPlace().get(1).matches("[0-9]*") && body.getPlace().get(2).matches("[a-z A-Z]*") && body.getPlace().get(3).matches("[0-9]*[a-zA-Z]?")) {
+            if(body.getPlace().get(0).matches("[a-z A-Z-]*") && body.getPlace().get(1).matches("[0-9]*") && body.getPlace().get(2).matches("[a-z A-Z-]*") && body.getPlace().get(3).matches("[0-9]*[a-zA-Z]?")) {
                 gruppe.setDeliveryPlace(body.getPlace());
             }
             else {

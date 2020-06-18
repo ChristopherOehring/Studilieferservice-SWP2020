@@ -27,6 +27,8 @@ import java.util.UUID;
 /**
  * provides a web-controller at /web <br>
  * A web controller returns html documents and is meant to be consumed via browser
+ * @author Christopher Oehring
+ * @version 1.3 6/18/2020
  */
 
 // TODO Figure out how to properly handle errors here

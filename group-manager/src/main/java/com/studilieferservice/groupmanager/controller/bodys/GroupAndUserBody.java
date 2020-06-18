@@ -2,8 +2,8 @@ package com.studilieferservice.groupmanager.controller.bodys;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 /**
- *  This is a template that is used in the {@link com.studilieferservice.groupmanager.controller.GroupController}
- *  whenever the input of a groupId and a email is required
+ * This is a template that is used in the {@link com.studilieferservice.groupmanager.controller.GroupController}
+ * whenever the input of a groupId and a email is required
     <pre>
         Example:
                 {
@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
                 "email":"max.mustermann@tu-ilmenau.de"
                 }
     </pre>
+ * @author Christopher Oehring
+ * @version 1.1 6/18/20
  */
 public class GroupAndUserBody {
 

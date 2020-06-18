@@ -9,6 +9,8 @@ import java.util.Objects;
 
 /**
  * This is a composite key, used to model a Invitation to a Group
+ * @author Christopher Oehring
+ * @version 1.1 6/18/20
  */
 @Entity(name = "Invite")
 @Table(name = "invite")
