@@ -25,7 +25,7 @@ import java.util.UUID;
 // TODO: 5/31/20 Should you be able to create multiple groups with the same name?
 /**
  * Provides a api for the group-service at /api/group-service
- * @version 1.2 6/04/20
+ * @version 1.4 6/18/20 //TODO shouldn't it be version "2".4, as it is the completely rewritten version of the prototype?
  * @author Christopher Oehring
  * @author Manuel Jirsak
  */
@@ -318,6 +318,13 @@ public class GroupController {
     }
     // TODO: 5/31/20 as of now, admins cant be removed here, Should this be possible? - IMO only the owner should be able to remove admins ~ Manu 6/04/20
 
+    /**
+     * Changes the delivery data of a group <br>
+     * Can be reached with a POST request at api/group-service/deliveryData
+     * You can have the delivery data returned to you (along with all group information) when with a GET request at api/group-service/group
+     * @param body A {@link GroupDeliveryBody}, which contains the group id and the place to deliver to (consisting of city-name, zip code, street and house number)
+     * @return A response entity containing the updated group (if something changed, otherwise just "nothing changed") or explaining what went wrong (400: some data is invalid; 404: group cannot be found)
+     */
     @PostMapping(path = "/deliveryData")
     public ResponseEntity<?> setDeliveryData(@RequestBody GroupDeliveryBody body) {
         Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
@@ -354,5 +361,37 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body(gruppe);
     }
 
+    /**
+     * Changes the owner of the group, afterwards, the former owner is saved as admin
+     * Can be reached with a POST request at api/group-service/group/owner
+     * @param body A {@link GroupAndUserBody}, which contains the groupId and the identifying email of the user
+     * @return A response entity indicating, whether the change was successful (200, former owner is now an admin) or not (404, either group or user weren't found) - if the nothing changed, it is indicated as 200 OK
+     */
+    @PostMapping(path = "/group/owner")
+    public ResponseEntity<?> setOwner(@RequestBody GroupAndUserBody body){
+        Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
+        if (optionalGruppe.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No group with id "+body.getGroupId()+" was found!");
+        Gruppe gruppe = optionalGruppe.get();
+        for(User u:gruppe.getMembers()) {
+            if(u.getEmail().equals(body.getEmail())) {
+                gruppe.addAdmin(gruppe.getOwner());
+                gruppe.setOwner(u);
+                groupService.save(gruppe);
+                return ResponseEntity.status(HttpStatus.OK).body("User "+body.getEmail()+" is now the owner of this group");
+            }
+        }
+        for (User a:gruppe.getAdmins()) {
+            if(a.getEmail().equals(body.getEmail())) {
+                gruppe.addAdmin(gruppe.getOwner());
+                gruppe.setOwner(a);
+                groupService.save(gruppe);
+                return ResponseEntity.status(HttpStatus.OK).body("User "+body.getEmail()+" is now the owner of this group");
+            }
+        }
+        if (gruppe.getOwner().getEmail().equals(body.getEmail())) {
+            return ResponseEntity.status(HttpStatus.OK).body("User "+body.getEmail()+" is already the owner of this group");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User "+body.getEmail()+" is not a member of this group");
+    }
 
 }
