@@ -2,14 +2,12 @@ package com.studilieferservice.shoppinglistmanager.shoppinglist;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.studilieferservice.shoppinglistmanager.group.Group;
-import com.studilieferservice.shoppinglistmanager.item.Item;
 import com.studilieferservice.shoppinglistmanager.relation.ItemShoppingList;
 import com.studilieferservice.shoppinglistmanager.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 @Entity
@@ -75,19 +73,6 @@ public class ShoppingList {
 
     public void addItem(ItemShoppingList itemShoppingList) {
         items.add(itemShoppingList);
-    }
-
-    public void removeItem(Item item) {
-        for (Iterator<ItemShoppingList> iterator = items.iterator(); iterator.hasNext();) {
-            ItemShoppingList relation = iterator.next();
-
-            if (relation.getShoppingList().equals(this) &&
-                    relation.getItem().equals(item)) {
-                iterator.remove();
-                relation.setShoppingList(null);
-                relation.setItem(null);
-            }
-        }
     }
 
     @Override

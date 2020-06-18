@@ -21,10 +21,6 @@ public class ItemService {
         return itemRepository.findById(name).orElseThrow();
     }
 
-    //public Item getItemByName(String name) {
-    //    return itemRepository.findByName(name);
-    //}
-
     public void deleteItem(Item item) {
         itemRepository.delete(item);
     }
