@@ -3,10 +3,46 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../static/groupmanager/style.css" th:href="@{/static/groupmanager/style.css}"/>
+    <link rel="stylesheet" type="text/css" href="../static/groupmanager/groupMenu.css" th:href="@{/static/groupmanager/groupMenu.css}"/>
     <title>groupMenu</title>
 </head>
 <body>
+
+    <h1>Dashboard</h1>
+
+
+
+    <div class="members-bar">
+        <div class="membersList">
+            <rewe-digital-include path="https://some.path/to/fragment"></rewe-digital-include>
+            Members-List
+        </div>
+        <div class="inviteMember">
+            <!--TODO: invite Member-Bar-->
+            Invite Member
+        </div>
+    </div>
+
+    <div class="chat">
+        <rewe-digital-include path="https://some.path/to/fragment"></rewe-digital-include>
+        Chat
+    </div>
+
+    <div class="shipping-information">
+        <rewe-digital-include path="https://some.path/to/fragment"></rewe-digital-include>
+        Shipping-Information
+    </div>
+
+    <div class="orderButton">
+        <input type="button">
+        Order
+    </div>
+
+    <div class="shopping-list">
+        <rewe-digital-include path="https://some.path/to/fragment"></rewe-digital-include>
+        Shopping-List
+    </div>
+
     Work in progress! <th th:text="*{groupId}"></th>
 </body>
 </html>
