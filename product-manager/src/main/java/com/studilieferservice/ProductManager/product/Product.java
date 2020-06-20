@@ -31,13 +31,15 @@ public class Product {
      public Product(String name, double price) {
           this.name = name;
           this.price = price;
+          description = "";
+          imageUrl = new Text("");
      }
 
-     public Product(String name, String description, double price, Text imageUrl) {
+     public Product(String name, String description, double price, String imageUrl) {
           this.name = name;
           this.description = description;
           this.price = price;
-          this.imageUrl = imageUrl;
+          this.imageUrl = new Text(imageUrl);
      }
 
      public String getName() {
@@ -69,7 +71,7 @@ public class Product {
      }
 
      public void setImageUrl(String imageUrl) {
-          this.imageUrl.setContent(imageUrl);
+          this.imageUrl = new Text(imageUrl);
      }
 
      @Override

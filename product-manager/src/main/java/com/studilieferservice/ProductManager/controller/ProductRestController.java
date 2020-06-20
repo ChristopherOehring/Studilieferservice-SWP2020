@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Provides api inteface for Productmanaget
+ * Provides api interface for Productmanager
  */
-@RestController("/product")
+@RestController
+@RequestMapping("product")
 public class ProductRestController {
 
     private final ProductService productService;
@@ -24,7 +25,7 @@ public class ProductRestController {
     /**
      * Creates a product and saves to database
      * @param product in JSON format
-     * @return response entity,if successful, with the created product
+     * @return response entity, if successful, with the created product
      */
     @PostMapping("/create")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
@@ -36,10 +37,9 @@ public class ProductRestController {
 
     /**
      * Searches all the products with the given name in database
-      * @param product in JSON format
+     * @param product in JSON format
      * @return the found product in JSON product
      */
-
     @GetMapping("/search")
     public Product searchProduct(@RequestBody Product product) {
         return productService.findProductById(product.getName());
@@ -49,7 +49,6 @@ public class ProductRestController {
      * Outputs all the products in the database
      * @return an array of JSON objects of type product
      */
-
     @GetMapping("/listall")
     public List<Product> listAllProducts() {
         return (productService.listAllProducts());

@@ -2,8 +2,18 @@
 A basic product microservice.
 
 ## Setup and access
-The service Product manager has 4 rest interfaces which are intuitive:
+The service Product manager has 4 REST interfaces:
 1./create
+
+JSON example:
+```
+{
+    "name": "test",
+    "price": 1.99,
+    "description": "bla",
+    "imageUrl": "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg"
+}
+```
 
 2./search
 
@@ -11,4 +21,9 @@ The service Product manager has 4 rest interfaces which are intuitive:
 
 4./listall
 
-Locally accessed on port 8080 on docker on 9060
+**Web Controller:**
+
+You can see a page listing all created products at http://localhost:9060/products
+
+
+Locally accessed on port 8060 on docker on 9060

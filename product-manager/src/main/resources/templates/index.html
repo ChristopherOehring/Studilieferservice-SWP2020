@@ -42,7 +42,7 @@
                         <td th:text="${product.name}"></td>
                         <td th:text="${product.description}"></td>
                         <td th:text="${product.price} + ' €'"></td>
-                        <td> <img th:src="@{${product.imageUrl.content}}" width="47" height="47"> </td>
+                        <td> <img th:src="@{${product.imageUrl}}" width="47" height="47"> </td>
                         <td id="addButton"><a th:href="@{/addProduct(name=${product.name})}" class="btn btn-dark">Add Product</a></td>
                     </tr>
                 </table>
