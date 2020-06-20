@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../static/groupmanager/groupMenu.css" th:href="@{/groupmanager/groupMenu.css}"/>
-    <title>groupMenu</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
+    <title>Dashboard</title>
 </head>
 <body>
 
@@ -13,15 +15,50 @@
 
 
     <div class="members-bar">
+        <div class="memberTitleBox">
+            <h2>Members</h2>
+        </div> 
         <div class="membersList">
-            <rewe-digital-include path="https://some.path/to/fragment"></rewe-digital-include>
-            Members-List
+            <table class="memTable">
+                <!-- List of Admins -->
+                <tr class="memTr" th:each="member: ${adminList}"> <!-- TODO: adjust -->
+                    <td class="memTd">
+                        <img src="../imgs/crown-3-128.png" alt=" ">
+                    </td>
+                    <td class="memTd">
+                        <p th:text="${member.name}">You</p>
+                    </td>
+                    <td class="memTd">
+                        <img th:if="member.hasSubmitted" src="../imgs/checkmark-128.png" alt="">
+                    </td>
+                </tr>
+
+               
+                <!-- List of the other Members -->
+                <tr class="memTr" th:each="member: ${memberList}"> <!-- TODO: adjust -->
+                    <td class="memTd">
+                        &emsp;
+                    </td>
+                    <td class="memTd">
+                        <p th:text="${meber.name}">Invite your friends!</p>
+                    </td>
+                    <td class="memTd">
+                        <img th:if="member.hasSubmitted" src="../imgs/checkmark-128.png" alt="">
+                    </td>
+                </tr>
+            </table>
         </div>
+
         <div class="inviteMember">
-            Invite Member
             <form action="">
-                <input type="text" name="inviteEmail" id="inviteEmail">
-                <input type="button" value="add a new friend">
+
+                <div class="inviteUsername">
+                    <input type="text" name="inviteEmail" id="inviteEmail" placeholder="username">
+                </div>
+
+                <div class="inviteButton">
+                    <input type="button" value="add a new friend" id="inviteButton">
+                </div>
             </form>
             
         </div>
@@ -33,13 +70,33 @@
     </div>
 
     <div class="shipping-information">
-        <rewe-digital-include path="https://some.path/to/fragment"></rewe-digital-include>
-        Shipping-Information
+        <table class="delTable">
+            <tr class="delTr">
+                <td class="delTd">delivery date:</td>
+                <td class="delTd">
+                    <!-- TODO: adjust! -->
+                    Mo, 01.01.2020
+                </td>
+                <td class="delTd">
+                    <input type="image" src="../imgs/edit.png" />
+                </td>
+            </tr>
+            <tr class="delTr">
+                <td class="delTd">delivery adress:</td>
+                <td class="delTd">
+                    <!-- TODO: adjust! -->
+                    123456 Model City, <br>
+                    Modelstreet 42
+                </td>
+                <td class="delTd">
+                    <input type="image" src="../imgs/edit.png" />
+                </td>
+            </tr>
+    </table>        
     </div>
 
     <div class="orderButton">
-        <input type="button">
-        Order
+        <input type="button" id="orderButton" value="order">
     </div>
 
     <div class="shopping-list">
@@ -47,6 +104,6 @@
         Shopping-List
     </div>
 
-    Work in progress! <th th:text="*{groupId}"></th>
+    <!--Work in progress! <th th:text="*{groupId}"></th>  --> 
 </body>
 </html>
