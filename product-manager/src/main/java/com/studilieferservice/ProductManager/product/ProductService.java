@@ -1,6 +1,5 @@
 package com.studilieferservice.ProductManager.product;
 
-import com.studilieferservice.ProductManager.kafka.product.ProductEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class ProductService {
      */
     public Product createProduct(Product product) {
         Product saved = productRepository.save(product);
-        eventPublisher.publishEvent(new ProductEvent(saved,this));
+        //eventPublisher.publishEvent(new ProductEvent(saved,this));
         return saved;
     }
 

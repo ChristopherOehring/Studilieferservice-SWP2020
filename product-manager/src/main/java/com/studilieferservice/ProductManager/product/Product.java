@@ -2,27 +2,35 @@ package com.studilieferservice.ProductManager.product;
 
 import org.attoparser.dom.Text;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
+import javax.persistence.*;
 /**
  * Product Model with the respective attributes and their setters and getters
  *
  */
 
 @Entity
+@Table(name = "product")
 public class Product {
 
      @Id
+     @Column(name ="name")
+     @NotNull
      private String name;
 
+     @Column(name ="description")
      private String description;
 
      @NotNull
+     @Column(name ="price")
      private double price;
 
      //kafka should then use imageUrl.getContent() in payload
+     @Column(name ="imageUrl")
      private Text imageUrl;
 
      public Product() { }
@@ -66,8 +74,8 @@ public class Product {
           this.price = price;
      }
 
-     public String getImageUrl() {
-          return imageUrl.getContent();
+     public Text getImageUrl() {
+          return imageUrl;
      }
 
      public void setImageUrl(String imageUrl) {

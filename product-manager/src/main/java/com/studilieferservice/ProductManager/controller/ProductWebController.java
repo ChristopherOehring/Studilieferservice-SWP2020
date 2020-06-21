@@ -19,11 +19,13 @@ public class ProductWebController {
 
     @GetMapping("/products")
     public String listProducts(Model model, @RequestParam(defaultValue = "") String name) {
+
         if (!name.equals("")) {
             model.addAttribute("products", productService.findAllWithName(name));
         } else {
             model.addAttribute("products", productService.listAllProducts());
         }
+
         return "index";
     }
 }

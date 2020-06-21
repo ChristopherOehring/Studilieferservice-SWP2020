@@ -1,12 +1,13 @@
 package com.studilieferservice.ProductManager.kafka.product;
+import org.attoparser.dom.Text;
 
 public class ProductPayload {
     private String name;
     private String description;
     private double price;
-    private String imageUrl;
+    private Text imageUrl;
 
-    public ProductPayload(String name, String description, double price, String imageUrl) {
+    public ProductPayload(String name, String description, double price, Text imageUrl) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -25,7 +26,7 @@ public class ProductPayload {
         return price;
     }
 
-    public String getImageUrl() {
+    public Text getImageUrl() {
         return imageUrl;
     }
 
@@ -41,7 +42,7 @@ public class ProductPayload {
         this.price = price;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(Text imageUrl) {
         this.imageUrl = imageUrl;
     }
 }

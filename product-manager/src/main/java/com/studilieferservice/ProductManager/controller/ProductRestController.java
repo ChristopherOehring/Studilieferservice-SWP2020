@@ -17,7 +17,7 @@ public class ProductRestController {
 
     private final ProductService productService;
 
-    @Autowired
+
     public ProductRestController(ProductService productService) {
         this.productService = productService;
     }
