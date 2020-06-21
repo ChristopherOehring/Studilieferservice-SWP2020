@@ -1,0 +1,96 @@
+:root{
+    --primary: #363636;
+    --secondary: #474747;
+    --lineColor: #909090;
+
+    --colTopMargin: 20%;
+}
+
+body{
+    height: 100%;
+    margin: 0;
+    background-color: var(--primary);
+}
+
+h1{
+    font-family: Arial;
+    margin-top: 3rem;
+    text-align: center;
+    color: white;
+}
+
+.searchBox{
+    width: 20%;
+    right: 50px;
+    top: 37px;
+    position: absolute;
+    border-bottom: 2px dashed white;
+    margin-top: 4rem;
+}
+
+::placeholder {
+    color: white;
+    font-family: Arial;
+}
+
+.input{
+    text-align: center;
+    outline: none;
+    border: none;
+    overflow: hidden;
+    margin: 0;
+    width: 100%;
+    padding: 0.25rem 0;
+    background: none;
+    color: white;
+    font-size: 1.2rem;
+    font-family: "Roboto";
+}
+
+.backButton{
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    size: 16px 40px;
+    background: none;
+    color: white;
+}
+
+.backButton a{
+    padding-top: 50px;
+    font-family: Arial;
+    font-size: 20px;
+    text-decoration: none;
+    color: white;
+    line-height: 16px;
+    display: block;
+    text-align: center;
+}
+
+a.backButton:hover{
+    text-decoration: none;
+    color: var(--secondary);
+}
+
+.columnRight hr{
+    border-color: white;
+}
+
+.productTable {
+    border-collapse: separate;
+    border-spacing: 15px;
+    width: 100%;
+}
+
+td{
+    vertical-align: center;
+    padding: 1rem;
+}
+
+tr{
+    outline: thin solid;
+    border-color: white;
+}
