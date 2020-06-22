@@ -17,29 +17,53 @@ html{
     background-color: #363636;
     margin: 0px;
 }
+
+/*  ############
+    ### Logo ###
+    ############
+*/
+
+.logo{
+    text-align: center;
+    margin-top: 2rem;
+}
+
+#logo{
+    width: 10rem;
+
+}
+
+/*  ##############
+    ### Header ###
+    ##############
+*/
   
 h1{
     text-align: center;
     color: white;
     font-family: "Patua One";
-    margin-top: 8rem;
+    margin-top: 5rem;
     margin-bottom: 2rem;
 }
 
-.box{
+/*  #############
+    ### Input ###
+    #############   */
+
+.box{ /*box around the input-fields for the dashed line and positioning*/
     width: 100%;
     position: relative;
     border-bottom: 2px dashed white;
     margin-top: 4rem;
 }
 
-.label{
-    color: #ffffff;
+.label{ /*The placeholder-text E-Mail and Password*/
+    color: white;
     font-size: 1.2rem;
     font-family: "Roboto";
 }
 
-.input{
+.input{ /*The input-fields*/
     outline: none;
     border: none;
     overflow: hidden;
@@ -47,12 +71,14 @@ h1{
     width: 100%;
     padding: 0.25rem 0;
     background: none;
+
+    /*fonts of the written input*/
     color: white;
     font-size: 1.2rem;
     font-family: "Roboto";
 }
 
-.box::after{
+.box::after{ /*the box is shrinken down and enlage to y-axis */
     content: "";
     position: relative;
     display: block;
@@ -126,32 +152,43 @@ form{
 
 }
 
-.navbar{
+/*  ###############
+    ### Nav-Bar ###
+    ###############
+*/
+.navbar{ /*box for positioning*/
+    margin-top: 1rem;
     text-align: center;
-    margin-top: 3rem;
     margin-right: 2rem;
-}
-
-nav{
-    color: white;
-}
-
-.header{
-    display: inline;
 }
 
 li{
     display: inline;
     list-style-type: none;
+    margin-left: 0.5rem;
+}
+
+a{ 
+    transition: 0.5s;
+    border-radius: 30px;
+
+    /*box-shadow*/
+    -webkit-box-shadow: 10px 12px 5px -10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 12px 5px -10px rgba(0,0,0,0.75);
+    box-shadow: 10px 12px 5px -10px rgba(0,0,0,0.75);
+
 }
 
 a:link, a:visited {
     background-color: var(--secondary);
-    color: white;
     padding: 14px 25px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
+    
+    /*fonts*/
+    color: white;
+    font-family: var(--secondaryFont);
 }
   
 a:hover, a:active {
