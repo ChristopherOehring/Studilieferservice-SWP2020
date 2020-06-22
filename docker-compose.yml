@@ -11,7 +11,7 @@ services:
       # - POSTGRES_DB=db
       # Configure multiple databases here
       # Note: does not allow names containing "-"
-      POSTGRES_MULTIPLE_DATABASES: groupManager,userManager
+      POSTGRES_MULTIPLE_DATABASES: groupManager,userManager,shoppingListManager
     ports:
       - "5432:5432"
     volumes:
@@ -57,18 +57,18 @@ services:
     logging:
       driver: none
 
-  composer:
-    image: studi-lieferservice/composer-service:latest
-    ports:
-      - 9000:8000
+  #composer:
+  #  image: studi-lieferservice/composer-service:latest
+  #  ports:
+  #    - 9000:8000
   group-manager:
     image: studi-lieferservice/group-manager:latest
     ports:
       - 9010:8010
-#  shopping-list-manager:
-#    image: studi-lieferservice/shopping-list-manager:latest
-#    ports:
-#      - 9070:8070
+  shopping-list-manager:
+    image: studi-lieferservice/shopping-list-manager:latest
+    ports:
+      - 9070:8070
   user-manager:
     image: studi-lieferservice/user-manager:latest
     ports:
