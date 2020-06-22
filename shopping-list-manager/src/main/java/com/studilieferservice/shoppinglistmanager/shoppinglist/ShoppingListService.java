@@ -55,11 +55,11 @@ public class ShoppingListService {
     }
 
     public ShoppingList getShoppingListByUserAndGroup(User user, Group group) {
-        return shoppingListRepository.findByUserAndGroup(user, group);
+        return shoppingListRepository.findByUserAndGroup(user, group).orElse(null);
     }
 
     public int addItemToShoppingList(ShoppingList shoppingList, Item item, int amount) {
-        ShoppingList sl = shoppingListRepository.findByUserAndGroup(shoppingList.getUser(), shoppingList.getGroup());
+        ShoppingList sl = shoppingListRepository.findByUserAndGroup(shoppingList.getUser(), shoppingList.getGroup()).orElseThrow();
         Item i = itemService.getItem(item.getName());
 
         int amountOld = 0;
@@ -81,7 +81,7 @@ public class ShoppingListService {
 
     //reduces the int amount of the corresponding ItemShoppingList or deletes the ItemShoppingList if the amount reaches zero
     public int removeItemFromShoppingList(ShoppingList shoppingList, Item item, int amount) {
-        ShoppingList sl = shoppingListRepository.findByUserAndGroup(shoppingList.getUser(), shoppingList.getGroup());
+        ShoppingList sl = shoppingListRepository.findByUserAndGroup(shoppingList.getUser(), shoppingList.getGroup()).orElseThrow();
         Item i = itemService.getItem(item.getName());
         ItemShoppingList isl = itemShoppingListService.getItemShoppingList(sl, i);
 

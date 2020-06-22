@@ -145,7 +145,7 @@ public class ShoppingListRestController {
     }
 
     /**
-     * REST request (POST) for "/addProduct": adds an {@link Item} to a {@link ShoppingList} and saves the amount of items
+     * REST request (PUT) for "/addProduct": adds an {@link Item} to a {@link ShoppingList} and saves the amount of items
      * in the {@link ItemShoppingList relation} between the two objects.
      *
      * @param body in the body of the request: a special class for representing the body: {@link ItemAndShoppingListBody}
@@ -167,7 +167,7 @@ public class ShoppingListRestController {
      *        }
      * @return HTTP status code and short infotext
      */
-    @PostMapping("/addProduct")
+    @PutMapping("/addProduct")
     public ResponseEntity<?> addItemToShoppingList(@RequestBody ItemAndShoppingListBody body) {
         int amountNew = shoppingListService.addItemToShoppingList(body.shoppingList, body.item, body.amount);
         return ResponseEntity.status(HttpStatus.CREATED).body("Added Item to ShoppingList: amount="+body.amount
@@ -201,7 +201,7 @@ public class ShoppingListRestController {
     @PutMapping("/removeProduct")
     public ResponseEntity<?> removeItemFromShoppingList(@RequestBody ItemAndShoppingListBody body) {
         int amountNew = shoppingListService.removeItemFromShoppingList(body.shoppingList, body.item, body.amount);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Removed Item from ShoppingList: amount="+body.amount
+        return ResponseEntity.status(HttpStatus.CREATED).body("Removed Item from ShoppingList: amount="+body.amount
                 +", newTotalAmount="+amountNew+", "+body.item.toString()+", "+body.shoppingList.toString());
     }
 

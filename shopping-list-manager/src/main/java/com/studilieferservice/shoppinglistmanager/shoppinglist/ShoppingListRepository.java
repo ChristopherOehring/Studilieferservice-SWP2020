@@ -5,11 +5,11 @@ import com.studilieferservice.shoppinglistmanager.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ShoppingListRepository extends JpaRepository<ShoppingList, Long> {
 
-    //ShoppingList findByGroupId(String groupId);
     List<ShoppingList> findAllByGroup(Group group);
 
-    ShoppingList findByUserAndGroup(User user, Group group);
+    Optional<ShoppingList> findByUserAndGroup(User user, Group group);
 }
