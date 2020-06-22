@@ -8,11 +8,26 @@
     <script th:src="@{webjars/bootstrap/bootstrap.min.js}"></script>
 
     <link rel="stylesheet" href="../../static/css/about.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
 
     <title>About</title>
 </head>
 
 <body>
+    <div class="logo">
+        <input id="logo" type="image" src="../../static/img/StuLiLogo.png" alt="">
+    </div>
+    
+    <div  th:layout:fragment="content" class="container mySpace">
+        <div class="jumbotron">
+            <p><h1>What does this service do?</h1></p>
+            <p><h3>With StudiLieferservice you can create groups to order your groceries together and save the delivery costs.</h3></p>
+            <br>
+            <p><h2>Continue to Register or Login!</h2></p>
+        </div>
+    </div>
+
     <div class="navbar">
         <nav>      
             <ul>
@@ -31,12 +46,6 @@
         </nav>
     </div>
 
-    <div  th:layout:fragment="content" class="container mySpace">
-        <div class="jumbotron">
-            <p><h1>What does this app do?</h1></p>
-            <p><h3>TODO Beschreibung einfügen</h3></p>
-        </div>
-    </div>
 
 </body>
 
