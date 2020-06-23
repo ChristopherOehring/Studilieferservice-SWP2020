@@ -25,7 +25,7 @@ import java.util.UUID;
 // TODO: 5/31/20 Should you be able to create multiple groups with the same name?
 /**
  * Provides an api for the group-service at /api/group-service
- * @version 1.4 6/18/20 //TODO: 6/18/20 shouldn't it be version "2".4, as it is the completely rewritten version of the prototype? ~ Manu
+ * @version 1.5 6/23/20 //TODO: 6/18/20 shouldn't it be version "2".5, as it is the completely rewritten version of the prototype? ~ Manu
  * @author Christopher Oehring
  * @author Manuel Jirsak
  */
@@ -64,7 +64,7 @@ public class GroupController {
     @PostMapping(path = "/user")
     public ResponseEntity<?> addUser(@RequestBody User user) {
         System.out.println("success");
-        if(user.isValidEmailAddress(user.getEmail()) && user.isValidName(user.getFirstName()) && user.isValidName(user.getLastName())) {
+        if(user.isValidEmailAddress(user.getEmail()) && user.isValidName(user.getFirstName()) && user.isValidName(user.getLastName()) && !user.getUserName().isBlank()) {
             if (userService.findById(user.getEmail()).isPresent()) {
                 User user1 = userService.findById(user.getEmail()).get();
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+user1.getEmail()+" already saved as "+user1.getUserName()+" with the name "+user1.getFirstName()+" "+user1.getLastName());
@@ -73,8 +73,8 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         }
         //TODO causes 500, fix it   -   I guess it is fixed... ~ Manu 6/17/20
-        else if (!user.isValidEmailAddress(user.getEmail()) || !user.isValidName(user.getFirstName()) || !user.isValidName(user.getLastName())){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have to fill in both your first name and last name, also you may only use letters, dashes and spaces. Also, check your email address whether it matches the right from");
+        else if (!user.isValidEmailAddress(user.getEmail()) || !user.isValidName(user.getFirstName()) || !user.isValidName(user.getLastName()) || user.getUserName().isBlank()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have to fill in both your first name and last name, also you may only use letters, dashes and spaces. Also, check your email address whether it matches the right form and make sure you've chosen an username");
         }
         else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something wrong, check your input values");
@@ -84,6 +84,7 @@ public class GroupController {
     /**
      * Removes a member from the Database
      * Can be reached with a DELETE request at /api/group-service/user
+     * Body has to contain the raw e-mail, e.g. if the e-mail is "max.mustermann@tu-ilmenau.de", the body must contain exactly "max.mustermann@tu-ilmenau.de" (without quotation marks), not in JSON-syntax
      *
      * @param email the email adress of the member
      * @return returns "Operation successfull" if there was no error
@@ -91,13 +92,13 @@ public class GroupController {
      */
     //TODO isn't that supposed to be a bug?? ~ Manu 6/04/20
     @DeleteMapping(path = "/user")
-    public ResponseEntity<?> removeUser(@RequestBody String email) {
-        if(userService.findById(email).isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email address "+email+" found!");
+    public ResponseEntity<?> removeUser(@RequestBody GetUserBody email) {
+        if(userService.findById(email.getValue()).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email address "+email.getValue()+" found!");
         }
-        System.out.println(email);
-        userService.deleteUserById(email);
-        return ResponseEntity.status(HttpStatus.OK).body("Deleted user with email address "+email+" successfully!");
+        System.out.println(email.getValue());
+        userService.deleteUserById(email.getValue());
+        return ResponseEntity.status(HttpStatus.OK).body("Deleted user with email address "+email.getValue()+" successfully!");
     }
 
     /**
@@ -109,7 +110,7 @@ public class GroupController {
     @GetMapping(path = "/user")
     public ResponseEntity<?> getUser(@RequestBody GetUserBody email) {
         Optional<User> userOptional = userService.findById(email.getValue());
-        if (userOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email address "+email+" found!");
+        if (userOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email address "+email.getValue()+" found!");
         return ResponseEntity.status(HttpStatus.OK).body(userOptional.get());
     }
 
@@ -196,6 +197,15 @@ public class GroupController {
         Gruppe group = groupOptional.get();
         if (userService.findById(body.getEmail()).isPresent()) {
             User user = userService.findById(body.getEmail()).get();
+            if(group.getMembers().contains(user)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+body.getEmail()+" is already a Member of this group");
+            }
+            if(group.getAdmins().contains(user)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+body.getEmail()+" is already an Admin of this group");
+            }
+            if(group.getOwner().equals(user)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+body.getEmail()+" is already the Owner of this group");
+            }
 
             group.addMember(user);
             groupService.save(group);
@@ -217,12 +227,21 @@ public class GroupController {
         Gruppe group = groupOptional.get();
         if(userService.findById(body.getEmail()).isPresent()) {
             User user = userService.findById(body.getEmail()).get();
+            if(group.getMembers().contains(user)) {
+                group.removeMember(user);
+                groupService.save(group);
+                return ResponseEntity.status(HttpStatus.OK).body("Successfully removed member "+body.getEmail()+" from the group");
+            }
+            if(group.getAdmins().contains(user)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot remove admin "+body.getEmail()+" from the group, can only remove members");
+            }
+            if(group.getOwner().equals(user)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot remove owner "+body.getEmail()+" from the group, a group must not exist without an owner");
+            }
 
-            group.removeMember(user);
-            groupService.save(group);
-            return ResponseEntity.status(HttpStatus.OK).body("Successfully removed member "+body.getEmail()+"from the group");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found in this group!");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found in this group!");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Unknown user "+body.getEmail()+"!");
     }
 
     /**
@@ -238,12 +257,20 @@ public class GroupController {
         Gruppe group = groupOptional.get();
         if(userService.findById(body.getEmail()).isPresent()) {
             User user = userService.findById(body.getEmail()).get();
-
-            group.promote(user);
-            groupService.save(group);
-            return ResponseEntity.status(HttpStatus.OK).body("Promoted user "+body.getEmail());
+            if (group.getMembers().contains(user)) {
+                group.promote(user);
+                groupService.save(group);
+                return ResponseEntity.status(HttpStatus.OK).body("Promoted user " + body.getEmail());
+            }
+            if (group.getAdmins().contains(user)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+ body.getEmail()+" is already an admin of this group");
+            }
+            if (group.getOwner().equals(user)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+body.getEmail()+" is the owner of the group and therefore already has admin rights");
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found in this group!");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found in this group!");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Unknown user "+body.getEmail()+"!");
     }
 
     /**
@@ -259,12 +286,20 @@ public class GroupController {
         Gruppe group = groupOptional.get();
         if(userService.findById(body.getEmail()).isPresent()) {
             User user = userService.findById(body.getEmail()).get();
-
-            group.demote(user);
-            groupService.save(group);
-            return ResponseEntity.status(HttpStatus.OK).body("Demoted user "+body.getEmail());
+            if(group.getAdmins().contains(user)) {
+                group.demote(user);
+                groupService.save(group);
+                return ResponseEntity.status(HttpStatus.OK).body("Demoted user " + body.getEmail());
+            }
+            if (group.getMembers().contains(user)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+body.getEmail()+" is already a member and cannot be demoted further");
+            }
+            if (group.getOwner().equals(user)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot demote "+body.getEmail()+", as it is the owner of the group");
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found in this group!");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email "+body.getEmail()+" was found in this group!");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Unknown user "+body.getEmail()+"!");
     }
 
     /**
@@ -282,6 +317,10 @@ public class GroupController {
         Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
         if (optionalGruppe.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No group with id "+body.getGroupId()+" was found!");
         Gruppe gruppe = optionalGruppe.get();
+
+        if (gruppe.getMembers().contains(user) || gruppe.getAdmins().contains(user) || gruppe.getOwner().equals(user)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User "+body.getEmail()+" is already part of the group and cannot be invited twice");
+        }
 
         Invite invite = new Invite(gruppe, user);
         inviteService.addInvite(invite);

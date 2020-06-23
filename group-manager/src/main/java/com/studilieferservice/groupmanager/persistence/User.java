@@ -14,7 +14,7 @@ import java.util.Objects;
  * This is how users are represented in this microservice
  * @author Manuel Jirsak
  * @author Christopher Oehring
- * @version 1.6 6/18/20
+ * @version 1.7 6/23/20
  */
 //todo add version
 @Entity(name = "Nutzer")
@@ -118,21 +118,25 @@ public class User {
                 //enthält erster Teil einen Punkt, wird überprüft, ob davor und danach noch ein Buchstabe kommt
                 if (StringUtils.countOccurrencesOf(seq1, ".") > 0 || StringUtils.countOccurrencesOf(seq1, "-") > 0) {
                     for (int i = 0; i < seq1.length(); i++) {
-                        if (seq1.charAt(i) == '.') {
+                        boolean nonAlphabeticSymbol = seq1.charAt(i) == '.' || seq1.charAt(i) == '-' || seq1.charAt(i) == '_';
+                        if (nonAlphabeticSymbol) {
                             //passiert, wenn erstes Zeichen ein ".", "_" oder "-" ist
-                            if ((seq1.charAt(i) == '.' || seq1.charAt(i) == '_' || seq1.charAt(i) == '-') && i == 0) {
+                            if (i == 0) {
+                                System.out.println("i=0");
                                 return false;
                             }
                             //passiert, wenn zwei "." hinter einander
-                            if (i > 0 && i + 2 < seq1.length()) {
+                            if (i + 2 < seq1.length()) {
                                 boolean beforeIsAlphabetic = Character.isAlphabetic(seq1.charAt(i - 1));
                                 boolean afterIsAlphabetic = Character.isAlphabetic(seq1.charAt(i + 1));
                                 if (!(beforeIsAlphabetic && afterIsAlphabetic)) {
+                                    System.out.println("non-alph");
                                     return false;
                                 }
                             }
                             //passiert, wenn letztes Zeichen vor "@" ein "." ist
-                            if (seq1.charAt(i) == '.' && i + 1 == seq1.length()) {
+                            if (i + 1 == seq1.length()) {
+                                System.out.println("i+1");
                                 return false;
                             }
                         }
@@ -141,22 +145,26 @@ public class User {
                 //zweiter Teil muss mindestens einen Punkt enthalten, sonst gelten dieselben Regeln
                 if (StringUtils.countOccurrencesOf(seq2, ".") >= 1) {
                     for (int i = 0; i < seq2.length(); i++) {
-                        if (seq2.charAt(i) == '.' && i + 1 < seq2.length()) {
+                        boolean nonAlphabeticSymbol = seq2.charAt(i) == '.' || seq2.charAt(i) == '-' || seq2.charAt(i) == '_';
+                        if (nonAlphabeticSymbol && i + 1 < seq2.length()) {
                             //passiert, wenn erstes Zeichen nach "@" ein "." ist
-                            if (seq2.charAt(i) == '.' && i == 0) {
+                            if (i == 0) {
+                                System.out.println("i = 0 seq2");
                                 return false;
                             }
                             //passiert, wenn zwei "." hinter einander
-                            if (i > 0 && i + 2 < seq2.length()) {
+                            if (i + 2 < seq2.length()) {
                                 boolean beforeIsAlphabetic = Character.isAlphabetic(seq2.charAt(i - 1));
                                 boolean afterIsAlphabetic = Character.isAlphabetic(seq2.charAt(i + 1));
                                 if (!(beforeIsAlphabetic && afterIsAlphabetic)) {
+                                    System.out.println("non-alph seq2");
                                     return false;
                                 }
                             }
                         }
                         //passiert, wenn letztes Zeichen ein "." ist
-                        if (seq2.charAt(i) == '.' && i + 1 == seq2.length()) {
+                        if (nonAlphabeticSymbol && i + 1 == seq2.length()) {
+                            System.out.println("i+1=seq2.length");
                             return false;
                         }
                     }
