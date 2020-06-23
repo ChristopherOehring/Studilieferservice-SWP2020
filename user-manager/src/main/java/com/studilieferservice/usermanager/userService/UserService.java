@@ -1,11 +1,12 @@
 package com.studilieferservice.usermanager.userService;
 
+import com.studilieferservice.usermanager.kafka.user.UserEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import javax.transaction.Transactional;
+import static com.studilieferservice.usermanager.kafka.user.UserEventType.NEW;
+import static com.studilieferservice.usermanager.kafka.user.UserEventType.UPDATE;
 
 /**
  * just a normal service for handling JpaRepositories
@@ -42,7 +43,7 @@ public class UserService {
         User saved = userRepository.save(user);
 
 
-        eventPublisher.publishEvent(new UserEvent(user, this));
+        eventPublisher.publishEvent(new UserEvent(user, this, NEW));
         return saved;
 
 
@@ -104,6 +105,7 @@ public class UserService {
         currentUser.setSignedIn(true);
         currentUser.setPassword(currentUser.getPassword());
         currentUser.setEmail(currentUser.getEmail());
+        eventPublisher.publishEvent(new UserEvent(currentUser,this, UPDATE));
         return userRepository.save(currentUser);
     }
 
