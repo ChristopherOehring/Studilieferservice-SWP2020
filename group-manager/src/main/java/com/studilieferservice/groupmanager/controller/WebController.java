@@ -2,6 +2,7 @@ package com.studilieferservice.groupmanager.controller;
 
 import com.studilieferservice.groupmanager.controller.bodys.CreationForm;
 import com.studilieferservice.groupmanager.controller.bodys.GroupAndUserBody;
+import com.studilieferservice.groupmanager.controller.bodys.TestForm;
 import com.studilieferservice.groupmanager.persistence.Gruppe;
 import com.studilieferservice.groupmanager.persistence.Invite;
 import com.studilieferservice.groupmanager.persistence.User;
@@ -11,6 +12,7 @@ import com.studilieferservice.groupmanager.service.UserService;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,9 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.http.HttpHeaders;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,8 +56,30 @@ public class WebController {
     }
 
     @GetMapping("/test")
-    public String test(Model model) {
+    public String test(Model model, @RequestHeader @Nullable HttpHeaders header) {
+        List<String> sessionValues;
+        if(header != null) {
+            sessionValues = header.allValues("x-rd-test");
+        } else {
+            sessionValues = new ArrayList<>();
+        }
+        model.addAttribute("sessionMessages", sessionValues);
+        model.addAttribute("form", new TestForm());
+        System.out.println(sessionValues);
         return "test";
+    }
+
+    @GetMapping("/persistMessage")
+    public String persistMessage(/*@ModelAttribute TestForm form,*/@RequestParam("msg") String msg, HttpServletResponse response) {
+        //response.addHeader("x-rd-test", form.getMsg());
+        System.out.println(msg);
+        return "redirect:test";
+    }
+
+    @PostMapping("/destroy")
+    public String destroySession(HttpServletRequest request) {
+        request.getSession().invalidate();
+        return "redirect:/web/test";
     }
 
     /**
@@ -74,7 +101,7 @@ public class WebController {
         if(optionalUser.isEmpty()) {
             System.out.println("Error 404: user \"" + email + "\" not found");
             model.addAttribute("subject", "user: \"" + email + "\"");
-            return "error404";
+            return "nichtStandarderror404";
         }
         User user = optionalUser.get();
 
@@ -121,7 +148,7 @@ public class WebController {
         Optional<User> optionalUser = userService.findById(form.getUser());
         if(optionalUser.isEmpty()) {
             model.addAttribute("subject", "user: \"" + form.getUser() + "\"");
-            return "error404";
+            return "nichtStandarderror404";
         }
         User user = optionalUser.get();
 
