@@ -69,7 +69,7 @@ public class WebController {
         return "test";
     }
 
-    @GetMapping("/persistMessage")
+    @PostMapping("/persistMessage")
     public String persistMessage(/*@ModelAttribute TestForm form,*/@RequestParam("msg") String msg, HttpServletResponse response) {
         //response.addHeader("x-rd-test", form.getMsg());
         System.out.println(msg);
