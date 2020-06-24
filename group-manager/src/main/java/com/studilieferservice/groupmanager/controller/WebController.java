@@ -79,7 +79,7 @@ public class WebController {
     @PostMapping("/destroy")
     public String destroySession(HttpServletRequest request) {
         request.getSession().invalidate();
-        return "redirect:/web/test";
+        return "redirect:test";
     }
 
     /**
@@ -127,8 +127,18 @@ public class WebController {
      */
     @GetMapping("/groupMenu/{groupId}")
     public String groupMenu(Model model, @PathVariable("groupId") String groupId) {
-        model.addAttribute("groupId", groupId);
+        Optional<Gruppe> optionalGruppe = groupService.findById(groupId);
+        if (optionalGruppe.isEmpty()){
+            System.out.println("Error 404: group \"" + groupId + "\" not found");
+            model.addAttribute("subject", "group: \"" + groupId + "\"");
+            return "nichtStandarderror404";
+        }
+        Gruppe gruppe = optionalGruppe.get();
 
+        model.addAttribute("groupId", groupId);
+        model.addAttribute("owner", gruppe.getOwner());
+        model.addAttribute("adminList", gruppe.getAdmins());
+        model.addAttribute("memberList", gruppe.getMembers());
         return "groupMenu";
     }
 

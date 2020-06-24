@@ -43,8 +43,19 @@
                     -->
                     <li th:each="gruppe : ${groupsWhereOwner}">
                         <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
-                        <label th:for="${gruppe.id}" th:text="${gruppe.groupName}">No Groups Available</label>
+                        <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
                     </li>
+                    <li th:each="gruppe : ${groupsWhereAdmin}">
+                        <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                        <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
+                    </li>
+                    <li th:each="gruppe : ${groupsWhereMember}">
+                        <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                        <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
+                    </li>
+                    <th th:if="${groupsWhereAdmin.isEmpty() && groupsWhereMember.isEmpty() && groupsWhereAdmin.isEmpty()}">
+                        <label>No Groups Available!</label>
+                    </th>
                     <!-- TODO Delete Dummy Groups -->
                     <li>
                         <input type="radio" id="a1" value="Gruppe1" name="list">
