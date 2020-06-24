@@ -82,7 +82,7 @@ tr{ /*table rows*/
     box-shadow: 5px 5px 10px -4px #000000;
 }
 
-td{ /*table columns*/
+td, th{ /*table columns*/
 
     /*positioning*/
     width: 100%;

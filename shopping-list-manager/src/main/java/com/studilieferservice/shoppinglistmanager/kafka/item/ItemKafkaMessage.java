@@ -3,7 +3,7 @@ package com.studilieferservice.shoppinglistmanager.kafka.item;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.studilieferservice.shoppinglistmanager.item.Item;
 import com.studilieferservice.shoppinglistmanager.kafka.KafkaMessage;
-//TODO update payload
+
 public class ItemKafkaMessage extends KafkaMessage<Item> {
 
     public ItemKafkaMessage(@JsonProperty("id") String id,
@@ -19,6 +19,7 @@ public class ItemKafkaMessage extends KafkaMessage<Item> {
 /*
 Item payload:
     String name;
-    double price;
     String description;
+    double price;
+    String imageUrl;
 */

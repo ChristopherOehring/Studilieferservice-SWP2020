@@ -13,94 +13,65 @@
 
 <body>
 
-    <div class="OuterBox">
-        <div class="title">
-            <h1>
-                Shopping List
-            </h1>
-        </div>
-
-        <div class="items">
-            <table>
-                <tr th:each="item : ${getShoppingListByGroupId}">
-                    <td th:text="${item.name}">Noch keine Produkte hinzugefügt</td>
-                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
-                    <td th:text="${item.amount}"></td>
-                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
-                </tr>
-                <!-- /* -->
-                <tr>
-                    <td>Apple</td>
-                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
-                    <td>5</td>
-                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
-                </tr>                
-                <tr>
-                    <td>Apple</td>
-                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
-                    <td>5</td>
-                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
-                </tr>                
-                <tr>
-                    <td>Apple</td>
-                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
-                    <td>5</td>
-                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
-                </tr>                
-                <tr>
-                    <td>Apple</td>
-                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
-                    <td>5</td>
-                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
-                </tr>                
-                <tr>
-                    <td>Apple</td>
-                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
-                    <td>5</td>
-                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
-                </tr>                
-                <tr>
-                    <td>Apple</td>
-                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
-                    <td>5</td>
-                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
-                </tr>                
-                <tr>
-                    <td>Apple</td>
-                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
-                    <td>5</td>
-                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
-                </tr>                
-                <tr>
-                    <td>Apple</td>
-                    <td><input type="image" src="../static/icons/minus.png" alt=""></td>
-                    <td>5</td>
-                    <td><input type="image" src="../static/icons/plus.png" alt=""></td>
-                </tr>                
-                
-                <!-- */ -->
-            </table>
-        </div>
-
-        <div class="addProduct">
-            <input type="button" value="add products" class="addProductButton">
-        </div>
-
-        <div class="line"></div>
-
-        <div class="sum">
-            <p>50€</p>
-        </div>
-
+<div class="OuterBox">
+    <div class="title">
+        <h1>
+            Shopping List
+        </h1>
     </div>
-            <div class="element">
-                <form th:action="@{/shoppingList/addItem}" th:object="${item}"  method="POST">
-                    <label for="productname">Produkte hinzufügen: </label>
-                    <input type="text" id="productname" th:field="*{name}" placeholder="Produkt" >
-                    <input type="hidden" name= "groupId"   th:value="${shoppingList.groupId}" />
-                    <input type="submit" value="Hinzufügen">
-                </form>
-            </div>
+
+    <div class="items">
+        <table>
+            <tr>
+                <th>Product&emsp; - &emsp;Price</th>
+                <th>Sum</th>
+                <th></th>
+                <th>Amount</th>
+                <th></th>
+            </tr>
+            <tr th:if="${!items.isEmpty()}" th:each="itemShoppingList : ${items}">
+                <td th:text="${itemShoppingList.item.name+' - '+itemShoppingList.item.price+'€'}">produkt</td>
+
+                <td th:text="${#numbers.formatDecimal(itemShoppingList.item.price*itemShoppingList.amount, 0, 2)+'€'} ">preis</td>
+
+                <td><form th:action="@{/shoppingList/itemDecrease}" method="POST">
+                    <input type="image" th:src="@{/icons/minus.png}" alt="-">
+                    <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
+                    <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
+                </form></td>
+
+                <td th:text="${itemShoppingList.amount}">0</td>
+
+                <td><form th:action="@{/shoppingList/itemIncrease}" method="POST">
+                    <input type="image" th:src="@{/icons/plus.png}" alt="+">
+                    <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
+                    <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
+                </form></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="addProduct">
+        <input type="button" value="add products" class="addProductButton">
+    </div>
+
+    <div class="line"></div>
+
+    <div th:if="${totalPrice != 0}" class="sum">
+        <p th:text="${#numbers.formatDecimal(totalPrice, 0, 2)+'€'}">total</p>
+    </div>
+
+</div>
+
+<!--div class="element">
+    <form th:action="@{/shoppingList/addProduct}" th:object="${itemAndShoppingList}" th:method="PUT">
+        <label for="item.name">Produkte hinzufügen: </label>
+        <input type="text" id="item.name" th:field="*{item.name}" placeholder="Produkt">
+        <input type="hidden" name="shoppingList.id" th:value="${shoppingList.id}"/>
+        <input type="hidden" name="amount" th:value="${1}"/>
+        <input type="submit" value="Hinzufügen">
+    </form>
+</div-->
 
 </body>
 

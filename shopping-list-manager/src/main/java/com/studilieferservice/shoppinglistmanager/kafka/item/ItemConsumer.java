@@ -22,7 +22,7 @@ public class ItemConsumer {
         this.itemService = itemService;
         this.objectMapper = objectMapper;
     }
-    //TODO update topic and id name
+
     @KafkaListener(topics = "productTopic", id = "product_1")
     public void consume(ConsumerRecord<String, String> consumerRecord, Acknowledgment acknowledgment){
 

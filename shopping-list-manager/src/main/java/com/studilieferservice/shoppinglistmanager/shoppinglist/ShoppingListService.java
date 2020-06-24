@@ -62,6 +62,9 @@ public class ShoppingListService {
         ShoppingList sl = shoppingListRepository.findByUserAndGroup(shoppingList.getUser(), shoppingList.getGroup()).orElseThrow();
         Item i = itemService.getItem(item.getName());
 
+        if (amount <= 0)
+            amount = 1;
+
         int amountOld = 0;
 
         if (!sl.getItems().contains(itemShoppingListService.getItemShoppingList(sl, i))) {
@@ -84,6 +87,9 @@ public class ShoppingListService {
         ShoppingList sl = shoppingListRepository.findByUserAndGroup(shoppingList.getUser(), shoppingList.getGroup()).orElseThrow();
         Item i = itemService.getItem(item.getName());
         ItemShoppingList isl = itemShoppingListService.getItemShoppingList(sl, i);
+
+        if (amount < 0)
+            amount = 0;
 
         int amountTotal = isl.getAmount();
         //here, Math.max makes amountTotalNew unable to be smaller than zero
@@ -111,6 +117,15 @@ public class ShoppingListService {
                 relation.setItem(null);
             }
         }
+    }
+
+    public double getTotalPrice(ShoppingList shoppingList) {
+        double total = 0;
+
+        for (ItemShoppingList isl : shoppingList.getItems())
+            total += isl.getItem().getPrice() * isl.getAmount();
+
+        return total;
     }
 
     //returns a custom JSON object containing the data of the group, its users and the shopping lists of the users

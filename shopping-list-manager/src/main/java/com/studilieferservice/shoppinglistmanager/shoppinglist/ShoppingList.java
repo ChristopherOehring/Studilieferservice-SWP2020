@@ -27,6 +27,7 @@ public class ShoppingList {
 
     //actually a single-sided ManyToMany relation
     @OneToMany(mappedBy = "shoppingList")
+    @OrderColumn(name = "item")
     private List<ItemShoppingList> items = new ArrayList<>();
 
     //SHOULD NEVER BE USED: ShoppingLists cannot exist without a group or a user

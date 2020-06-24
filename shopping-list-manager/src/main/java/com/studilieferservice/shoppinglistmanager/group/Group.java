@@ -1,5 +1,6 @@
 package com.studilieferservice.shoppinglistmanager.group;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.studilieferservice.shoppinglistmanager.shoppinglist.ShoppingList;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "shopping_group")
 //table name cannot be "group" as this word is an SQL statement and thus reserved
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Group {
 
     @Id

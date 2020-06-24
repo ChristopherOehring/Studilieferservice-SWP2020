@@ -1,13 +1,14 @@
 package com.studilieferservice.shoppinglistmanager.controller;
 
-import com.studilieferservice.shoppinglistmanager.item.Item;
+import com.studilieferservice.shoppinglistmanager.group.GroupService;
 import com.studilieferservice.shoppinglistmanager.item.ItemService;
 import com.studilieferservice.shoppinglistmanager.shoppinglist.ShoppingList;
 import com.studilieferservice.shoppinglistmanager.shoppinglist.ShoppingListService;
+import com.studilieferservice.shoppinglistmanager.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,20 +24,61 @@ public class ShoppingListWebController {
 
     private final ShoppingListService shoppingListService;
     private final ItemService itemService;
+    private final UserService userService;
+    private final GroupService groupService;
 
     @Autowired
-    public ShoppingListWebController(ShoppingListService shoppingListService, ItemService itemService) {
+    public ShoppingListWebController(ShoppingListService shoppingListService, ItemService itemService,
+                                     UserService userService, GroupService groupService) {
         this.shoppingListService = shoppingListService;
         this.itemService = itemService;
+        this.userService = userService;
+        this.groupService = groupService;
     }
 
+    @GetMapping("/{groupId}/{userId}")
+    public ModelAndView getShoppingListForUserAndGroup(@PathVariable String groupId, @PathVariable String userId) {
+        ModelAndView model = new ModelAndView("list");
+
+        ShoppingList sl = shoppingListService.getShoppingListByUserAndGroup(
+                userService.getUser(userId), groupService.getGroup(groupId));
+
+        model.addObject("items", sl.getItems());
+        model.addObject("totalPrice", shoppingListService.getTotalPrice(sl));
+
+        return model;
+    }
+
+    @PostMapping("/itemIncrease")
+    public String increaseItemAmountInShoppingList(HttpServletRequest request) {
+        String shoppingListId = request.getParameter("shoppingListId");
+        String itemName = request.getParameter("itemName");
+
+        ShoppingList sl = shoppingListService.getShoppingList(Long.parseLong(shoppingListId));
+        shoppingListService.addItemToShoppingList(sl, itemService.getItem(itemName), 1);
+
+        return "redirect:" + sl.getGroup().getId() + "/" + sl.getUser().getId();
+    }
+
+    @PostMapping("/itemDecrease")
+    public String decreaseItemAmountInShoppingList(HttpServletRequest request) {
+        String shoppingListId = request.getParameter("shoppingListId");
+        String itemName = request.getParameter("itemName");
+
+        ShoppingList sl = shoppingListService.getShoppingList(Long.parseLong(shoppingListId));
+        shoppingListService.removeItemFromShoppingList(sl, itemService.getItem(itemName), 1);
+
+        return "redirect:" + sl.getGroup().getId() + "/" + sl.getUser().getId();
+    }
+
+/*
     /**
      * Web request (GET) for "/[Group-ID]": retrieves the page of the shopping list for the respective group.
      * @param groupId The group-ID which is passed as a parameter through the URL
      * @param model Spring specific: the {@code model} of the requested {@link ShoppingList}, the data of which is dynamically inserted into the list.html
      * @return the HTML page "list.html" which displays the shopping list
      */
-    @GetMapping("/{groupId}")
+/*    @GetMapping("/{groupId}")
     public String getShoppingListByGroupId(@PathVariable String groupId, Model model) {
 
         model.addAttribute("shoppingList", shoppingListService.getAllShoppingListsByGroupId(groupId));
