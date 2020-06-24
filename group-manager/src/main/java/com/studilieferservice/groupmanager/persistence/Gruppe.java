@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,9 +17,10 @@ import java.util.Objects;
 
 /**
  * The Structure that represents groups
+ *
  * @author Manuel Jirsak
  * @author Christopher Oehring
- * @version 1.6 6/18/20
+ * @version 1.7 6/24/20
  */
 
 @Entity(name = "Gruppe")
@@ -57,7 +59,7 @@ public class Gruppe {
             orphanRemoval = true
     )
     List<Invite> invites = new ArrayList<>();
-    
+
     private long version;
 
     private String deliveryCity; //city to deliver to
@@ -121,20 +123,20 @@ public class Gruppe {
     }
 
     public boolean addMember(User user) {
-        if(owner.equals(user) || adminList.contains(user) || memberList.contains(user)) return false;
+        if (owner.equals(user) || adminList.contains(user) || memberList.contains(user)) return false;
         version++;
         return memberList.add(user);
     }
 
     public boolean removeMember(User user) {
-        if(memberList.remove(user)){
+        if (memberList.remove(user)) {
             version++;
             return true;
         }
         return false;
     }
 
-    public boolean removeAdminOrMember(User user){
+    public boolean removeAdminOrMember(User user) {
         version++;
         return (memberList.remove(user) | adminList.remove(user));
     }
@@ -157,7 +159,7 @@ public class Gruppe {
 
     // TODO: 5/31/20 Should this really be possible?:
     public boolean addAdmin(User admin) {
-        if(adminList.contains(admin) || memberList.contains(admin) || owner.equals(admin)) {
+        if (adminList.contains(admin) || memberList.contains(admin) || owner.equals(admin)) {
             return false;
         }
         version++;
@@ -178,8 +180,8 @@ public class Gruppe {
         this.owner = owner;
     }
 
-    public boolean promote(User user){
-        if(memberList.remove(user)) {
+    public boolean promote(User user) {
+        if (memberList.remove(user)) {
             adminList.add(user);
             version++;
             return true;
@@ -187,8 +189,8 @@ public class Gruppe {
         return false;
     }
 
-    public boolean demote(User user){
-        if(adminList.remove(user)) {
+    public boolean demote(User user) {
+        if (adminList.remove(user)) {
             memberList.add(user);
             version++;
             return true;
@@ -196,15 +198,15 @@ public class Gruppe {
         return false;
     }
 
-// lookup
+    // lookup
     public boolean isOwner(User user) {
-        return user ==this.owner;
+        return user == this.owner;
     }
 
-    public String getPermissions(User user){
-        if(memberList.contains(user)) return "member";
-        if(adminList.contains(user)) return "admin";
-        if(owner == user) return "owner";
+    public String getPermissions(User user) {
+        if (memberList.contains(user)) return "member";
+        if (adminList.contains(user)) return "admin";
+        if (owner == user) return "owner";
         return null;
     }
 
@@ -220,7 +222,7 @@ public class Gruppe {
         this.invites = invites;
     }
 
-    public boolean addInvite(Invite invite){
+    public boolean addInvite(Invite invite) {
         return invites.add(invite);
     }
 
@@ -261,17 +263,39 @@ public class Gruppe {
     }
 
     public boolean isValidDate(String date) {
-        if(!date.matches("[0-9][0-9]\\.[0-9][0-9]\\.[0-9][0-9][0-9][0-9]")) {
+        if (!date.matches("[0-9][0-9]\\.[0-9][0-9]\\.[0-9][0-9][0-9][0-9]")) {
             return false;
         }
-        int day = Integer.parseInt(date.substring(0,2));
-        int month = Integer.parseInt(date.substring(3,5));
-        int year = Integer.parseInt(date.substring(6,10));
-        if (day >31 || month >12 || (day>29 && month==2) || (day>30 && month==4) || (day>30 && month==6) || (day>30 && month==9) || (day>30 && month==11)) return false;
-        if (year < 2020) return false;
-        if((day==29 && month==2) && year%4==0) {
-            if(year%100==0) {
+        int day = Integer.parseInt(date.substring(0, 2));
+        int month = Integer.parseInt(date.substring(3, 5));
+        int year = Integer.parseInt(date.substring(6, 10));
+        if (day > 31 || month > 12 || (day > 29 && month == 2) || (day > 30 && month == 4) || (day > 30 && month == 6) || (day > 30 && month == 9) || (day > 30 && month == 11))
+            return false;
+        //if (year < 2020) return false; //is checked by isDateInFuture
+        if ((day == 29 && month == 2) && year % 4 == 0) {
+            if (year % 100 == 0) {
                 return year % 400 == 0;
+            }
+        }
+        return isDateInFuture(day, month, year);
+    }
+
+    private boolean isDateInFuture(int dayDate, int monthDate, int yearDate) {
+
+        monthDate--; //January is represented through 0 and is not month 1
+        Calendar calendar = Calendar.getInstance();
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        if (yearDate < year) {
+            return false;
+        }
+        if (yearDate == year) {
+            if (monthDate < month) {
+                return false;
+            }
+            if (monthDate == month) {
+                return dayDate > dayOfMonth;
             }
         }
         return true;

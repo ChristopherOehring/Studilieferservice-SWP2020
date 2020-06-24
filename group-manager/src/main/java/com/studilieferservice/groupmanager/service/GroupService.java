@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,7 @@ import static com.studilieferservice.groupmanager.service.GroupEventType.*;
  * This is a service for database Operations regarding Groups
  * @author Christopher Oehring
  * @author Manuel Jirsak
- * @version 1.1 6/18/20
+ * @version 1.2 6/24/20
  */
 @Service
 public class GroupService {
@@ -59,6 +60,7 @@ public class GroupService {
      * @return true, if the group was found and could be deleted.
      *          false, if the group could not be found
      */
+    @Transactional
     public boolean deleteById(String id) {
         Optional<Gruppe> g = groupRepository.findById(id);
         if(g.isEmpty()){

@@ -29,7 +29,7 @@ import java.util.UUID;
  *
  * @author Christopher Oehring
  * @author Manuel Jirsak
- * @version 1.6 6/23/20 //TODO: 6/18/20 shouldn't it be version "2".5, as it is the completely rewritten version of the prototype? ~ Manu
+ * @version 2.7 6/24/20 //TODO: 6/18/20 shouldn't it be version "2".5, as it is the completely rewritten version of the prototype? ~ Manu
  */
 @RequestMapping("/api/group-service")
 @RestController
@@ -369,6 +369,22 @@ public class GroupController {
     }
 
     /**
+     * Use to see all invites of a specific user <br>
+     * Can be reached with a GET request at api/group-service/invite
+     *
+     * @param body common {@link GetUserBody} containing the email of the user you want to see the invites of
+     * @return a list of invites of the provided user; if the user cannot be found: "NOT_FOUND"
+     */
+    @GetMapping(path = "/invite")
+    public ResponseEntity<?> getInvitesOfUser(@RequestBody GetUserBody body) {
+        Optional<User> optionalUser = userService.findById(body.getValue());
+        if (optionalUser.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user with email " + body.getValue() + " was found!");
+        User user = optionalUser.get();
+        return ResponseEntity.status(HttpStatus.OK).body(user.getInvites());
+    }
+
+    /**
      * Changes the delivery data of a group <br>
      * Can be reached with a POST request at api/group-service/deliveryData <br>
      * You can have the delivery data returned to you (along with all group information) when with a GET request at api/group-service/group
@@ -395,7 +411,7 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.OK).body("Nothing changed");
         }
         if (!body.getPlace().get(0).isBlank() && !body.getPlace().get(1).isBlank() && !body.getPlace().get(2).isBlank() && !body.getPlace().get(3).isBlank()) {
-            if (body.getPlace().get(0).matches("[a-z A-Z-]*") && body.getPlace().get(1).matches("[0-9]*") && body.getPlace().get(2).matches("[a-z A-Z-]*") && body.getPlace().get(3).matches("[0-9]*[a-zA-Z]?")) {
+            if (body.getPlace().get(0).matches("[a-z A-Z-À-ÿ]*") && body.getPlace().get(1).matches("[0-9]*") && body.getPlace().get(2).matches("[a-z A-Z-À-ÿ]*") && body.getPlace().get(3).matches("[0-9]*[a-zA-Z]?")) {
                 gruppe.setDeliveryPlace(body.getPlace());
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not update delivery data - Check that your address details are correct: City and street only contains letters, zip code only contains letters and house number contains numbers and maximum one letter");
