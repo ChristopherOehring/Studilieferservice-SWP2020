@@ -4,12 +4,18 @@ import com.studilieferservice.usermanager.userService.User;
 import com.studilieferservice.usermanager.userService.UserRepository;
 import com.studilieferservice.usermanager.userService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 /**
  * provides a web-controller
@@ -68,9 +74,10 @@ public class WebController {
      * @return returns "login" which results in invocation of the login.html
      */
     @GetMapping("/login")
-    public String loginForm(Model model) {
+    public String loginForm(Model model, HttpServletResponse response) {
 
         model.addAttribute("user", new User());
+
         return "views/login";
     }
 
@@ -89,6 +96,25 @@ public class WebController {
     }
 
     /**
+     * Meant to be used by a webpage to login
+     * @param user
+     * @param bindingResult
+     * @param model
+     * @return HTML view
+     */
+    @GetMapping("/loginFwd")
+    public String loginUser(@Valid User user, BindingResult bindingResult, Model model, HttpServletResponse response) {
+        response.addCookie(new Cookie("useremail", user.getEmail()));
+        return "redirect:regerror"; //TODO weiterleitung in group-manager
+    }
+
+    @GetMapping("/regerror")
+    public String regerror(@CookieValue("useremail") @Nullable String email, Model model){
+        model.addAttribute("test", email);
+        return "views/regerror";
+    }
+
+    /**
      * Meant to be used by a webpage to create a new user
      * @param bindingResult
      * @param model
@@ -104,7 +130,7 @@ public class WebController {
             return "views/regerror";
         }
         userService.createUser(user);
-        return "views/successedRegistration";
+        return "redirect:/login";
     }
 
     /**
@@ -119,21 +145,6 @@ public class WebController {
 
         userService.edit(user);
         return "views/successedLogin";
-    }
-
-    /**
-     * Meant to be used by a webpage to login
-     * @param user
-     * @param bindingResult
-     * @param model
-     * @return HTML view
-     */
-    @GetMapping("/loginn")
-    public String loginUser(@Valid User user, BindingResult bindingResult, Model model) {
-        if (userService.login(user) == true)
-            return "views/successedLogin";
-        else
-            return "views/regerror";
     }
 
     /**
