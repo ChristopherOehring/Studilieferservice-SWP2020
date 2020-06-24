@@ -3,105 +3,87 @@
 
 <head>
     <link rel="stylesheet" href="../../static/user-manager/css/editaccount.css" th:href="@{user-manager/css/editaccount.css}">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
     <title>Edit Account</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">SWP-09 </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
-                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    
+    <a href="">back</a> <!-- TODO: Link back to Dashboard -->
 
-        <div class="collapse navbar-collapse" id="navbarColor01">
-            <ul class="navbar-nav mr-auto">
-                <!-- <li class="nav-item active">
-                     <a class="nav-link" href="/register">Register <span class="sr-only">(current)</span></a>
-                 </li>
-                 <li class="nav-item">
-                     <a class="nav-link" href="/login">Login</a>
-                 </li>-->
-                <li class="nav-item">
-                    <a class="nav-link" href="/edit">Edit Account <span class="sr-only">(current)</span></a>
-                </li>
+    <h1>Edit your Account</h1>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-            </ul>
 
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="hidden"/>
-                <!-- <button class="btn btn-secondary my-2 my-sm-0" type="submit">Logout</button> -->
-            </form>
+    <form th:action="@{/edit}" th:object="${user}" method="POST">
+        <table class="center">
+            <tr>
+                <td><p>First Name</p></td>
+                <td><input type="text" class="inputField" th:field="*{firstName}" id="firstName"/></td>
+                <td><div class="red_p" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div></td>
+            </tr>
+        </table>        
+
+        <table class="center">
+            <tr>
+                <td><p>Last Name</p></td>
+                <td><input type="text" class="inputField" th:field="*{lastName}" id="lastName"/></td>
+                <td><div class="red_p" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div></td>
+            </tr>
+        </table>
+        
+        <table class="center">
+            <tr>
+                <td><p>Username</p></td>
+                <td><input type="text" class="inputField" th:field="*{userName}" id="userName"/></td>
+                <td><div class="red_p" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></div></td>
+            </tr>
+        </table>           
+        
+        <table class="center">
+            <tr>
+                <td><p>Street</p></td>
+                <td><input type="text" class="inputField" th:field="*{street}" id="street"/></td>
+                <td><div class="red_p" th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></div></td>
+            </tr>
+        </table>
+
+        <table class="center">
+            <tr>
+                <td><p>City</p></td>
+                <td><input type="text" class="inputField" th:field="*{city}" id="city"/></td>
+                <td><div class="red_p" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div></td>
+            </tr>
+        </table>
+
+        <table class="center">
+            <tr>
+                <td><p>ZIP</p></td>
+                <td><input type="text" class="inputField" th:field="*{zip}" id="city"/></td>
+                <td><div class="red_p" th:if="${#fields.hasErrors('zip')}" th:errors="*{zip}"></div></td>
+            </tr>
+        </table>
+
+    <!--
+            <div class="inputField
+                <label for="password" class="inputField-label">Old Password</label> <input
+                    type="password" class="inputField" th:field="*{password}"
+                    id="password" />
+                <div class="text text-danger"
+                        th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            </div >
+
+            <div class="inputField
+                <label for="password" class="inputField-label">New Password</label> <input
+                    type="text" class="inputField" th:field="*{password}" id="password" />
+                <div class="text text-danger" th:if="${#fields.hasErrors('password')}"
+                        th:errors="*{password}"></div>
+            </div>
+    -->
+        <div class="submit">
+            <input type="submit" value="Submit" id="submit"/>
         </div>
-    </nav>
-
-    <div class="stylepadding">
-        <form th:action="@{/edit}" th:object="${user}" method="POST">
-            <div class="form-group">
-                <label for="firstName" class="form-control-label">First Name</label> <input
-                    type="text" class="form-control" th:field="*{firstName}" id="firstName"/>
-                <div class="text text-danger" th:if="${#fields.hasErrors('firstName')}"
-                     th:errors="*{firstName}"></div>
-            </div>
-
-            <div class="form-group">
-                <label for="lastName" class="form-control-label">Last Name</label> <input
-                    type="text" class="form-control" th:field="*{lastName}" id="lastName"/>
-                <div class="text text-danger" th:if="${#fields.hasErrors('lastName')}"
-                     th:errors="*{lastName}"></div>
-            </div>
-
-            <div class="form-group">
-                <label for="userName" class="form-control-label">User Name</label> <input
-                    type="text" class="form-control" th:field="*{userName}" id="userName"/>
-                <div class="text text-danger" th:if="${#fields.hasErrors('userName')}"
-                     th:errors="*{userName}"></div>
-            </div>
-
-            <div class="form-group">
-                <label for="street" class="form-control-label">Street</label> <input
-                    type="text" class="form-control" th:field="*{street}" id="street"/>
-                <div class="text text-danger" th:if="${#fields.hasErrors('street')}"
-                     th:errors="*{street}"></div>
-            </div>
-            <div class="form-group">
-                <label for="city" class="form-control-label">City</label> <input
-                    type="text" class="form-control" th:field="*{city}" id="city"/>
-                <div class="text text-danger" th:if="${#fields.hasErrors('city')}"
-                     th:errors="*{city}"></div>
-            </div>
-            <div class="form-group">
-                <label for="zip" class="form-control-label">Zip</label> <input
-                    type="text" class="form-control" th:field="*{zip}" id="zip"/>
-                <div class="text text-danger" th:if="${#fields.hasErrors('zip')}"
-                     th:errors="*{zip}"></div>
-            </div>
-        <!--
-                <div class="form-group">
-                    <label for="password" class="form-control-label">Old Password</label> <input
-                        type="password" class="form-control" th:field="*{password}"
-                        id="password" />
-                    <div class="text text-danger"
-                         th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-                </div >
-
-                <div class="form-group">
-                    <label for="password" class="form-control-label">New Password</label> <input
-                        type="text" class="form-control" th:field="*{password}" id="password" />
-                    <div class="text text-danger" th:if="${#fields.hasErrors('password')}"
-                         th:errors="*{password}"></div>
-                </div>
-        -->
-            <input type="submit" value="Submit" class="btn btn-primary"/>
-        </form>
-    </div>
-
-    <div id="footer">
-        <p>&copy; 2020 Rewe SWP09</p>
-    </div>
+    </form>
 </body>
 
 </html>
