@@ -3,7 +3,7 @@
 
 <head>
     <script th:src="@{webjars/jquery/jquery.min.js}"></script>
-    <link rel="stylesheet" href="../static/user-manager/css/index.css" th:href="user-manager/css/index.css">
+    <link rel="stylesheet" href="../static/user-manager/css/index.css" th:href="@{user-manager/css/index.css}">
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
 
@@ -12,7 +12,7 @@
 
 <body>
     <div class="jumbotron">
-        <p><input id="logo" type="image" src="../static/user-manager/img/StuLiLogo.png" alt=""></p>
+        <p><input id="logo" type="image" src="../static/user-manager/img/StuLiLogo.png" th:src="@{user-manager/img/StuLiLogo.png}" alt=""></p>
         <br>
         <p><h1>Welcome! Glad you are here</h1></p>
         <p><h3>Continue to Register or Login</h3></p>
