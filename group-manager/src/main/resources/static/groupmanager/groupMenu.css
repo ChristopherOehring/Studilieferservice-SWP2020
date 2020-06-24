@@ -28,6 +28,19 @@ body{
     background-color: var(--primary);
 }
 
+a{
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+}
+
+#editImg{
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
 h1{ /*Header "Dashboard"*/
     text-align: center;
     color: white;
