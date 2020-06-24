@@ -20,7 +20,7 @@
     </parent>
 
     <modules>
-        <!--module>composer-service</module-->
+        <module>composer-service</module>
         <module>group-manager</module>
         <module>user-manager</module>
         <module>shopping-list-manager</module>
