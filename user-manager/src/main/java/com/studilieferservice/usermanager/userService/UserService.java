@@ -13,7 +13,6 @@ import static com.studilieferservice.usermanager.kafka.user.UserEventType.UPDATE
  */
 
 @Service
-
 public class UserService {
     private final ApplicationEventPublisher eventPublisher;
     private final UserRepository userRepository;
@@ -60,7 +59,6 @@ public class UserService {
     public boolean login(User user) {
 
         User user1 = findOne(user.getEmail());
-        //userRepository.findByEmail(user.getEmail());
 
         if (user1 == null || !encoder.matches(user.getPassword(), user1.getPassword())) {
             return false;

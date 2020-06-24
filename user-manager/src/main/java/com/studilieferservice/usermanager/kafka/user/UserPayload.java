@@ -2,6 +2,9 @@ package com.studilieferservice.usermanager.kafka.user;
 
 /**
  * the basic structure of the kafka message payload
+ *
+ * @author Seraj Hadros
+ * @version 1.1 6/23/20
  */
 public class UserPayload {
     private String firstName;
