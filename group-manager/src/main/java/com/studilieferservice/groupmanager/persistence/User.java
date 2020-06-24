@@ -23,7 +23,7 @@ import java.util.Objects;
  * @author Christopher Oehring
  * @version 1.8 6/24/20
  */
-//todo add version   -   Aye, will do ~ Manu 6/24/20
+//todo add version   -   Added version and getter/setter/adder-method - but how do we use them now? ~ Manu 6/24/20
 //TODO should we allow duplicate usernames? ~ Manu 6/24/20
 @Entity(name = "Nutzer")
 @Table(name = "nutzer")
@@ -55,6 +55,8 @@ public class User {
      */
     private String userName;
 
+    private long version;
+
     @JsonIgnore
     @OneToMany(
             mappedBy = "user",
@@ -79,6 +81,7 @@ public class User {
             this.firstName = simplifyName(firstName);
             this.lastName = simplifyName(lastName);
             this.userName = userName;
+            this.version = 0;
         }
         else if(!isValidName(firstName) || !isValidName(lastName)) {
             System.out.println("You have to fill in both your first name and last name, also you may only use letters, dashes and spaces");
@@ -121,6 +124,18 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public long getVersion() {
+        return this.version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
+    }
+
+    public void addVersion(long add) {
+        this.version = this.version + add;
     }
 
     /**

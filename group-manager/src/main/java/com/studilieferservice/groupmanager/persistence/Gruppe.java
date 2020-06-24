@@ -16,7 +16,15 @@ import java.util.Objects;
 // TODO: rename this to Group to stick with naming conventions through out the projects
 
 /**
- * The Structure that represents groups
+ * The Structure that represents groups <br>
+ * To create a group, see the associated method in the
+ * {@link com.studilieferservice.groupmanager.controller.GroupController} <br>
+ * When created, the user- and admin-lists are empty,
+ * the delivery date and place are null, the version
+ * equals to zero (is needed for kafka messages) and
+ * the group does not hold any invitations <br>
+ * When created, the group also receives a random UUID
+ * and the requesting user is set as the group owner
  *
  * @author Manuel Jirsak
  * @author Christopher Oehring
