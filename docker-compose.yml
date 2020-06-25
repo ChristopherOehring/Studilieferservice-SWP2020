@@ -57,10 +57,10 @@ services:
     logging:
       driver: none
 
-  #composer:
-  #  image: studi-lieferservice/composer-service:latest
-  #  ports:
-  #    - 9000:8000
+  composer:
+    image: studi-lieferservice/composer-service:latest
+    ports:
+      - 9000:8000
   group-manager:
     image: studi-lieferservice/group-manager:latest
     ports:

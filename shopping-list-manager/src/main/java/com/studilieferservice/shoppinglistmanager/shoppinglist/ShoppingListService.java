@@ -140,16 +140,18 @@ public class ShoppingListService {
             StringBuilder items = new StringBuilder();
             for (ItemShoppingList i : s.getItems()) {
                 items.append("\n\t\t\t\t{\n\t\t\t\t\t\"name\": \"").append(i.getItem().getName()).
-                        append("\",\n\t\t\t\t\t\"price\": \"").append(i.getItem().getPrice()).
-                        append("\",\n\t\t\t\t\t\"amount\": \"").append(i.getAmount()).
-                        append("\"\n\t\t\t\t}, ");
+                        append("\",\n\t\t\t\t\t\"price\": ").append(i.getItem().getPrice()).
+                        append(",\n\t\t\t\t\t\"amount\": ").append(i.getAmount()).
+                        append(",\n\t\t\t\t\t\"sum\": ").append(i.getAmount()*i.getItem().getPrice()).
+                        append("\n\t\t\t\t}, ");
             }
             if (items.length() > 0)
                 items.setLength(items.length() - 2);
 
             users.append("\n\t\t{\n\t\t\t\"id\": \"").append(s.getUser().getId()).
                     append("\",\n\t\t\t\"name\": \"").append(s.getUser().getName()).
-                    append("\",\n\t\t\t\"items\": [").append(items).
+                    append("\",\n\t\t\t\"totalprice\": ").append(getTotalPrice(s)).
+                    append(",\n\t\t\t\"items\": [").append(items).
                     append("\n\t\t\t]\n\t\t}, ");
         }
         users.setLength(users.length() - 2);
