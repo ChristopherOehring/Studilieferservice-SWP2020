@@ -4,6 +4,8 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" media="screen" data-rd-options="include" type="text/css" href="../static/groupmanager/style.css" th:href="@{/groupmanager/style.css}"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
     <title>StudiLieferservice</title>
 </head>
 
@@ -77,23 +79,55 @@
     <div class="subtitle">
         <h2>Invites</h2>
     </div>
+    <!--  
     <th th:if="${!invites.isEmpty()}">
+            <form th:action="${'http://' + link + ':9010/web/acceptInvite'}" method="GET"> 
         <div class="list">
             <th:block th:each="invite: ${invites}">
                 <li>
                     <input th:id="*{invite.id}" class="radio isHidden" name="listElement" type="radio">
-                    <label th:for="*{invite.getId()}" class="label" th:text="*{invite.groupName}"></label>
+                    <label th:for="*{invite.getId()}" class="label" th:text="*{invite.groupName}">Test</label>
                 </li>
             </th:block>
         </div>
 
-        <form th:action="${'http://' + link + ':9010/web/acceptInvite'}" method="GET"> <!-- TODO adjust th:action -->
             <div class="submitBox">
                 <input type="submit" value="continue" class="submitButton"/>
             </div>
             <input type="hidden" name="groupId" th:value="${invites.get(0).id}" />
             <input type="hidden" name="email" th:value="${user}" />
-        </form>
+        </form> 
+    </th>
+    -->
+    <th th th:if="${!invites.isEmpty()}">
+        <th:block th:each="invite: ${invites}"> 
+            <table>
+                <tr>
+                    <td>
+                        <form th:action="${'http://' + link + ':9010/web/acceptInvite'}" method="GET">   <!-- TODO: edit th:action to ignoreInvite -->
+                            <div class="inviteImage">
+                                <input type="image" src="../static/groupmanager/imgs/x-mark-128.png" th:src="@{groupmanager/imgs/x-mark-128.png}" alt="-" />
+                            </div>
+                            <input type="hidden" name="groupId" th:value="${invites.get(0).id}" />
+                            <input type="hidden" name="email" th:value="${user}" />
+                        </form>
+                    </td>
+                    <td>
+                        <input th:id="*{invite.id}" class="radio isHidden" name="listElement" type="radio">
+                        <label th:for="*{invite.getId()}" id="invLabel" th:text="*{invite.groupName}">Test2</label>
+                    </td>
+                    <td>
+                        <form th:action="${'http://' + link + ':9010/web/acceptInvite'}" method="GET"> 
+                            <div class="inviteImage">
+                                <input type="image" src="../static/groupmanager/imgs/checkmark-128.png" th:src="@{groupmanager/imgs/checkmark-128.png}" alt="-" />
+                            </div>
+                            <input type="hidden" name="groupId" th:value="${invites.get(0).id}" />
+                            <input type="hidden" name="email" th:value="${user}" />
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </th:block>
     </th>
 </div>
 
@@ -123,60 +157,6 @@
         </form>
     </div>
 </div>
-
-<!--div class="col3">
-    <div class="subtitle">
-        <h2>All Groups</h2>
-    </div>
-
-    <div class="col3Search">
-        <label for="allGroupSearch"></label>
-        <input type="text" name="allGroupSearch" id="allGroupSearch" placeholder="Search">
-    </div>
-
-    <th:block th:each="gruppe: ${groupList}">
-        <div class="list">
--->
-<!-- FIXME delete Demo Objects -->
-<!--
-            <li>
-                <input id="radio_11" class="radio isHidden" name="test" type="radio">
-                <label for="radio_11" class="label">Test1</label>
-            </li>
-            <li>
-                <input id="radio_22" class="radio isHidden" name="test" type="radio">
-                <label for="radio_22" class="label">Test2</label>
-            </li>
-            <li>
-                <input id="radio_33" class="radio isHidden" name="test" type="radio">
-                <label for="radio_33" class="label">Test2</label>
-            </li>
-
-
-            <li>
-                <input th:id="*{gruppe.id}" class="radio isHidden" name="listElement" type="radio">
-                <label th:for="*{gruppe.id}" class="label" th:text=*{gruppe.groupName}></label>
-            </li>
-
-        </div>
-        <form th:action="@{/web/group/getList}" method="GET">
--->
- <!-- TODO adjust th:action -->
-<!--
-            <div class="submitBox">
-                <input type="submit" value="ask" class="submitButton"/>
-            </div>
-            <input type="hidden" name="id" th:value="${gruppe.id}" />
-        </form>
-    </th:block>
-</div>
--->
-<!-- ##############################################################################################-->
-<!-- ##############################################################################################-->
-
-<!-- #################-->
-<!-- #### Column 4 ###-->
-<!-- #################-->
 
 </body>
 

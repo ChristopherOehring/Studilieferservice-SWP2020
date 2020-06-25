@@ -282,7 +282,18 @@ input[type=radio]:checked + label {
   #### JOIN REQUESTS ####
   #######################*/
 
+input[type=image]{
+    height: 1rem;
+}
 
+table{
+    width: 100%;
+    text-align: center;
+}
+
+#invLabel:hover{
+    background-color: transparent;
+}
 
 
 
