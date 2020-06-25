@@ -31,7 +31,7 @@
         </div>
     
         <div class="groupList">
-            <form  th:action="@{/web/group/getList}" method="GET" >
+            <form  th:action="@{http://localhost:9010/web/groupMenuFwd}" method="GET" >
                 <div class="listBox">
                     
                     <!-- Explanation:
@@ -52,38 +52,9 @@
                         <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
                         <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
                     </li>
-                    <th th:if="${groupsWhereAdmin.isEmpty() && groupsWhereMember.isEmpty() && groupsWhereAdmin.isEmpty()}">
+                    <th th:if="${groupsWhereOwner.isEmpty() && groupsWhereMember.isEmpty() && groupsWhereAdmin.isEmpty()}">
                         <label>No Groups Available!</label>
                     </th>
-                    <!-- TODO Delete Dummy Groups -->
-                    <li>
-                        <input type="radio" id="a1" value="Gruppe1" name="list">
-                        <label for="a1">Gruppe1</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="a2" value="Gruppe2" name="list">
-                        <label for="a2">Gruppe2</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="a3" value="Gruppe3" name="list">
-                        <label for="a3">Gruppe3</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="a4" value="Gruppe4" name="list">
-                        <label for="a4">Gruppe4</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="a5" value="Gruppe5" name="list">
-                        <label for="a5">Gruppe5</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="a6" value="Gruppe6" name="list">
-                        <label for="a6">Gruppe6</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="a7" value="Gruppe7" name="list">
-                        <label for="a7">Gruppe7</label>
-                    </li>
     
                 </div>
                 <div class="submitBox">
@@ -139,7 +110,7 @@
         <h2>Create new Group</h2>
     </div>
     <div class="createGroup">
-        <form th:action="@{/web/save-group}" th:object="${creationForm}" method="POST">
+        <form th:action="@{http://localhost:9010/web/save-group}" th:object="${creationForm}" method="POST">
             <div class="inputGroupName">
                 <input type="text" id="groupname" th:field="*{groupName}" placeholder="Groupname">
             </div>

@@ -33,7 +33,7 @@
     
     <h1>Login</h1>
 
-    <form th:action="@{/loginFwd}" th:object="${user}" method="GET">
+    <form th:action="@{http://localhost:9080/loginFwd}" th:object="${user}" method="GET">
 
         <div class="box">
             <div class="text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>

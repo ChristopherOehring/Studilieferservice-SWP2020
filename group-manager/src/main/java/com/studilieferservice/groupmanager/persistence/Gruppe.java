@@ -41,7 +41,6 @@ public class Gruppe {
      * which is assigned, when a group is created
      */
     @Id
-    @Column(name = "group_id")
     private String id;
 
     /**

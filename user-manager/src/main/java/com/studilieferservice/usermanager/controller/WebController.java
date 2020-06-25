@@ -8,14 +8,15 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
+
 /**
  * provides a web-controller
  * A web controller returns html documents and is meant to be consumed via browser
@@ -38,9 +39,9 @@ public class WebController {
      * @param
      * @return returns "index" which results in invocation of the index.html
      */
-    @GetMapping("/")
-    public String showIndexPage() {
 
+    @GetMapping("/index")
+    public String index(){
         return "index";
     }
 
@@ -54,6 +55,24 @@ public class WebController {
 
         model.addAttribute("user", new User());
         return "views/registerForm";
+    }
+
+    /**
+     * Meant to be used by a webpage to create a new user
+     * @param bindingResult
+     * @param model
+     * @param  user
+     *
+     * @return HTML view
+     */
+    @PostMapping("/register")
+    public RedirectView registerUser(@Valid User user, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+
+            new RedirectView("http://localhost:9000/regerror");
+        }
+        userService.createUser(user);
+        return new RedirectView("http://localhost:9000/login");
     }
 
     /**
@@ -76,7 +95,7 @@ public class WebController {
     public String loginForm(Model model, HttpServletResponse response) {
 
         model.addAttribute("user", new User());
-
+        System.out.println("calling login page");
         return "views/login";
     }
 
@@ -96,39 +115,27 @@ public class WebController {
 
     /**
      * Meant to be used by a webpage to login
-     * @param user
-     * @param bindingResult
-     * @param model
      * @return HTML view
      */
     @GetMapping("/loginFwd")
-    public String loginUser(@Valid User user, BindingResult bindingResult, Model model, HttpServletResponse response) {
-        response.addCookie(new Cookie("useremail", user.getEmail()));
-        return "redirect:regerror"; //TODO weiterleitung in group-manager
+    public RedirectView loginUser(@RequestParam(name = "email") @Nullable String email,
+                            @RequestParam(name = "password") @Nullable String password,
+                            HttpServletRequest request,
+                            HttpServletResponse response) {
+        System.out.println(request.getQueryString());
+        System.out.println(email + ", " + password);
+        if(userService.login(email, password)) {
+            response.addCookie(new Cookie("useremail", email));
+        } else {
+            return new RedirectView("http://localhost:9000/login");
+        }
+        return new RedirectView("http://localhost:9000/web/userMenu");
     }
 
     @GetMapping("/regerror")
     public String regerror(@CookieValue("useremail") @Nullable String email, Model model){
         model.addAttribute("test", email);
         return "views/regerror";
-    }
-
-    /**
-     * Meant to be used by a webpage to create a new user
-     * @param bindingResult
-     * @param model
-     * @param  user
-     *
-     * @return HTML view
-     */
-    @PostMapping("/register")
-    public String registerUser(@Valid User user, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-
-            return "views/regerror";
-        }
-        userService.createUser(user);
-        return "redirect:/login";
     }
 
     /**

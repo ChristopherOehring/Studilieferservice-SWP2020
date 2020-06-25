@@ -20,6 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
 import java.net.http.HttpHeaders;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,21 +77,15 @@ public class WebController {
         return "redirect:test";
     }
 
-    @PostMapping("/destroy")
-    public String destroySession(HttpServletRequest request) {
-        request.getSession().invalidate();
-        return "redirect:test";
-    }
-
     /**
      * get request on .../userMenu/{userEmail} invokes the userMenu.html of the group-manager
      * @param model is used by thymeleaf in the html page
      * @param email the PathVariable userEmail contains the email of the user who's menu should be displayed
      * @return returns "userMenu" which results in invocation of the userMenu.html
      */
-    @GetMapping("/userMenu/{userEmail}")
+    @GetMapping("/userMenu")
     public String userMenu(Model model,
-                        @PathVariable("userEmail") String email,
+                        @CookieValue("useremail") String email,
                            final HttpServletResponse response){
 
         response.addHeader("x-uic-stylesheet", "/groupmanager/style.css");
@@ -101,7 +96,7 @@ public class WebController {
         if(optionalUser.isEmpty()) {
             System.out.println("Error 404: user \"" + email + "\" not found");
             model.addAttribute("subject", "user: \"" + email + "\"");
-            return "nichtStandarderror404";
+            return "customError404";
         }
         User user = optionalUser.get();
 
@@ -126,14 +121,25 @@ public class WebController {
      * @return returns "userMenu" which results in invocation of the userMenu.html
      */
     @GetMapping("/groupMenu/{groupId}")
-    public String groupMenu(Model model, @PathVariable("groupId") String groupId) {
+    public String groupMenu(Model model, @PathVariable("groupId") String groupId, @CookieValue("useremail") String email) {
         Optional<Gruppe> optionalGruppe = groupService.findById(groupId);
         if (optionalGruppe.isEmpty()){
             System.out.println("Error 404: group \"" + groupId + "\" not found");
             model.addAttribute("subject", "group: \"" + groupId + "\"");
-            return "nichtStandarderror404";
+            return "customError404";
+        }
+        Optional<User> optionalUser = userService.findById(email);
+        if(optionalUser.isEmpty()) {
+            System.out.println("Error 404: user \"" + email + "\" not found");
+            model.addAttribute("subject", "user: \"" + email + "\"");
+            return "customError404";
         }
         Gruppe gruppe = optionalGruppe.get();
+        User user = optionalUser.get();
+        if(gruppe.getPermissions(user) == null) {
+            model.addAttribute("subject", String.format("groupMenu of group %s for user %s", groupId, email));
+            return "customError404";
+        }
 
         model.addAttribute("groupId", groupId);
         model.addAttribute("owner", gruppe.getOwner());
@@ -150,20 +156,24 @@ public class WebController {
      * which should only happen if the group-name in the form invalid.
      */
     @PostMapping("/save-group")
-    public String saveGroupSubmission(Model model, @ModelAttribute CreationForm form) throws JSONException {
+    public RedirectView saveGroupSubmission(HttpServletResponse response, @ModelAttribute CreationForm form) throws JSONException {
+        RedirectView redirectView = new RedirectView();
+
+        System.out.println("creating group " + form.getGroupName() + " with owner " + form.getUser());
+
         Gruppe group = new Gruppe();
         group.setGroupName(form.getGroupName());
         group.setId(UUID.randomUUID().toString());
 
         Optional<User> optionalUser = userService.findById(form.getUser());
         if(optionalUser.isEmpty()) {
-            model.addAttribute("subject", "user: \"" + form.getUser() + "\"");
-            return "nichtStandarderror404";
+            redirectView.setUrl("http://localhost:9000/web/customError404");
+            return redirectView;
         }
         User user = optionalUser.get();
 
         group.setOwner(user);
-
+        System.out.println(group);
         groupService.save(group);
 
         /*
@@ -184,7 +194,14 @@ public class WebController {
         restTemplate.postForObject(urlPOST, request , String.class );
         */
 
-        return "redirect:groupMenu/" + group.getId();
+        redirectView.setUrl("http://localhost:9000/web/groupMenu/" + group.getId());
+        return redirectView;
+    }
+
+    @GetMapping("/groupMenuFwd")
+    public RedirectView groupMenuFwd(@PathParam("list") String list){
+        System.out.println(list);
+        return new RedirectView("http://localhost:9000/web/groupMenu/" + list);
     }
 
     /**

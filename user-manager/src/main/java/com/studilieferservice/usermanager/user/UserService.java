@@ -43,21 +43,22 @@ public class UserService {
     /**
      * fetch if the email in DB exist and then
      * matches the given password
-     * if all matches, then update the given user date to true in DB
+     * if all matches, then return true
      *
-     * @param user
+     * @param email The given email
+     * @param password The given password
      * @return true if the password and the email correct, otherwise false
      */
-    public boolean login(User user) {
+    public boolean login(String email, String password) {
+        System.out.println("Login attempt: "  + email);
+        User user1 = findOne(email);
+        //userRepository.findByEmail(user.getEmail());
 
-        User user1 = findOne(user.getEmail());
-
-        if (user1 == null || !encoder.matches(user.getPassword(), user1.getPassword())) {
+        if (user1 == null || !encoder.matches(password, user1.getPassword())) {
+            System.out.println("denied!");
             return false;
         } else {
-            user1.setSignedIn(true);
-            userRepository.save(user1);
-            setCurrentUser(user1);
+            System.out.println("success!");
             return true;
         }
     }

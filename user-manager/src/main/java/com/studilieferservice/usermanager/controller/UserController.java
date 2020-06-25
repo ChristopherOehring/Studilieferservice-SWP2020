@@ -105,7 +105,7 @@ public class UserController {
      */
     @GetMapping("/rest-login")
     public ResponseEntity<?> login(@RequestBody User user) {
-        if (userService.login(user) == true)
+        if (userService.login(user.getEmail(), user.getPassword()) == true)
             return ResponseEntity.ok("OKKKKKK");
         else
             return ResponseEntity.notFound().build();
