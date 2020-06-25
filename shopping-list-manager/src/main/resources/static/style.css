@@ -1,122 +1,155 @@
-body{
+/*###################
+  #### VARIABLES ####
+  ###################*/
+
+  :root{
+    /*## COLORS ###*/
+    --primary: #363636;
+    --secondary: #474747;
+    --lineColor: #909090;
+
+    /*## FONTS ##*/
+    --headingFont: "Patua One";
+    --secondaryFont: "Roboto";
+
+    /*## STANDARD STRUCTURE ##*/
+    --colTopMargin: 20%;
+    --colHeight: 70%;
+}
+
+/*DELETE ME*/
+.element{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+
+/*##############
+  #### BODY ####
+  ##############*/
+
+
+body{ /*For full website*/
     margin: 0;
 }
 
-.header{
-    height: 50px;
-    background: #ff0000;
+.OuterBox{ /*box around all elements*/
+    position: absolute;
+    height: 90%;
+    width: 25%;
+    background-color: var(--primary);
 }
 
-.headerTitle{
-    position: absolute;
-
-    width: 171px;
-    height: 36px;
-    left: calc(50% - 171px/2 - 0.5px);
-    top: 5px;
-
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 30px;
-    line-height: 51px;
-    display: flex;
-    align-items: center;
+.title{ /*box around title for positioning*/
+    border-bottom: 1px solid var(--lineColor);
     text-align: center;
-
-    color: #FFFFFF;
 }
 
-.logo{
-    position: absolute;
-    left: 18px;
-    top: 5px;
-
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-style: normal;
-    font-weight: 800;
-    font-size: 24px;
-    line-height: 40px;
-
-    color: #FFFFFF;
-}
-
-.logoAdd{
-    position: absolute;
-    width: 201.56px;
-    height: 35.32px;
-    left: 95px;
-    top: 13px;
-
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 27px;
-
-    color: #FFFFFF;
-}
-
-.columnLeft{
-    position: fixed;
-    left: 20%;
-    top: 100px;
-    height: 60%;
-    width: 20%;
-    padding: 20px;
-    background: rgb(252, 45, 45);
-    -webkit-box-shadow: 7px 10px 6px -6px rgba(0,0,0,0.8);
-    box-shadow: 7px 10px 6px -6px rgba(0,0,0,0.8);
-    border-radius: 20px
-}
-
-.columnRight{
-    position: fixed;
-    right: 20%;
-    top: 100px;
-    height: 60%;
-    width: 20%;
-    padding: 20px;
-    background: rgb(252, 45, 45);
-    -webkit-box-shadow: 7px 10px 6px -6px rgba(0,0,0,0.8);
-    box-shadow: 7px 10px 6px -6px rgba(0,0,0,0.8);
-    border-radius: 20px
-}
-
-.title{
-    text-align: center;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 25px;
-    font-weight: bold;
+h1{ /*the title itself*/
     color: white;
-    padding-bottom: 20px;
+    font-family: var(--headingFont);
 }
 
-.element{
-    color: rgb(0, 0, 0);
-    left: 10%;
-    right: 10%;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 15px;
-    display: block;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    line-height: 2.0;
-    background-color: rgb(220, 220, 220);
-    text-align: left;
-    -webkit-box-shadow: 6px 8px 11px -4px rgba(0,0,0,0.61);
-    -moz-box-shadow: 6px 8px 11px -4px rgba(0,0,0,0.61);
-    box-shadow: 6px 8px 11px -4px rgba(0,0,0,0.61);
-    list-style-type: none;
+.items{ /*box around the itemlist*/
+    margin-top: 1rem;
+    margin-left: 0.5rem;
+    padding-right: 1rem;
+    height: 60%;
+    overflow: scroll;
+
+        /*#SCROLLBAR FOR FIREFOX#*/
+    scrollbar-color: var(--secondary) var(--primary);
+    scrollbar-width: thin;
+    scrollbar-track-color: var(--primary);
+
 }
 
-.footer{
-    position: fixed;
-    height: 25px;
-    left: 0;
-    bottom: 0;
+table{ /*some settings for the table itself*/
     width: 100%;
-    background-color: red;
-    color: white;
+    border-spacing: 0rem 1rem; /*space betw cols = 0rem ### space betw rows 1rem*/
+}
+
+tr{ /*table rows*/
+
+    /*positioning and color*/
+    width: 100%;
+    margin: 0.5rem;
     text-align: center;
+    background-color: var(--secondary);
+
+    /*box-shadow*/
+    -webkit-box-shadow: 5px 5px 10px -4px #000000; 
+    box-shadow: 5px 5px 10px -4px #000000;
+}
+
+td, th{ /*table columns*/
+
+    /*positioning*/
+    width: 100%;
+    margin-right: 0px;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+
+    /*fonts*/
+    color: white;
+    font-family: var(--secondaryFont);
+}
+
+
+input[type=image]{ /*the + and - of each item*/
+    width: 15px;
+    height: 15px;
+}
+
+.addProduct{ /* box around addProduct button for positioning */
+    text-align: center;
+    margin-top: 5%;
+}
+
+.addProductButton{ /*submitbutton styling*/
+    /*positioning and boxform*/
+    width: auto;
+    text-align: center;
+    padding-top: 0.2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 0.2rem;
+    background-color: transparent;
+
+    /* border */
+    border-radius: 30px;
+    border: 2px solid white;
+
+    /*font*/
+    font-size: 16px;
+    color: white;
+    font-family: var(--secondaryFont);
+
+    /*animation time for hover*/
+    transition: 0.5s;
+}
+
+/* Change when button is hovered */
+.addProductButton:hover{
+    background-color: white;
+    color: var(--primary);
+}
+
+.line{ /*the line between button and sum*/ 
+    margin-top: 5%;
+    width: 100%;
+    border-bottom: 1px solid var(--lineColor);
+}
+
+.sum{ /*box around the sum*/
+    text-align: right;
+}
+
+p{ /*fonts for the sum*/
+    margin-top: 2px;
+    margin-right: 1rem;
+    color: white;
+    font-family: var(--secondaryFont);
+    font-size: 22px;
+    
 }
