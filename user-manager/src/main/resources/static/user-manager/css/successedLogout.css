@@ -1,0 +1,101 @@
+/*###################
+  #### VARIABLES ####
+  ###################*/
+
+  :root{
+    /*## COLORS ###*/
+    --primary: #363636;
+    --secondary: #474747;
+    --lineColor: #909090;
+
+    /*## FONTS ##*/
+    --headingFont: "Patua One";
+    --secondaryFont: "Roboto";
+  }
+
+html{
+    background-color: #363636;
+    margin: 0px;
+}
+
+/*  ############
+    ### Logo ###
+    ############
+*/
+
+.logo{
+    text-align: center;
+    margin-top: 5%;
+}
+
+#logo{
+    width: 20rem;
+
+}
+
+/*  ##############
+    ### Header ###
+    ##############
+*/
+  
+h1{
+    text-align: center;
+    color: white;
+    font-family: "Patua One";
+    margin-top: 5rem;
+    margin-bottom: 2rem;
+    font-size: 3rem;
+}
+h3{
+    text-align: center;
+    color: white;
+    font-family: "Patua One";
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+
+/*  ###############
+    ### Nav-Bar ###
+    ###############
+*/
+.navbar{ /*box for positioning*/
+    margin-top: 1rem;
+    text-align: center;
+    margin-right: 2rem;
+}
+
+li{
+    display: inline;
+    list-style-type: none;
+    margin-left: 0.5rem;
+}
+
+a{ 
+    transition: 0.5s;
+    border-radius: 30px;
+
+    /*box-shadow*/
+    -webkit-box-shadow: 10px 12px 5px -10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 12px 5px -10px rgba(0,0,0,0.75);
+    box-shadow: 10px 12px 5px -10px rgba(0,0,0,0.75);
+
+}
+
+a:link, a:visited {
+    background-color: var(--secondary);
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    
+    /*fonts*/
+    color: white;
+    font-family: var(--secondaryFont);
+}
+  
+a:hover, a:active {
+    background-color: white;
+    color: var(--primary);
+}

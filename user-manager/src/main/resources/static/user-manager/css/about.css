@@ -1,0 +1,90 @@
+/*###################
+  #### VARIABLES ####
+  ###################*/
+
+  :root{
+    /*## COLORS ###*/
+    --primary: #363636;
+    --secondary: #474747;
+    --lineColor: #909090;
+
+    /*## FONTS ##*/
+    --headingFont: "Patua One";
+    --secondaryFont: "Roboto";
+
+}
+body{
+    margin: 0px;
+    background-color: var(--primary);
+}
+
+.logo{
+    text-align: center;
+    margin-top: 2rem;
+}
+
+#logo{
+    width: 15rem;
+}
+
+/*  ###############
+    ### Nav-Bar ###
+    ###############
+*/
+.navbar{ /*box for positioning*/
+    text-align: center;
+    margin-top: 3rem;
+    margin-right: 2rem;
+}
+
+li{
+    display: inline;
+    list-style-type: none;
+    margin-left: 0.5rem;
+}
+
+a{ 
+    transition: 0.5s;
+    border-radius: 30px;
+
+    /*box-shadow*/
+    -webkit-box-shadow: 10px 12px 5px -10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 12px 5px -10px rgba(0,0,0,0.75);
+    box-shadow: 10px 12px 5px -10px rgba(0,0,0,0.75);
+
+}
+
+a:link, a:visited {
+    background-color: var(--secondary);
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    
+    /*fonts*/
+    color: white;
+    font-family: var(--secondaryFont);
+}
+  
+a:hover, a:active {
+    background-color: white;
+    color: var(--primary);
+}
+
+/*  ############
+    ### Text ###
+    ############
+*/
+
+.jumbotron{
+    text-align: center;
+    margin-top: 5%;
+    color: white;
+}
+
+h1,h2{
+    font-family: var(--headingFont);
+}
+h3{
+    font-family: var(--secondaryFont);
+}

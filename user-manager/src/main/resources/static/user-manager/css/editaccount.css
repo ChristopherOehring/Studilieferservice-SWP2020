@@ -1,0 +1,123 @@
+/*###################
+  #### VARIABLES ####
+  ###################*/
+
+  :root{
+    /*## COLORS ###*/
+    --primary: #363636;
+    --secondary: #474747;
+    --lineColor: #909090;
+
+    /*## FONTS ##*/
+    --headingFont: "Patua One";
+    --secondaryFont: "Roboto";
+  }
+
+html{
+    background-color: #363636;
+    margin: 0px;
+}
+
+/*  ############
+    ### Logo ###
+    ############
+*/
+
+.logo{
+    text-align: center;
+    margin-top: 2rem;
+}
+
+#logo{
+    width: 10rem;
+
+}
+
+/*  ##############
+    ### Header ###
+    ##############
+*/
+  
+h1{
+    text-align: center;
+    color: white;
+    font-family: "Patua One";
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+}
+
+a{
+    position: absolute;
+    text-decoration: none;
+    font-size: 16px;
+    color: white;
+    font-family: var(--secondaryFont);
+    padding: 0.5rem 1rem;
+    border: 1px white solid;
+    border-radius: 10px;
+    top: 1rem;
+    left: 1rem;
+}
+
+/*########*/
+
+table{
+    table-layout: fixed;
+    width: 20rem;
+    border-collapse: collapse;
+}
+
+table.center{
+    margin-left: 40%;
+}
+
+tr:first-child{
+    width: 30rem;
+}
+
+p{
+    color: white;
+    font-family: var(--secondaryFont);
+}
+
+.red_p{
+    color: #fa5757;
+}
+
+.inputField{
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px dashed var(--lineColor);
+
+    color: white;
+    font-size: 15px;
+}
+
+.submit{
+    text-align: center;
+    height: 3rem;
+    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3rem;
+ 
+}
+
+/* #submit is submit-input-button inside of .submit div*/
+#submit{
+    color: white;
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    background-color: transparent;
+    cursor: pointer;
+    border: 2px solid #FFFFFF;
+    border-radius: 50px;
+    transition: 0.5s;
+}
+
+#submit:hover{
+    color: #363636;
+    background-color: white;
+
+}

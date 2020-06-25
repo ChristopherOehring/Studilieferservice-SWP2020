@@ -7,10 +7,13 @@ import net.bytebuddy.implementation.bind.annotation.Default;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
+/**
+ *  basic structure for user
+ */
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table (name = "user1")
+
 public class User {
 
     public User(String firstName,String lastName ,String userName,String city,String street, String zip,
@@ -83,28 +86,7 @@ public class User {
     @Column(name = "password")
 
     private String password;
-//    public User(@JsonProperty("firstName")String firstName,
-//                @JsonProperty("lastName")String lastName,
-//                @JsonProperty("userName")String userName,
-//                @JsonProperty("street")String street,
-//                @JsonProperty("city")String city,
-//                @JsonProperty("zip")String zip,
-//                @JsonProperty("email")String email,
-//                @JsonProperty("password")String password,
-//                @JsonProperty("isSignedIn") boolean isSignedIn
-//
-//                ){
-//
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.userName = userName;
-//        this.isSignedIn = isSignedIn;
-//        this.city = city;
-//        this.street = street;
-//        this.zip = zip;
-//        this.email = email;
-//        this.password = password;
-//    }
+
     public boolean isSignedIn() {
         return isSignedIn;
     }
