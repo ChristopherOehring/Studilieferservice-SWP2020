@@ -47,8 +47,13 @@ public class UserConsumer {
             return;
         }
 
-        User user = userMessage.getPayload();
-        userService.createUser(user);
+        User payload = userMessage.getPayload();
+
+        if (userMessage.getType().equals("UPDATE")) {
+            userService.updateUserFromKafka(payload.getId(), payload.getName());
+        } else {
+            userService.createUserFromKafka(payload.getId(), payload.getName());
+        }
         acknowledgment.acknowledge();
     }
 }

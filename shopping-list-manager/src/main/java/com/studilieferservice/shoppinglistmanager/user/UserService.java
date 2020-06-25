@@ -30,10 +30,6 @@ public class UserService {
         return userRepository.findById(id).orElseThrow();
     }
 
-    //public void updateUser(User user) {
-    //    User u = userRepository.findById(user.getId()).orElseThrow();
-    //}
-
     public void deleteUser(User user) {
         userRepository.delete(user);
     }
@@ -48,5 +44,10 @@ public class UserService {
         }
 
         return membersUser;
+    }
+
+    public void updateUserFromKafka(String email, String username) {
+        User u = userRepository.findById(email).orElseThrow();
+        u.setName(username);
     }
 }
