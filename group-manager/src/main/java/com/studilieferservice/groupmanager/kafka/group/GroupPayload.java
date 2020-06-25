@@ -2,6 +2,12 @@ package com.studilieferservice.groupmanager.kafka.group;
 
 import java.util.List;
 
+/**
+ * This class is a representation of the relevant information of a {@link com.studilieferservice.groupmanager.persistence.Gruppe}, for use in a {@link GroupKafkaMessage}
+ * @author Christopher Oehring
+ * @version 1.1 6/18/20
+ */
+
 public class GroupPayload {
     private String id;
 
@@ -12,17 +18,14 @@ public class GroupPayload {
     private List<String> userList;
 
     private List<String> adminList;
-    
-    private long version;
 
     public GroupPayload(String id, String groupName, String owner, List<String> userList,
-                        List<String> adminList, long version) {
+                        List<String> adminList) {
         this.id = id;
         this.groupName = groupName;
         this.owner = owner;
         this.userList = userList;
         this.adminList = adminList;
-        this.version = version;
     }
 
     public String getOwner() {
@@ -63,13 +66,5 @@ public class GroupPayload {
 
     public void setAdminList(List<String> adminList) {
         this.adminList = adminList;
-    }
-
-    public long getVersion() {
-        return version;
-    }
-
-    public void setVersion(long version) {
-        this.version = version;
     }
 }

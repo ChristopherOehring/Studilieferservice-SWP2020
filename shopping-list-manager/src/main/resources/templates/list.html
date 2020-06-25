@@ -3,48 +3,77 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../static/style.css" th:href="@{/style.css}"/>
+    <link rel="stylesheet" type="text/css" href="../static/shoppinglistmanager/style.css" th:href="@{/shoppinglistmanager/style.css}"/>
+    <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <title>StudiLieferservice</title>
 </head>
 
 <body>
-    <div class="header">
-        <div class="logo">REWE</div>
-        <div class="logoAdd">StudiLieferservice</div>
-        <div class="headerTitle">Einkaufsliste</div>
+
+<div class="OuterBox">
+    <div class="title">
+        <h1>
+            Shopping List
+        </h1>
     </div>
 
-    <div class="columnLeft">
-        <div class="title">
-            Gruppe: <td th:text="${shoppingList.groupName}">Gruppenname</td>
-        </div>
-
-        <div class="element">
-            <h3>Positionen:</h3>
-            <tr th:each="item : ${shoppingList.items}">
-                <p><b>- <td th:text="${item.name}"></td></b></p>
+    <div class="items">
+        <table>
+            <tr>
+                <th>Product&emsp; - &emsp;Price</th>
+                <th>Sum</th>
+                <th></th>
+                <th>Amount</th>
+                <th></th>
             </tr>
-        </div>
+
+            <tr th:if="${!items.isEmpty()}" th:each="itemShoppingList : ${items}">
+                <td th:text="${itemShoppingList.item.name+' - '+itemShoppingList.item.price+'€'}">produkt</td>
+
+                <td th:text="${#numbers.formatDecimal(itemShoppingList.item.price*itemShoppingList.amount, 0, 2)+'€'} ">preis</td>
+
+                <td><form th:action="@{/shoppingList/itemDecrease}" method="POST">
+                    <input type="image" th:src="@{/shoppinglistmanager/icons/minus.png}" alt="-">
+                    <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
+                    <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
+                </form></td>
+
+                <td th:text="${itemShoppingList.amount}">0</td>
+
+                <td><form th:action="@{/shoppingList/itemIncrease}" method="POST">
+                    <input type="image" th:src="@{/shoppinglistmanager/icons/plus.png}" alt="+">
+                    <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
+                    <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
+                </form></td>
+            </tr>
+        </table>
     </div>
 
-    <div class="columnRight">
-        <div class="title">
-            Artikel hinzufügen
-        </div>
-
-        <div class="element">
-            <form th:action="@{/shoppingList/addItem}" th:object="${item}"  method="POST">
-                <label for="productname">Produkte hinzufügen: </label>
-                <input type="text" id="productname" th:field="*{name}" placeholder="Produkt" >
-                <input type="hidden" name= "groupId"   th:value="${shoppingList.groupId}" />
-                <input type="submit" value="Hinzufügen">
-            </form>
-        </div>
+    <div class="addProduct">
+        <input type="button" value="add products" class="addProductButton">
     </div>
 
-    <div class="footer">
-        Impressum
+    <div class="line"></div>
+
+    <div th:if="${totalPrice != 0}" class="sum">
+        <p th:text="${#numbers.formatDecimal(totalPrice, 0, 2)+'€'}">total</p>
     </div>
+
+</div>
+
+<!--div class="element">
+    <form th:action="@{/shoppingList/addProduct}" th:object="${itemAndShoppingList}" th:method="PUT">
+        <label for="item.name">Produkte hinzufügen: </label>
+        <input type="text" id="item.name" th:field="*{item.name}" placeholder="Produkt">
+        <input type="hidden" name="shoppingList.id" th:value="${shoppingList.id}"/>
+        <input type="hidden" name="amount" th:value="${1}"/>
+        <input type="submit" value="Hinzufügen">
+    </form>
+</div-->
+
 </body>
 
 </html>

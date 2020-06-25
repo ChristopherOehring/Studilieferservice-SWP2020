@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/groupmanager/groupMembersStyle.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <script src="../static/groupmanager/js/main.js"></script>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="memberTitleBox">
+        <h2>Member</h2>
+    </div>
+
+    <table>
+        <tr th:each="member: ${memberList}">
+            <td>
+                <img th:if="memer.isAdmin" src="../static/groupmanager/imgs/crown-3-128.png" alt=" ">
+            </td>
+            <td>
+                <p th:text="${member.name}"></p>
+            </td>
+            <td>
+                <img th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="">
+            </td>
+        </tr>
+
+            <!-- TODO DELETE PLACEHOLDER -->
+        <tr>
+            <td><img th:if="memer.isAdmin" src="../static/groupmanager/imgs/crown-3-128.png" alt=" "></td>
+            <td>Person1</td>
+            <td><img th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt=""></td>
+        </tr>
+        <tr>
+            <td><img th:if="memer.isAdmin" src="../static/groupmanager/imgs/crown-3-128.png" alt=" "></td>
+            <td>Alibaba</td>
+            <td><img th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt=""></td>
+        </tr>
+        <tr>
+            <td><img th:if="memer.isAdmin" src="../static/groupmanager/imgs/crown-3-128.png" alt=" "></td>
+            <td>Die Schöne</td>
+            <td><img th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt=""></td>
+        </tr>
+        <tr>
+            <td><img th:if="memer.isAdmin" src="../static/groupmanager/imgs/crown-3-128.png" alt=" "></td>
+            <td>Das Biest</td>
+            <td><img th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt=""></td>
+        </tr>
+        <tr>
+            <td><img th:if="memer.isAdmin" src="../static/groupmanager/imgs/crown-3-128.png" alt=" "></td>
+            <td>Lorem ipsum</td>
+            <td><img th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt=""></td>
+        </tr>
+
+    </table>
+
+</body>
+</html>
