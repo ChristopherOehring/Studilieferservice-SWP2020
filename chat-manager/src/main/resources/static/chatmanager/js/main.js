@@ -31,6 +31,7 @@ function connect(event) {
     event.preventDefault();
 }
 
+
 function onConnected() {
     // Subscribe to the Public Topic
     stompClient.subscribe('/topic/public', onMessageReceived);
@@ -44,10 +45,12 @@ function onConnected() {
     connectingElement.classList.add('hidden');
 }
 
+
 function onError(error) {
     connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
     connectingElement.style.color = 'red';
 }
+
 
 function send(event) {
     var messageContent = messageInput.value.trim();
@@ -64,6 +67,7 @@ function send(event) {
     }
     event.preventDefault();
 }
+
 
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
@@ -101,6 +105,7 @@ function onMessageReceived(payload) {
     messageArea.appendChild(messageElement);
     messageArea.scrollTop = messageArea.scrollHeight;
 }
+
 
 function getAvatarColor(messageSender) {
     var hash = 0;

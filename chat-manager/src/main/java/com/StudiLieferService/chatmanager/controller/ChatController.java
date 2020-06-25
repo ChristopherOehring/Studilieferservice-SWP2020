@@ -7,9 +7,11 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
 import com.StudiLieferService.chatmanager.model.ChatMessage;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class ChatController {
+
 
 	@MessageMapping("/chat.register")
 	@SendTo("/topic/public")

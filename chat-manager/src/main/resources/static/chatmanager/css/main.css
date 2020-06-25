@@ -20,6 +20,8 @@ body {
 
     height: 100%;
 
+
+
   /* Center and scale the image nicely */
   background-position: center;
   background-repeat: no-repeat;
@@ -138,6 +140,7 @@ button.accent {
     margin-top: 10px;
 }
 
+
 #chat-page {
     position: relative;
     height: 100%;
@@ -254,6 +257,7 @@ button.accent {
     top: 65px;
     width: 100%;
 }
+
 
 @media screen and (max-width: 730px) {
 
