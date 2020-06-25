@@ -40,7 +40,7 @@
     <h1>Register</h1>
 
     <div class="stylepadding">
-        <form th:action="@{http://localhost:9080/register}" th:object="${user}" method="POST">
+        <form th:action="${'http://' + link + ':9080/register'}" th:object="${user}" method="POST">
             <div class="box" >
                 <input class="input" type="text" th:field="*{firstName}" id="firstName" placeholder=" " />
                 <label for="firstName" class="label">First Name</label> 

@@ -87,7 +87,7 @@
             </th:block>
         </div>
 
-        <form th:action="@{/web/acceptInvite}" method="GET"> <!-- TODO adjust th:action -->
+        <form th:action="${'http://' + link + ':9010/web/acceptInvite'}" method="GET"> <!-- TODO adjust th:action -->
             <div class="submitBox">
                 <input type="submit" value="continue" class="submitButton"/>
             </div>
@@ -110,7 +110,7 @@
         <h2>Create new Group</h2>
     </div>
     <div class="createGroup">
-        <form th:action="@{http://localhost:9010/web/save-group}" th:object="${creationForm}" method="POST">
+        <form th:action="${'http://' + link + ':9010/web/save-group'}" th:object="${creationForm}" method="POST">
             <div class="inputGroupName">
                 <input type="text" id="groupname" th:field="*{groupName}" placeholder="Groupname">
             </div>

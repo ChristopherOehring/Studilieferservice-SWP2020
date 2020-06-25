@@ -4,6 +4,7 @@ import com.studilieferservice.usermanager.user.User;
 import com.studilieferservice.usermanager.user.UserRepository;
 import com.studilieferservice.usermanager.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,9 +28,11 @@ public class WebController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+    private String link;
 
     @Autowired
-    public WebController(UserService userService, UserRepository userRepository) {
+    public WebController(@Value("${link}") String link, UserService userService, UserRepository userRepository) {
+        this.link = link;
         this.userService = userService;
         this.userRepository = userRepository;
     }
@@ -54,6 +57,7 @@ public class WebController {
     public String registerForm(Model model) {
 
         model.addAttribute("user", new User());
+        model.addAttribute("link", link);
         return "views/registerForm";
     }
 
@@ -69,10 +73,10 @@ public class WebController {
     public RedirectView registerUser(@Valid User user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
 
-            new RedirectView("http://localhost:9000/regerror");
+            new RedirectView("http://" + link + ":9000/regerror");
         }
         userService.createUser(user);
-        return new RedirectView("http://localhost:9000/login");
+        return new RedirectView("http://" + link + ":9000/login");
     }
 
     /**
@@ -95,6 +99,7 @@ public class WebController {
     public String loginForm(Model model, HttpServletResponse response) {
 
         model.addAttribute("user", new User());
+        model.addAttribute("link", link);
         System.out.println("calling login page");
         return "views/login";
     }
@@ -127,9 +132,9 @@ public class WebController {
         if(userService.login(email, password)) {
             response.addCookie(new Cookie("useremail", email));
         } else {
-            return new RedirectView("http://localhost:9000/login");
+            return new RedirectView("http://" + link + ":9000/login");
         }
-        return new RedirectView("http://localhost:9000/web/userMenu");
+        return new RedirectView("http://" + link + ":9000/web/userMenu");
     }
 
     @GetMapping("/regerror")

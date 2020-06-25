@@ -44,13 +44,16 @@ public class WebController {
     private final UserService userService;
     private String groupManagerSrc;
     private InviteService inviteService;
+    private String link;
 
     @Autowired
     public WebController(final @Value("${group-manager-src}") String groupManagerSrc,
+                         @Value("${link}") String link,
                          GroupService groupService,
                          UserService userService,
                          InviteService inviteService) {
         this.groupService = groupService;
+        this.link = link;
         this.userService = userService;
         this.groupManagerSrc = groupManagerSrc;
         this.inviteService = inviteService;
@@ -99,6 +102,7 @@ public class WebController {
             return "customError404";
         }
         User user = optionalUser.get();
+        model.addAttribute("link", link);
 
         model.addAttribute("creationForm", new CreationForm());
 
@@ -167,7 +171,7 @@ public class WebController {
 
         Optional<User> optionalUser = userService.findById(form.getUser());
         if(optionalUser.isEmpty()) {
-            redirectView.setUrl("http://localhost:9000/web/customError404");
+            redirectView.setUrl("http://" + link + ":9000/web/customError404");
             return redirectView;
         }
         User user = optionalUser.get();
@@ -194,14 +198,14 @@ public class WebController {
         restTemplate.postForObject(urlPOST, request , String.class );
         */
 
-        redirectView.setUrl("http://localhost:9000/web/groupMenu/" + group.getId());
+        redirectView.setUrl("http://" + link + ":9000/web/groupMenu/" + group.getId());
         return redirectView;
     }
 
     @GetMapping("/groupMenuFwd")
     public RedirectView groupMenuFwd(@PathParam("list") String list){
         System.out.println(list);
-        return new RedirectView("http://localhost:9000/web/groupMenu/" + list);
+        return new RedirectView("http://" + link + ":9000/web/groupMenu/" + list);
     }
 
     /**
@@ -215,7 +219,7 @@ public class WebController {
         String groupId = request.getParameter("id");
 
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://localhost:8070/shoppingList/" + groupId);
+        redirectView.setUrl("http://" + link + ":8070/shoppingList/" + groupId);
         return redirectView;
     }
 
