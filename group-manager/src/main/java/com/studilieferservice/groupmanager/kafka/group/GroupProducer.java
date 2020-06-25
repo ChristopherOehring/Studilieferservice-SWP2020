@@ -16,6 +16,41 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+/**
+ * This Component creates kafka messages on the topic: "groupTopic" <br>
+ * These Messages are based on GroupEvents<br>
+ * Every Message contains a {@link GroupKafkaMessage} which, among other things, contains a {@link GroupPayload}<br>
+ * <br>
+ * The resulting JSON looks a little like this:<br>
+ * <pre>
+ {
+     "id":"3ec50b55-f6e6-4b0d-b821-b8751d282aa3",
+     "key":"65c57e94-e417-4578-85d5-cb2bbd7085fd",
+     "time":"2020-06-09T03:57:21Z",
+     "type":"UPDATE",
+     "version":3,
+     "payload":{
+         "id":"65c57e94-e417-4578-85d5-cb2bbd7085fd",
+         "groupName":"test",
+         "owner":"max.mustermann@tu-ilmenau.de",
+         "userList":[],
+         "adminList":[]
+     }
+ }
+ * </pre>
+ * The values contain the following information:<br>
+ * <pre>
+     id: A UUID that identifies this message
+     key: The UUID that identifies the Group
+     time: the time at which this message was sent
+     type: The type of operation this message indicates (namely: UPDATE or DELETION
+     version: the version of the group that can be found in this message
+     payload: A representation of the relevant values of the group
+ * </pre>
+ * @author Christopher Oehring
+ * @version 1.1 6/18/20
+ */
+
 @Component
 public class GroupProducer {
 
@@ -34,14 +69,14 @@ public class GroupProducer {
     }
 
     /**
-     * Sendet eine KafkaMessage, wenn eine Gruppe erstellt wird
-     * Diese enthält die Gruppe
+     * Sendet eine KafkaMessage, wenn eine Gruppe erstellt wird.<br>
+     * Diese enthält die unter anderem die Gruppe.
      * @param event wird generiert, wenn eine gruppe erstellt wird
      */
     @EventListener
     public void produceGroupEvent(GroupEvent event){
         GroupPayload payload = conversionService.convert(event.getGroup(), GroupPayload.class);
-        String message = createKafkaMessage(payload, event.getType());
+        String message = createKafkaMessage(event.getGroup().getVersion(), payload, event.getType());
         if(StringUtils.isEmpty(message)){
             System.out.println("Cannot send empty message");
             return;
@@ -52,14 +87,14 @@ public class GroupProducer {
     }
 
 
-    private String createKafkaMessage(GroupPayload payload, GroupEventType type) {
+    private String createKafkaMessage(Long version, GroupPayload payload, GroupEventType type) {
 
         GroupKafkaMessage message = new GroupKafkaMessage(
                 UUID.randomUUID().toString(),
                 payload.getId(),
                 ZonedDateTime.now(ZoneOffset.UTC).withNano(0).format(DateTimeFormatter.ISO_DATE_TIME),
                 type.name(),
-                payload.getVersion(),
+                version,
                 payload
         );
 

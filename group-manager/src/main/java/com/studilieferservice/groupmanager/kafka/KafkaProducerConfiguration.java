@@ -16,6 +16,11 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This Configuration creates the Kafka Topic "groupTopic"
+ * @author Christopher Oehring
+ * @version 1.1 6/18/20
+ */
 @Configuration
 public class KafkaProducerConfiguration {
 
