@@ -1,6 +1,6 @@
 package com.studilieferservice.usermanager.kafka.user;
 
-import com.studilieferservice.usermanager.userService.User;
+import com.studilieferservice.usermanager.user.User;
 import org.springframework.stereotype.Component;
 import org.springframework.core.convert.converter.Converter;
 
@@ -24,6 +24,5 @@ public class UserToPayloadConverter implements Converter<User, UserPayload> {
                 user.getEmail()
         );
     }
-
 
 }

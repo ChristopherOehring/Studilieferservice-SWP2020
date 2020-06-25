@@ -2,7 +2,7 @@
   #### VARIABLES ####
   ###################*/
 
-  :root{
+:root{
     /*## COLORS ###*/
     --primary: #363636;
     --secondary: #474747;
@@ -11,8 +11,8 @@
     /*## FONTS ##*/
     --headingFont: "Patua One";
     --secondaryFont: "Roboto";
-
 }
+
 body{
     margin: 0px;
     background-color: var(--primary);

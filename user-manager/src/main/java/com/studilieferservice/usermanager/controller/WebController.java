@@ -1,8 +1,8 @@
 package com.studilieferservice.usermanager.controller;
 
-import com.studilieferservice.usermanager.userService.User;
-import com.studilieferservice.usermanager.userService.UserRepository;
-import com.studilieferservice.usermanager.userService.UserService;
+import com.studilieferservice.usermanager.user.User;
+import com.studilieferservice.usermanager.user.UserRepository;
+import com.studilieferservice.usermanager.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 /**
@@ -33,12 +32,12 @@ public class WebController {
         this.userService = userService;
         this.userRepository = userRepository;
     }
+
     /**
      * get request on / invokes the index.html of the user-manager
      * @param
      * @return returns "index" which results in invocation of the index.html
      */
-
     @GetMapping("/")
     public String showIndexPage() {
 
@@ -122,7 +121,6 @@ public class WebController {
      *
      * @return HTML view
      */
-
     @PostMapping("/register")
     public String registerUser(@Valid User user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {

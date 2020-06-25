@@ -1,4 +1,4 @@
-package com.StudiLieferService.config;
+package com.StudiLieferService.chatmanager.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

@@ -2,7 +2,7 @@
   #### VARIABLES ####
   ###################*/
 
-  :root{
+:root{
     /*## COLORS ###*/
     --primary: #363636;
     --secondary: #474747;
@@ -11,7 +11,7 @@
     /*## FONTS ##*/
     --headingFont: "Patua One";
     --secondaryFont: "Roboto";
-  }
+}
 
 html{
     background-color: #363636;
@@ -119,5 +119,4 @@ p{
 #submit:hover{
     color: #363636;
     background-color: white;
-
 }

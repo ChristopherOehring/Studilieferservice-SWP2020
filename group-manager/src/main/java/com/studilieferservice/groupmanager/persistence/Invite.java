@@ -1,7 +1,6 @@
 package com.studilieferservice.groupmanager.persistence;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.studilieferservice.groupmanager.service.GroupService;
 
 import javax.persistence.*;
 import java.util.Date;

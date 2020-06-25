@@ -1,14 +1,11 @@
 package com.studilieferservice.usermanager.controller;
 
-import com.studilieferservice.usermanager.userService.User;
-import com.studilieferservice.usermanager.userService.UserRepository;
-import com.studilieferservice.usermanager.userService.UserService;
+import com.studilieferservice.usermanager.user.User;
+import com.studilieferservice.usermanager.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 
 /**
  * provides a api for the UserService
@@ -18,13 +15,10 @@ public class UserController {
 
     private final UserService userService;
 
-
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
-
     }
-
 
     /**
      * this Method is used to create a new User and save it in DB
@@ -83,6 +77,7 @@ public class UserController {
         } else
             return ResponseEntity.ok(userService.edit(user));
     }
+
     /**
      * used in the edit Method
      *
@@ -128,5 +123,4 @@ public class UserController {
         else
             return ResponseEntity.badRequest().build();
     }
-
 }

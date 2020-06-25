@@ -1,7 +1,6 @@
 package com.studilieferservice.usermanager.kafka.user;
 
-
-import com.studilieferservice.usermanager.userService.User;
+import com.studilieferservice.usermanager.user.User;
 import org.springframework.context.ApplicationEvent;
 
 /**

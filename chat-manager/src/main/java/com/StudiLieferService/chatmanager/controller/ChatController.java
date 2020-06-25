@@ -1,4 +1,4 @@
-package com.StudiLieferService.controller;
+package com.StudiLieferService.chatmanager.controller;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -6,7 +6,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
-import com.StudiLieferService.model.ChatMessage;
+import com.StudiLieferService.chatmanager.model.ChatMessage;
 
 @Controller
 public class ChatController {

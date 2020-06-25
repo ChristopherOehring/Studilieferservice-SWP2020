@@ -61,6 +61,10 @@ services:
     image: studi-lieferservice/composer-service:latest
     ports:
       - 9000:8000
+  user-manager:
+    image: studi-lieferservice/user-manager:latest
+    ports:
+      - 9080:8080
   group-manager:
     image: studi-lieferservice/group-manager:latest
     ports:
@@ -69,11 +73,11 @@ services:
     image: studi-lieferservice/shopping-list-manager:latest
     ports:
       - 9070:8070
-  user-manager:
-    image: studi-lieferservice/user-manager:latest
-    ports:
-      - 9080:8080
   product-manager:
     image: studi-lieferservice/product-manager:latest
     ports:
       - 9060:8060
+  chat-manager:
+    image: studi-lieferservice/chat-manager:latest
+    ports:
+      - 9040:8040

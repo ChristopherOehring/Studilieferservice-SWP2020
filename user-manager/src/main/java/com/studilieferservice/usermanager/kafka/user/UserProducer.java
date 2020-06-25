@@ -97,8 +97,5 @@ public class UserProducer {
         } catch (Exception e) {
             return null;
         }
-
-
-
     }
 }

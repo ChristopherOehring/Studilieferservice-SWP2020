@@ -1,9 +1,6 @@
-package com.studilieferservice.usermanager.userService;
+package com.studilieferservice.usermanager.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import net.bytebuddy.implementation.bind.annotation.Default;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -30,7 +27,6 @@ public class User {
     }
 
     public User() { }
-
 
     private boolean isSignedIn ;
 

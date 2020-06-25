@@ -1,4 +1,4 @@
-package com.studilieferservice.usermanager.userService;
+package com.studilieferservice.usermanager.user;
 
 import com.studilieferservice.usermanager.kafka.user.UserEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +19,10 @@ public class UserService {
     private User currentUser;
     final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-
     @Autowired
-    public UserService(ApplicationEventPublisher eventPublisher, UserRepository userRepository
-
-    ) {
+    public UserService(ApplicationEventPublisher eventPublisher, UserRepository userRepository) {
         this.eventPublisher = eventPublisher;
         this.userRepository = userRepository;
-
-
     }
 
     /**
@@ -41,11 +36,8 @@ public class UserService {
         setCurrentUser(null);
         User saved = userRepository.save(user);
 
-
         eventPublisher.publishEvent(new UserEvent(user, this, NEW));
         return saved;
-
-
     }
 
     /**
@@ -80,7 +72,6 @@ public class UserService {
         currentUser.setSignedIn(false);
         userRepository.save(this.currentUser);
         if (currentUser.isSignedIn() == false) {
-
             return true;
         } else
             return false;
@@ -117,7 +108,6 @@ public class UserService {
         return userRepository.findById(email).orElse(null);
     }
 
-
     /**
      * to get the current user
      *
@@ -135,6 +125,4 @@ public class UserService {
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
-
-
 }

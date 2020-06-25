@@ -2,7 +2,7 @@
   #### VARIABLES ####
   ###################*/
 
-:root{
+  :root{
     /*## COLORS ###*/
     --primary: #363636;
     --secondary: #474747;
@@ -11,38 +11,57 @@
     /*## FONTS ##*/
     --headingFont: "Patua One";
     --secondaryFont: "Roboto";
+  }
 
-}
-
-/*
-    ##########################
-    ### Standard Structure ###
-    ##########################
-*/
-body{
+html{
+    background-color: #363636;
     margin: 0px;
-    background-color: var(--primary);
 }
 
-/*  ####################
-    ### Welcome Text ###
-    ####################
+/*  ############
+    ### Logo ###
+    ############
 */
-.jumbotron{
+
+.logo{
     text-align: center;
-    margin-top: 10%;
-    color: white;
-    font-family: var(--headingFont);
+    margin-top: 5%;
 }
 
+#logo{
+    width: 20rem;
+
+}
+
+/*  ##############
+    ### Header ###
+    ##############
+*/
+  
+h1{
+    text-align: center;
+    color: white;
+    font-family: "Patua One";
+    margin-top: 5rem;
+    margin-bottom: 2rem;
+    font-size: 3rem;
+}
+h3{
+    text-align: center;
+    color: white;
+    font-family: "Patua One";
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
 
 /*  ###############
     ### Nav-Bar ###
     ###############
 */
 .navbar{ /*box for positioning*/
+    margin-top: 1rem;
     text-align: center;
-    margin-top: 3rem;
     margin-right: 2rem;
 }
 

@@ -20,11 +20,12 @@
     </parent>
 
     <modules>
-        <!--module>composer-service</module-->
-        <module>group-manager</module>
+        <module>composer-service</module>
         <module>user-manager</module>
+        <module>group-manager</module>
         <module>shopping-list-manager</module>
         <module>product-manager</module>
+        <module>chat-manager</module>
     </modules>
 
     <properties>

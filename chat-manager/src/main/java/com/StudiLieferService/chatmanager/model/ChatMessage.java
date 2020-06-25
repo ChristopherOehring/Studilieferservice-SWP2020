@@ -1,4 +1,4 @@
-package com.StudiLieferService.model;
+package com.StudiLieferService.chatmanager.model;
 
 public class ChatMessage {
 	private String content;

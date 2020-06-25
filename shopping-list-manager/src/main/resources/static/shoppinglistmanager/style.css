@@ -2,7 +2,7 @@
   #### VARIABLES ####
   ###################*/
 
-  :root{
+:root{
     /*## COLORS ###*/
     --primary: #363636;
     --secondary: #474747;
@@ -27,7 +27,6 @@
 /*##############
   #### BODY ####
   ##############*/
-
 
 body{ /*For full website*/
     margin: 0;
@@ -95,7 +94,6 @@ td, th{ /*table columns*/
     font-family: var(--secondaryFont);
 }
 
-
 input[type=image]{ /*the + and - of each item*/
     width: 15px;
     height: 15px;
@@ -151,5 +149,4 @@ p{ /*fonts for the sum*/
     color: white;
     font-family: var(--secondaryFont);
     font-size: 22px;
-    
 }
