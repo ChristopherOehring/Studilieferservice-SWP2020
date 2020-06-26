@@ -143,6 +143,9 @@ public class GroupController {
         Optional<User> ownerOptional = userService.findById(body.getOwnerEmail());
         if (ownerOptional.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User " + body.getOwnerEmail() + " not found");
+        if (body.getGroupName()==null || body.getGroupName().isBlank()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have to set a group name");
+        }
         Gruppe group = new Gruppe();
         group.setId(UUID.randomUUID().toString());
         group.setGroupName(body.getGroupName());
