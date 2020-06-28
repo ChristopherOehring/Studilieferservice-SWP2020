@@ -3,7 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../static/shoppinglistmanager/style.css" th:href="@{/shoppinglistmanager/style.css}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" type="text/css" href="../static/shoppinglistmanager/style.css"
+          th:href="@{/shoppinglistmanager/style.css}"/>
     <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -12,58 +16,58 @@
 </head>
 
 <body>
+<rewe-digital-content>
+    <div class="OuterBox">
+        <div class="title">
+            <h1>
+                Shopping List
+            </h1>
+        </div>
 
-<div class="OuterBox">
-    <div class="title">
-        <h1>
-            Shopping List
-        </h1>
+        <div class="items">
+            <table>
+                <tr>
+                    <th>Product&emsp; - &emsp;Price</th>
+                    <th>Sum</th>
+                    <th></th>
+                    <th>Amount</th>
+                    <th></th>
+                </tr>
+
+                <tr th:if="${!items.isEmpty()}" th:each="itemShoppingList : ${items}">
+                    <td th:text="${itemShoppingList.item.name+' - '+itemShoppingList.item.price+'€'}">produkt</td>
+
+                    <td th:text="${#numbers.formatDecimal(itemShoppingList.item.price*itemShoppingList.amount, 0, 2)+'€'} ">preis</td>
+
+                    <td><form th:action="@{/shoppingList/itemDecrease}" method="POST">
+                        <input type="image" th:src="@{/shoppinglistmanager/icons/minus.png}" alt="-">
+                        <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
+                        <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
+                    </form></td>
+
+                    <td th:text="${itemShoppingList.amount}">0</td>
+
+                    <td><form th:action="@{/shoppingList/itemIncrease}" method="POST">
+                        <input type="image" th:src="@{/shoppinglistmanager/icons/plus.png}" alt="+">
+                        <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
+                        <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
+                    </form></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="addProduct">
+            <input type="button" value="add products" class="addProductButton">
+        </div>
+
+        <div class="line"></div>
+
+        <div th:if="${totalPrice != 0}" class="sum">
+            <p th:text="${#numbers.formatDecimal(totalPrice, 0, 2)+'€'}">total</p>
+        </div>
+
     </div>
-
-    <div class="items">
-        <table>
-            <tr>
-                <th>Product&emsp; - &emsp;Price</th>
-                <th>Sum</th>
-                <th></th>
-                <th>Amount</th>
-                <th></th>
-            </tr>
-
-            <tr th:if="${!items.isEmpty()}" th:each="itemShoppingList : ${items}">
-                <td th:text="${itemShoppingList.item.name+' - '+itemShoppingList.item.price+'€'}">produkt</td>
-
-                <td th:text="${#numbers.formatDecimal(itemShoppingList.item.price*itemShoppingList.amount, 0, 2)+'€'} ">preis</td>
-
-                <td><form th:action="@{/shoppingList/itemDecrease}" method="POST">
-                    <input type="image" th:src="@{/shoppinglistmanager/icons/minus.png}" alt="-">
-                    <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
-                    <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
-                </form></td>
-
-                <td th:text="${itemShoppingList.amount}">0</td>
-
-                <td><form th:action="@{/shoppingList/itemIncrease}" method="POST">
-                    <input type="image" th:src="@{/shoppinglistmanager/icons/plus.png}" alt="+">
-                    <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
-                    <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
-                </form></td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="addProduct">
-        <input type="button" value="add products" class="addProductButton">
-    </div>
-
-    <div class="line"></div>
-
-    <div th:if="${totalPrice != 0}" class="sum">
-        <p th:text="${#numbers.formatDecimal(totalPrice, 0, 2)+'€'}">total</p>
-    </div>
-
-</div>
-
+</rewe-digital-content>
 <!--div class="element">
     <form th:action="@{/shoppingList/addProduct}" th:object="${itemAndShoppingList}" th:method="PUT">
         <label for="item.name">Produkte hinzufügen: </label>

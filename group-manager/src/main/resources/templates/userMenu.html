@@ -33,7 +33,7 @@
         </div>
     
         <div class="groupList">
-            <form  th:action="${'http://' + link + ':9010/web/groupMenuFwd'}" method="GET" >
+            <form  th:action="${'http://' + link + ':9010/web/groupmanager/groupMenuFwd'}" method="GET" >
                 <div class="listBox">
                     
                     <!-- Explanation:
@@ -79,9 +79,9 @@
     <div class="subtitle">
         <h2>Invites</h2>
     </div>
-    <!--  
+    <!--
     <th th:if="${!invites.isEmpty()}">
-            <form th:action="${'http://' + link + ':9010/web/acceptInvite'}" method="GET"> 
+            <form th:action="${'http://' + link + ':9010/web/acceptInvite'}" method="GET">
         <div class="list">
             <th:block th:each="invite: ${invites}">
                 <li>
@@ -91,20 +91,21 @@
             </th:block>
         </div>
 
+        <form th:action="@{/web/groupmanager/acceptInvite}" method="GET"> <!-- TODO adjust th:action -->
             <div class="submitBox">
                 <input type="submit" value="continue" class="submitButton"/>
             </div>
             <input type="hidden" name="groupId" th:value="${invites.get(0).id}" />
             <input type="hidden" name="email" th:value="${user}" />
-        </form> 
+        </form>
     </th>
     -->
     <th th th:if="${!invites.isEmpty()}">
-        <th:block th:each="invite: ${invites}"> 
+        <th:block th:each="invite: ${invites}">
             <table>
                 <tr>
                     <td>
-                        <form th:action="${'http://' + link + ':9010/web/acceptInvite'}" method="GET">   <!-- TODO: edit th:action to ignoreInvite -->
+                        <form th:action="@{/web/groupmanager/acceptInvite}" method="GET">   <!-- TODO: edit th:action to ignoreInvite -->
                             <div class="inviteImage">
                                 <input type="image" src="../static/groupmanager/imgs/x-mark-128.png" th:src="@{groupmanager/imgs/x-mark-128.png}" alt="-" />
                             </div>
@@ -117,7 +118,7 @@
                         <label th:for="*{invite.getId()}" id="invLabel" th:text="*{invite.groupName}">Test2</label>
                     </td>
                     <td>
-                        <form th:action="${'http://' + link + ':9010/web/acceptInvite'}" method="GET"> 
+                        <form th:action="${'http://' + link + ':9010/web/acceptInvite'}" method="GET">
                             <div class="inviteImage">
                                 <input type="image" src="../static/groupmanager/imgs/checkmark-128.png" th:src="@{groupmanager/imgs/checkmark-128.png}" alt="-" />
                             </div>
@@ -144,7 +145,7 @@
         <h2>Create new Group</h2>
     </div>
     <div class="createGroup">
-        <form th:action="${'http://' + link + ':9010/web/save-group'}" th:object="${creationForm}" method="POST">
+        <form th:action="@{/web/groupmanager/save-group}" th:object="${creationForm}" method="POST">
             <div class="inputGroupName">
                 <input type="text" id="groupname" th:field="*{groupName}" placeholder="Groupname">
             </div>

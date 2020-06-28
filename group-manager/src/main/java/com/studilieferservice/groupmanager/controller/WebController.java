@@ -2,14 +2,12 @@ package com.studilieferservice.groupmanager.controller;
 
 import com.studilieferservice.groupmanager.controller.bodys.CreationForm;
 import com.studilieferservice.groupmanager.controller.bodys.GroupAndUserBody;
-import com.studilieferservice.groupmanager.controller.bodys.TestForm;
 import com.studilieferservice.groupmanager.persistence.Gruppe;
 import com.studilieferservice.groupmanager.persistence.Invite;
 import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.GroupService;
 import com.studilieferservice.groupmanager.service.InviteService;
 import com.studilieferservice.groupmanager.service.UserService;
-import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
@@ -21,9 +19,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
-import java.net.http.HttpHeaders;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,50 +29,24 @@ import java.util.UUID;
  * @version 1.3 6/18/2020
  */
 
-// TODO Figure out how to properly handle errors here
-
-@RequestMapping("/web")
+@RequestMapping("/web/groupmanager")
 @Controller
 public class WebController {
 
     private final GroupService groupService;
     private final UserService userService;
-    private String groupManagerSrc;
-    private InviteService inviteService;
-    private String link;
+    private final String groupManagerSrc;
+    private final InviteService inviteService;
 
     @Autowired
     public WebController(final @Value("${group-manager-src}") String groupManagerSrc,
-                         @Value("${link}") String link,
                          GroupService groupService,
                          UserService userService,
                          InviteService inviteService) {
         this.groupService = groupService;
-        this.link = link;
         this.userService = userService;
         this.groupManagerSrc = groupManagerSrc;
         this.inviteService = inviteService;
-    }
-
-    @GetMapping("/test")
-    public String test(Model model, @RequestHeader @Nullable HttpHeaders header) {
-        List<String> sessionValues;
-        if(header != null) {
-            sessionValues = header.allValues("x-rd-test");
-        } else {
-            sessionValues = new ArrayList<>();
-        }
-        model.addAttribute("sessionMessages", sessionValues);
-        model.addAttribute("form", new TestForm());
-        System.out.println(sessionValues);
-        return "test";
-    }
-
-    @PostMapping("/persistMessage")
-    public String persistMessage(/*@ModelAttribute TestForm form,*/@RequestParam("msg") String msg, HttpServletResponse response) {
-        //response.addHeader("x-rd-test", form.getMsg());
-        System.out.println(msg);
-        return "redirect:test";
     }
 
     /**
@@ -88,10 +57,11 @@ public class WebController {
      */
     @GetMapping("/userMenu")
     public String userMenu(Model model,
-                        @CookieValue("useremail") String email,
-                           final HttpServletResponse response){
+                           @CookieValue("useremail") @Nullable String email,
+                           final HttpServletResponse response,
+                           HttpServletRequest request){
 
-        response.addHeader("x-uic-stylesheet", "/groupmanager/style.css");
+        if (email == null) return "redirect:noLogin";
 
         email = email.replace("%40", "@");
         System.out.println(email);
@@ -102,7 +72,7 @@ public class WebController {
             return "customError404";
         }
         User user = optionalUser.get();
-        model.addAttribute("link", link);
+        model.addAttribute("link", request.getServerName());
 
         model.addAttribute("creationForm", new CreationForm());
 
@@ -119,13 +89,20 @@ public class WebController {
     }
 
     /**
-     * get request on .../groupMenu/{userEmail} invokes the userMenu.html of the group-manager
+     * get request on .../groupMenu/{groupId} invokes the userMenu.html of the group-manager
      * @param model is used by thymeleaf in the html page
      * @param groupId the PathVariable groupId contains the id of the group who's menu should be displayed
+     * @param email The value of the cookie "useremail"
      * @return returns "userMenu" which results in invocation of the userMenu.html
      */
     @GetMapping("/groupMenu/{groupId}")
-    public String groupMenu(Model model, @PathVariable("groupId") String groupId, @CookieValue("useremail") String email) {
+    public String groupMenu(@PathVariable("groupId") String groupId,
+                            @CookieValue("useremail") @Nullable String email,
+                            Model model,
+                            HttpServletRequest request) {
+
+        if (email == null) return "redirect:/noLogin";
+
         Optional<Gruppe> optionalGruppe = groupService.findById(groupId);
         if (optionalGruppe.isEmpty()){
             System.out.println("Error 404: group \"" + groupId + "\" not found");
@@ -140,6 +117,7 @@ public class WebController {
         }
         Gruppe gruppe = optionalGruppe.get();
         User user = optionalUser.get();
+
         if(gruppe.getPermissions(user) == null) {
             model.addAttribute("subject", String.format("groupMenu of group %s for user %s", groupId, email));
             return "customError404";
@@ -149,18 +127,21 @@ public class WebController {
         model.addAttribute("owner", gruppe.getOwner());
         model.addAttribute("adminList", gruppe.getAdmins());
         model.addAttribute("memberList", gruppe.getMembers());
+        model.addAttribute("link", request.getServerName());
+        model.addAttribute("permission", gruppe.getPermissions(user));
         return "groupMenu";
     }
 
     /**
-     * Meant to be used by a webpage to create a new group. Will redirect to the index afterwards.
+     * Meant to be used by a web page to create a new group. Will redirect to the groupMenu afterwards.
      * @param form contains all necessary information to create a group
-     * @return redirects to /index
-     * @throws JSONException Throws exception if the String body is not a valid JSON,
-     * which should only happen if the group-name in the form invalid.
+     * @return redirects to /groupMenu in the composer
+     * which should only happen if the group-name in the form is invalid.
      */
     @PostMapping("/save-group")
-    public RedirectView saveGroupSubmission(HttpServletResponse response, @ModelAttribute CreationForm form) throws JSONException {
+    public RedirectView saveGroupSubmission(
+            @ModelAttribute CreationForm form,
+            HttpServletRequest request) {
         RedirectView redirectView = new RedirectView();
 
         System.out.println("creating group " + form.getGroupName() + " with owner " + form.getUser());
@@ -171,7 +152,8 @@ public class WebController {
 
         Optional<User> optionalUser = userService.findById(form.getUser());
         if(optionalUser.isEmpty()) {
-            redirectView.setUrl("http://" + link + ":9000/web/customError404");
+            redirectView.setContextRelative(true);
+            redirectView.setUrl("/customError404");
             return redirectView;
         }
         User user = optionalUser.get();
@@ -180,32 +162,20 @@ public class WebController {
         System.out.println(group);
         groupService.save(group);
 
-        /*
-        //following code is for telling the shopping-list-manager via POST to create a shopping list for the new group
-        String urlPOST = "http://localhost:8070/shoppingList/create";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        String body = "{ \"groupId\": \""+gruppe.getId()+"\", \"groupName\": \""+form.groupName+"\" }";
-
-        JSONObject jsonObject= new JSONObject(body);
-
-        //Raw use of parameterized class. Intellij doesnt like this:
-        HttpEntity request = new HttpEntity(jsonObject.toString(), headers);
-
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.postForObject(urlPOST, request , String.class );
-        */
-
-        redirectView.setUrl("http://" + link + ":9000/web/groupMenu/" + group.getId());
+        redirectView.setUrl("http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + group.getId());
         return redirectView;
     }
 
+    /**
+     * This method is used to switch to the composer because it is needed for composing the groupMenu
+     * @param list the id of the Group
+     * @return Returns a RedirectView that redirects to the groupMenu in the composer
+     */
     @GetMapping("/groupMenuFwd")
-    public RedirectView groupMenuFwd(@PathParam("list") String list){
+    public RedirectView groupMenuFwd(@PathParam("list") String list,
+                                     HttpServletRequest request){
         System.out.println(list);
-        return new RedirectView("http://" + link + ":9000/web/groupMenu/" + list);
+        return new RedirectView("http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + list);
     }
 
     /**
@@ -219,36 +189,9 @@ public class WebController {
         String groupId = request.getParameter("id");
 
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://" + link + ":8070/shoppingList/" + groupId);
+        redirectView.setUrl("http://" + request.getServerName() + ":8070/shoppingList/" + groupId);
         return redirectView;
     }
-
-    /*
-    /**
-     * called through a browser by the creationForm from groupCreator(...)
-     * @param form the object containing the input from the form
-     * @return redirects back to the groupCreator page
-     */
-    /*@PostMapping("/newGroup")
-    public String newGroup(@ModelAttribute CreationForm form, Model model) {
-        System.out.println(form);
-        Gruppe group = new Gruppe();
-        group.setGroupName(form.getGroupName());
-
-        Optional<User> userOptional = userService.findById(form.getUser());
-        //TODO: how do we handle this error?
-        if (userOptional.isEmpty()) {
-            model.addAttribute("subject", "user: \"" + form.getUser() + "\"");
-            return "error";
-        }
-        User user = userOptional.get();
-        group.setOwner(user);
-        groupService.save(group);
-
-//TODO: and where do we go afterwards?
-        return "redirect:groupMenu/" + group.getId();
-    }
-    /*
 
     /**
      * this method is invoked when creating a new invite
@@ -310,18 +253,11 @@ public class WebController {
 
         return "redirect:userMenu";
     }
-
-    //JUST FOR DEBUG
-    @GetMapping("/test2")
-    public String testSite(Model model) {
-        return "groupMenu";
-    }
-
-    @GetMapping("/test3/{userEmail}")
-    public String testSite2(Model model, @PathVariable("userEmail") String email) {
-        return "userMenu";
-    }
-
     //stürzt ab wenn nutzer keine invites hat
     //save-group keine WebPage, sondern nur Weiterleitung
+
+    @GetMapping("/noLogin")
+    public RedirectView noLogin(HttpServletRequest request){
+        return new RedirectView("http://" + request.getServerName() + ":9080/web/usermanager/login");
+    }
 }

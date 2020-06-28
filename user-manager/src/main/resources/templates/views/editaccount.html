@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
 
 <head>
-    <link rel="stylesheet" href="../../static/usermanager/css/editaccount.css" th:href="@{usermanager/css/editaccount.cs}">
+    <link rel="stylesheet" href="../../static/usermanager/css/editaccount.css" th:href="@{/usermanager/css/editaccount.cs}">
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
     <title>Edit Account</title>
@@ -13,7 +13,7 @@
 
     <h1>Edit your Account</h1>
 
-    <form th:action="@{/edit}" th:object="${user}" method="POST">
+    <form th:action="@{/web/usermanager/edit}" th:object="${user}" method="POST">
         <table class="center">
             <tr>
                 <td><p>First Name</p></td>

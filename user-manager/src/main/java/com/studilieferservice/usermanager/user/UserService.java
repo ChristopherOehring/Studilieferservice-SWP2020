@@ -55,6 +55,8 @@ public class UserService {
         //userRepository.findByEmail(user.getEmail());
 
         if (user1 == null || !encoder.matches(password, user1.getPassword())) {
+            System.out.println(user1);
+            System.out.println(password);
             System.out.println("denied!");
             return false;
         } else {

@@ -3,7 +3,7 @@
 
 <head>
     <script th:src="@{webjars/jquery/jquery.min.js}"></script>
-    <link rel="stylesheet" href="../static/usermanager/css/index.css" th:href="@{usermanager/css/index.css}">
+    <link rel="stylesheet" href="../static/usermanager/css/index.css" th:href="@{/usermanager/css/index.css}">
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
 
@@ -12,7 +12,7 @@
 
 <body>
     <div class="jumbotron">
-        <p><input id="logo" type="image" src="../static/usermanager/img/StuLiLogo.png" th:src="@{usermanager/img/StuLiLogo.png}" alt=""></p>
+        <p><input id="logo" type="image" src="../static/usermanager/img/StuLiLogo.png" th:src="@{/usermanager/img/StuLiLogo.png}" alt=""></p>
         <br>
         <p><h1>Welcome! Glad you are here</h1></p>
         <p><h3>Continue to Register or Login</h3></p>
@@ -21,15 +21,15 @@
         <nav>      
             <ul>
                 <li>
-                    <a class="nav-link" href="/register">Register</a>
+                    <a class="nav-link" href="/web/usermanager/register">Register</a>
                 </li>
     
                 <li>
-                    <a class="nav-link" href="/login">Login</a>
+                    <a class="nav-link" href="/web/usermanager/login">Login</a>
                 </li>
     
                 <li>
-                    <a class="nav-link" href="/about">About</a>
+                    <a class="nav-link" href="/web/usermanager/about">About</a>
                 </li>
             </ul>
         </nav>

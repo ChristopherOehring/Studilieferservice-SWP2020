@@ -4,7 +4,6 @@ import com.studilieferservice.usermanager.user.User;
 import com.studilieferservice.usermanager.user.UserRepository;
 import com.studilieferservice.usermanager.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,25 +15,32 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
+import java.util.Arrays;
 
 /**
  * provides a web-controller
  * A web controller returns html documents and is meant to be consumed via browser
  */
-
+@RequestMapping("/web/usermanager")
 @Controller
 public class WebController {
 
     private final UserService userService;
     private final UserRepository userRepository;
-    private String link;
 
     @Autowired
-    public WebController(@Value("${link}") String link, UserService userService, UserRepository userRepository) {
-        this.link = link;
+    public WebController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
+    }
+
+    @GetMapping("/fwd")
+    public String fwd(Model model, HttpServletRequest request){
+        System.out.println(request.getRequestURL());
+        System.out.println(request.getServerName());
+        model.addAttribute("link", request.getServerName());
+        //return new RedirectView("http://" + request.getServerName() + ":9080/web/usermanager/index");
+        return "redirect";
     }
 
     /**
@@ -42,7 +48,6 @@ public class WebController {
      * @param
      * @return returns "index" which results in invocation of the index.html
      */
-
     @GetMapping("/index")
     public String index(){
         return "index";
@@ -54,29 +59,28 @@ public class WebController {
      * @return returns "registerForm" which results in invocation of the registerForm.html
      */
     @GetMapping("/register")
-    public String registerForm(Model model) {
+    public String registerForm(Model model, HttpServletRequest request) {
 
         model.addAttribute("user", new User());
-        model.addAttribute("link", link);
+        model.addAttribute("link", request.getServerName());
         return "views/registerForm";
     }
 
     /**
      * Meant to be used by a webpage to create a new user
      * @param bindingResult
-     * @param model
      * @param  user
      *
      * @return HTML view
      */
     @PostMapping("/register")
-    public RedirectView registerUser(@Valid User user, BindingResult bindingResult, Model model) {
+    public String registerUser(@Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
 
-            new RedirectView("http://" + link + ":9000/regerror");
+            return "redirect:regerror";
         }
         userService.createUser(user);
-        return new RedirectView("http://" + link + ":9000/login");
+        return "redirect:login";
     }
 
     /**
@@ -96,10 +100,10 @@ public class WebController {
      * @return returns "login" which results in invocation of the login.html
      */
     @GetMapping("/login")
-    public String loginForm(Model model, HttpServletResponse response) {
+    public String loginForm(Model model, HttpServletRequest request) {
 
         model.addAttribute("user", new User());
-        model.addAttribute("link", link);
+        model.addAttribute("link", request.getServerName());
         System.out.println("calling login page");
         return "views/login";
     }
@@ -110,12 +114,16 @@ public class WebController {
      * @return returns "login" which results in invocation of the login.html
      */
     @GetMapping("/logout")
-    public String logoutForm(Model model) {
-        userService.getCurrentUser().setSignedIn(false);
-        userRepository.save(userService.getCurrentUser());
-        model.addAttribute("user", userService.getCurrentUser());
-
-        return "views/login";
+    public String logoutForm(Model model,
+                             HttpServletResponse response,
+                             HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        Cookie c = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("useremail")).findFirst().orElse(null);
+        if(!(c == null)){
+            c.setMaxAge(0);
+            response.addCookie(c);
+        }
+        return "redirect:index";
     }
 
     /**
@@ -130,28 +138,31 @@ public class WebController {
         System.out.println(request.getQueryString());
         System.out.println(email + ", " + password);
         if(userService.login(email, password)) {
-            response.addCookie(new Cookie("useremail", email));
+            Cookie c = new Cookie("useremail", email);
+            c.setPath("/");
+            response.addCookie(c);
+            System.out.println("set cookie value: " + email);
+            System.out.println("redirecting: http://" + request.getServerName() + ":9010/web/groupmanager/userMenu");
+            return new RedirectView("http://" + request.getServerName() + ":9010/web/groupmanager/userMenu");
         } else {
-            return new RedirectView("http://" + link + ":9000/login");
+            RedirectView redirectView = new RedirectView("/login");
+            redirectView.setContextRelative(true);
+            return redirectView;
         }
-        return new RedirectView("http://" + link + ":9000/web/userMenu");
     }
 
     @GetMapping("/regerror")
-    public String regerror(@CookieValue("useremail") @Nullable String email, Model model){
-        model.addAttribute("test", email);
+    public String regerror(Model model){
         return "views/regerror";
     }
 
     /**
      * Meant to be used by a webpage to edit user profile
      * @param user
-     * @param bindingResult
-     * @param model
      * @return HTML view
      */
     @PostMapping("/edit")
-    public String editUser(@Valid User user, BindingResult bindingResult, Model model) {
+    public String editUser(@Valid User user) {
 
         userService.edit(user);
         return "views/successedLogin";

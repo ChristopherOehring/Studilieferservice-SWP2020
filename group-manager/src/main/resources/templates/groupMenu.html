@@ -13,7 +13,7 @@
     <h1>Dashboard</h1>
 
     <a href="#">    <!-- TODO: adjust link to edit-account -->
-        <img src="../static/groupmanager/imgs/services-128.png" th:src="@{groupmanager/imgs/services-128.png}" alt="" id="editImg">
+        <img src="../static/groupmanager/imgs/services-128.png" th:src="@{/groupmanager/imgs/services-128.png}" alt="" id="editImg">
     </a>
 
     <div class="members-bar">
@@ -117,7 +117,7 @@
     </div>
 
     <div class="shopping-list">
-        <rewe-digital-include path="https://some.path/to/fragment"></rewe-digital-include>
+        <rewe-digital-include th:path="${'http://' + link + ':9070/web/shoppingList/' + groupId }"></rewe-digital-include>
         Shopping-List
     </div>
 

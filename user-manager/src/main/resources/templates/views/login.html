@@ -4,28 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="../../static/usermanager/css/login.css" th:href="@{usermanager/css/login.css}">
+    <link rel="stylesheet" href="../../static/usermanager/css/login.css" th:href="@{/usermanager/css/login.css}">
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
 </head>
 <body>
     <div class="logo">
-        <input id="logo" type="image" src="../../static/usermanager/img/StuLiLogo.png" th:src="@{usermanager/img/StuLiLogo.png}" alt="">
+        <input id="logo" type="image" src="../../static/usermanager/img/StuLiLogo.png" th:src="@{/usermanager/img/StuLiLogo.png}" alt="">
     </div>
     
     <div class="navbar">
         <nav>      
             <ul>
                 <li>
-                    <a class="nav-link" href="/register">Register</a>
+                    <a class="nav-link" href="/web/usermanager/register">Register</a>
                 </li>
                 
                 <li>
-                    <a class="nav-link" href="/login">Login</a>
+                    <a class="nav-link" href="/web/usermanager/login">Login</a>
                 </li>
                 
                 <li>
-                    <a class="nav-link" href="/about">About</a>
+                    <a class="nav-link" href="/web/usermanager/about">About</a>
                 </li>
             </ul>
         </nav>
@@ -33,7 +33,7 @@
     
     <h1>Login</h1>
 
-    <form th:action="${'http://' + link + ':9080/loginFwd'}" th:object="${user}" method="GET">
+    <form th:action="${'http://' + link + ':9080/web/usermanager/loginFwd'}" th:object="${user}" method="GET">
 
         <div class="box">
             <div class="text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>

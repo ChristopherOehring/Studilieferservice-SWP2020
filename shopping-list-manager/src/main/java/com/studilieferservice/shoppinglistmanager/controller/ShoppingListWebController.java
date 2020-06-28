@@ -6,9 +6,11 @@ import com.studilieferservice.shoppinglistmanager.shoppinglist.ShoppingList;
 import com.studilieferservice.shoppinglistmanager.shoppinglist.ShoppingListService;
 import com.studilieferservice.shoppinglistmanager.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version 2.0
  */
 @Controller
-@RequestMapping("/shoppingList")
+@RequestMapping("/web/shoppingList")
 public class ShoppingListWebController {
 
     private final ShoppingListService shoppingListService;
@@ -41,15 +43,19 @@ public class ShoppingListWebController {
      * and user (who belongs to the group)
      *
      * @param groupId The group-ID which is passed as a parameter through the URL
-     * @param userId The user-ID which is passed as a parameter through the URL
+     * @param email The user-ID which is passed as a cookie which is set on login
      * @return the HTML page "list.html" which displays the shopping list
      */
-    @GetMapping("/{groupId}/{userId}")
-    public ModelAndView getShoppingListForUserAndGroup(@PathVariable String groupId, @PathVariable String userId) {
+    @GetMapping("/{groupId}")
+    public ModelAndView getShoppingListForUserAndGroup(@PathVariable String groupId,
+                                                       @CookieValue("useremail") @Nullable String email) {
+
+        if (email == null) return new ModelAndView("redirect:noLogin");
+
         ModelAndView model = new ModelAndView("list");
 
         ShoppingList sl = shoppingListService.getShoppingListByUserAndGroup(
-                userService.getUser(userId), groupService.getGroup(groupId));
+                userService.getUser(email), groupService.getGroup(groupId));
 
         model.addObject("items", sl.getItems());
         model.addObject("totalPrice", shoppingListService.getTotalPrice(sl));
@@ -95,5 +101,10 @@ public class ShoppingListWebController {
         shoppingListService.removeItemFromShoppingList(sl, itemService.getItem(itemName), 1);
 
         return "redirect:" + sl.getGroup().getId() + "/" + sl.getUser().getId();
+    }
+
+    @GetMapping("/noLogin")
+    public RedirectView noLogin(HttpServletRequest request){
+        return new RedirectView("http://" + request.getServerName() + ":9080/web/usermanager/login");
     }
 }
