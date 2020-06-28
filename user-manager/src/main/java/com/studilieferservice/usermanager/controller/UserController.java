@@ -93,34 +93,34 @@ public class UserController {
                 || StringUtils.isEmpty(user.getCity())
                 || StringUtils.isEmpty(user.getZip());
     }
-
-    /**
-     * this method is used to login
-     * can be reached with the GET request at /rest-login
-     *
-     * @param user
-     *
-     * @return ResponseEntity with CodeStatus ok if the user is registered
-     * and the email and password are correct.
-     */
-    @GetMapping("/rest-login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        if (userService.login(user.getEmail(), user.getPassword()) == true)
-            return ResponseEntity.ok("OKKKKKK");
-        else
-            return ResponseEntity.notFound().build();
-    }
-
-    /**
-     * this method is used to logout the current user
-     * @param
-     * @return ResponseEntity CodeStatus
-     */
-    @PutMapping("/rest-logout")
-    public ResponseEntity<?> logout() {
-        if (userService.logout() == true)
-            return ResponseEntity.accepted().build();
-        else
-            return ResponseEntity.badRequest().build();
-    }
+//
+//    /**
+//     * this method is used to login
+//     * can be reached with the GET request at /rest-login
+//     *
+//     * @param user
+//     *
+//     * @return ResponseEntity with CodeStatus ok if the user is registered
+//     * and the email and password are correct.
+//     */
+//    @GetMapping("/rest-login")
+//    public ResponseEntity<?> login(@RequestBody User user) {
+//        if (userService.login(user.getEmail(), user.getPassword()) == true)
+//            return ResponseEntity.ok("OKKKKKK");
+//        else
+//            return ResponseEntity.notFound().build();
+//    }
+//
+//    /**
+//     * this method is used to logout the current user
+//     * @param
+//     * @return ResponseEntity CodeStatus
+//     */
+//    @PutMapping("/rest-logout")
+//    public ResponseEntity<?> logout() {
+//        if (true)
+//            return ResponseEntity.accepted().build();
+//        else
+//            return ResponseEntity.badRequest().build();
+//    }
 }

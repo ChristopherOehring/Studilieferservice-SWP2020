@@ -66,21 +66,6 @@ public class UserService {
     }
 
     /**
-     * update the login user state to false in DB
-     *
-     * @return true if the update success was, otherwise false
-     */
-    public boolean logout() {
-
-        currentUser.setSignedIn(false);
-        userRepository.save(this.currentUser);
-        if (currentUser.isSignedIn() == false) {
-            return true;
-        } else
-            return false;
-    }
-
-    /**
      * update the given user date in DB
      *
      * @param user
@@ -94,7 +79,6 @@ public class UserService {
         currentUser.setStreet(user.getStreet());
         currentUser.setCity(user.getCity());
         currentUser.setZip(user.getZip());
-        currentUser.setSignedIn(true);
         currentUser.setPassword(currentUser.getPassword());
         currentUser.setEmail(currentUser.getEmail());
         eventPublisher.publishEvent(new UserEvent(currentUser,this, UPDATE));

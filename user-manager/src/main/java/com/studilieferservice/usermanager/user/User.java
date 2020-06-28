@@ -14,21 +14,18 @@ import javax.validation.constraints.*;
 public class User {
 
     public User(String firstName,String lastName ,String userName,String city,String street, String zip,
-                String email, String password , boolean isSignedIn) {
+                String email, String password ) {
         this.firstName = firstName;
         this.lastName  =lastName;
         this.userName = userName;
         this.city = city;
         this.street =street ;
         this.zip = zip;
-        this .isSignedIn = isSignedIn;
         this.email = email;
         this.password = password;
     }
 
     public User() { }
-
-    private boolean isSignedIn ;
 
     @NotEmpty
     @NotNull
@@ -82,14 +79,6 @@ public class User {
     @Column(name = "password")
 
     private String password;
-
-    public boolean isSignedIn() {
-        return isSignedIn;
-    }
-
-    public void setSignedIn(boolean signedIn) {
-        isSignedIn = signedIn;
-    }
 
     public String getFirstName() {
         return firstName;
