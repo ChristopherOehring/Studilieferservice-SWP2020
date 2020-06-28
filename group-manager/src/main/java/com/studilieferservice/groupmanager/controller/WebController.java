@@ -117,7 +117,7 @@ public class WebController {
         }
         Gruppe gruppe = optionalGruppe.get();
         User user = optionalUser.get();
-
+        System.out.println("line 120!");
         if(gruppe.getPermissions(user) == null) {
             model.addAttribute("subject", String.format("groupMenu of group %s for user %s", groupId, email));
             return "customError404";

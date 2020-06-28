@@ -48,10 +48,8 @@
                 </tr>
 
                 <!-- List of the other Members -->
-                <tr class="memTr" th:each="member: ${memberList}"> <!-- TODO: adjust -->
-                    <td class="memTd">
+                <tr class="memTr" th:each="member: ${memberList}"> <!-- TODO: adjust -> this is missing the crown and is therefore looking weird-->
                         &emsp;
-                    </td>
                     <td class="memTd">
                         <p th:text="${member.getUserName()}">Invite your friends!</p>
                     </td>
@@ -80,8 +78,8 @@
     </div>
 
     <div class="chat">
-        <rewe-digital-include path="https://some.path/to/fragment"></rewe-digital-include>
-        Chat
+        <rewe-digital-include path="https://some.path/to/fragment">Chat</rewe-digital-include>
+
     </div>
 
     <div class="shipping-information">

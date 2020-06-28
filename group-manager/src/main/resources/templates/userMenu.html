@@ -91,7 +91,7 @@
             </th:block>
         </div>
 
-        <form th:action="@{/web/groupmanager/acceptInvite}" method="GET"> <!-- TODO adjust th:action -->
+        <form th:action="@{/web/groupmanager/acceptInvite}" method="GET">
             <div class="submitBox">
                 <input type="submit" value="continue" class="submitButton"/>
             </div>
@@ -105,9 +105,9 @@
             <table>
                 <tr>
                     <td>
-                        <form th:action="@{/web/groupmanager/acceptInvite}" method="GET">   <!-- TODO: edit th:action to ignoreInvite -->
+                        <form th:action="@{/web/groupmanager/declineInvite}" method="GET">   <!-- TODO: edit th:action to ignoreInvite -->
                             <div class="inviteImage">
-                                <input type="image" src="../static/groupmanager/imgs/x-mark-128.png" th:src="@{groupmanager/imgs/x-mark-128.png}" alt="-" />
+                                <input type="image" src="../static/groupmanager/imgs/x-mark-128.png" th:src="@{/groupmanager/imgs/x-mark-128.png}" alt="-" />
                             </div>
                             <input type="hidden" name="groupId" th:value="${invites.get(0).id}" />
                             <input type="hidden" name="email" th:value="${user}" />
@@ -118,9 +118,9 @@
                         <label th:for="*{invite.getId()}" id="invLabel" th:text="*{invite.groupName}">Test2</label>
                     </td>
                     <td>
-                        <form th:action="${'http://' + link + ':9010/web/acceptInvite'}" method="GET">
+                        <form th:action="@{/web/groupmanager/acceptInvite}" method="GET">
                             <div class="inviteImage">
-                                <input type="image" src="../static/groupmanager/imgs/checkmark-128.png" th:src="@{groupmanager/imgs/checkmark-128.png}" alt="-" />
+                                <input type="image" src="../static/groupmanager/imgs/checkmark-128.png" th:src="@{/groupmanager/imgs/checkmark-128.png}" alt="-" />
                             </div>
                             <input type="hidden" name="groupId" th:value="${invites.get(0).id}" />
                             <input type="hidden" name="email" th:value="${user}" />
