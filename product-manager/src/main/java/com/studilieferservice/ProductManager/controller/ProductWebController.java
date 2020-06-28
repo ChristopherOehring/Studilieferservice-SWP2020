@@ -26,4 +26,5 @@ public class ProductWebController {
         }
         return "index";
     }
+
 }

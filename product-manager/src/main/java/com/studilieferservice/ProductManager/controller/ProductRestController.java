@@ -37,12 +37,12 @@ public class ProductRestController {
 
     /**
      * Searches all the products with the given name in database
-     * @param product in JSON format
+     * @param productName als String
      * @return the found product in JSON product
      */
     @GetMapping("/search")
-    public Product searchProduct(@RequestBody Product product) {
-        return productService.findProductById(product.getName());
+    public Product searchProduct(@RequestBody String productName) {
+        return productService.findProductById(productName);
     }
 
     /**
@@ -59,7 +59,8 @@ public class ProductRestController {
      * @param product in JSON format
      */
     @PostMapping("/delete")
-    public void deleteProduct(@RequestBody Product product) {
+    public void deleteProduct(@RequestBody Product product)
+    {
          productService.deleteProductById(product.getName());
     }
 }
