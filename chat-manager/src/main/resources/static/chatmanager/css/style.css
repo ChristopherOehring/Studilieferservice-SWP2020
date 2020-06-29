@@ -77,45 +77,53 @@ input {
     outline: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
+/*h1, h2, h3, h4, h5, h6 {
     margin-top: 20px;
     margin-bottom: 20px;
-}
+}*/
 
 button {
     box-shadow: none;
-    border: 1px solid transparent;
+    border: 1px solid white;
     font-size: 14px;
     outline: none;
     line-height: 100%;
     white-space: nowrap;
     vertical-align: middle;
     padding: 0.6rem 1rem;
-    border-radius: 2px;
+    border-radius: 20px;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
     min-height: 38px;
 }
 
 button.default {
-    background-color: #222222;
+    background-color: transparent;
     color: #333;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
 }
 
 button.primary {
-    background-color: #222222;
+    background-color: transparent;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
     color: #fff;
 }
 
 button.accent {
-    background-color: #222222;
+    background-color: transparent;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
     color: #fff;
 }
 
+button:hover{
+    background-color: white;
+    color: var(--primary);
+}
+
 #messageArea {
+
+    margin-top: 1rem;
+
     /*#SCROLLBAR FOR FIREFOX#*/
     scrollbar-color: var(--secondary) var(--primary);
     scrollbar-width: thin;
@@ -146,8 +154,8 @@ button.accent {
     margin: 0;
     overflow: auto;
     overflow-y: scroll;
-    padding: 0 20px 0px 20px;
-    height: calc(100% - 150px);
+    padding: 0 20px 0 20px;
+    height: calc(100% - 80px);
 }
 
 #chat-page #messageForm {
@@ -220,6 +228,15 @@ button.accent {
     width: 80px;
     height: 38px;
     margin-left: 5px;
+}
+
+input[type="text"]{
+    background-color: transparent;
+    border: none;
+    border-bottom: dashed 1px var(--lineColor);
+
+    /*font*/
+    color: white;
 }
 
 .chat-header {
