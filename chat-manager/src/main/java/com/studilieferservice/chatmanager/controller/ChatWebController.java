@@ -33,7 +33,7 @@ public class ChatWebController {
 
     //TODO need to add user cookie
     /**
-     * Web request (GET) for "/[Group-ID]/[User-ID]": retrieves the page of the chat for the respective group
+     * Web request (GET) for "/[Group-ID]": retrieves the page of the chat for the respective group
      * and user (who belongs to the group). The user is extracted from a browser cookie and thus not passed as a
      * parameter through the URL
      *

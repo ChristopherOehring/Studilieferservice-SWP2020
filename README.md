@@ -35,9 +35,9 @@ Liste im Browser anzeigen lassen; Sessions fehlen noch
 Microservices geschickt werden (Kafka). Im Browser können die Produkte ausgewählt werden; 
 Sessions fehlen noch
 
-**Chatfunktion**: _teilweise vollständig_: Nutzer können Chats beitreten und sich im 
-Browser schreiben, persistente Speicherung der Daten und Sessions fehlen noch; Seite ist 
-momentan im Browser nicht erreichbar
+**Chatfunktion**: _nahezu vollständig_: Nutzer von Gruppen können sich im Browser 
+in Chats schreiben, die Chatverläufe werden gespeichert; Chats werden automatisch 
+beim Erstellen einer Gruppe erstellt (Kafka); Sessions fehlen noch
 
 ## Setup
 Um das Projekt zu starten bzw. um auf die Webseiten zugreifen zu können, müssen die 
@@ -65,5 +65,5 @@ Produktverwaltung erstellt und dann per Konsole der Einkaufsliste hinzugefügt w
 Es kann auf die Produktverwaltung im Browser zugegriffen werden: http://localhost:9060/products. 
 Allerdings können Produkte nur per Konsole zur Auswahl hinzugefügt werden.
 
-Auf den Chat kann eigentlich auch im Browser zugegriffen werden, allerdings ist die Seite momentan
-nicht erreichbar: http://localhost:9040/chat.
+Auf den Chat kann nur im Browser zugegriffen werden, die Seite ist erreichbar 
+unter: http://localhost:9040/chat/<groupId>/<userEmail>.
