@@ -21,7 +21,7 @@ public class GroupConsumer {
         this.objectMapper = objectMapper;
     }
 
-    @KafkaListener(topics = "groupTopic", id = "group_1")
+    @KafkaListener(topics = "groupTopic", id = "group_2")
     public void consume(ConsumerRecord<String,String> consumerRecord, Acknowledgment acknowledgment) {
 
         String message = consumerRecord.value();
@@ -47,7 +47,7 @@ public class GroupConsumer {
         GroupKafka payload = groupMessage.getPayload();
 
         if (groupMessage.getType().equals("DELETION")) {
-            groupKafkaService.deleteGroupFromKafka(payload.getId(), payload.getAllMembers());
+            groupKafkaService.deleteGroupFromKafka(payload.getId());
         } else if (groupKafkaService.groupAlreadyExists(payload.getId())) {
             groupKafkaService.updateGroupFromKafka(payload.getId(), payload.getAllMembers());
         } else {

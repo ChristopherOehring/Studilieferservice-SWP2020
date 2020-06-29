@@ -1,7 +1,6 @@
 package com.studilieferservice.chatmanager.group;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.studilieferservice.chatmanager.message.ChatMessage;
 import com.studilieferservice.chatmanager.user.User;
 
@@ -28,11 +27,9 @@ public class Group {
     @JoinTable(name = "group_user",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    //@JsonManagedReference("group") //to avoid recursion in JSON
     private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "group")
-    @JsonManagedReference("group") //to avoid recursion in JSON
     private List<ChatMessage> messages = new ArrayList<>();
 
     public Group() {}
@@ -86,7 +83,7 @@ public class Group {
         StringBuilder messagesString = new StringBuilder();
 
         for (ChatMessage m : messages) {
-            messagesString.append("Message [id=").append(m.getId()).append(", user=").append(m.getUser()).
+            messagesString.append("Message [id=").append(m.getId()).append(", user=").append(m.getUserName()).
                     append(", content=\"").append(m.getContent()).append("\"], ");
         }
         if (messagesString.length() > 0) {

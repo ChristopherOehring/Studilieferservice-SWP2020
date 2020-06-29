@@ -1,7 +1,6 @@
 package com.studilieferservice.chatmanager.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.studilieferservice.chatmanager.group.Group;
 
@@ -24,7 +23,6 @@ public class User {
     private String name;
 
     @ManyToMany(mappedBy = "users")
-    //@JsonManagedReference("user") //to avoid recursion in JSON
     private Set<Group> groups = new HashSet<>();
 
     public User() {}

@@ -1,6 +1,5 @@
 package com.studilieferservice.chatmanager.message;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.studilieferservice.chatmanager.group.Group;
 
 import javax.persistence.*;
@@ -14,7 +13,6 @@ public class ChatMessage {
 	private long id;
 
 	@ManyToOne
-	@JsonBackReference("group") //to avoid recursion in JSON
 	private Group group;
 
 	@NotNull
@@ -24,11 +22,18 @@ public class ChatMessage {
 	@NotNull
 	private String content;
 
+	private MessageType type;
+
+	public enum MessageType {
+		JOIN, LEAVE, MESSAGE
+	}
+
 	public ChatMessage() {}
 
-	public ChatMessage(String user, String content) {
+	public ChatMessage(String userName, String content, MessageType type) {
 		this.userName = userName;
 		this.content = content;
+		this.type = type;
 	}
 
 	public String getContent() {
@@ -39,8 +44,12 @@ public class ChatMessage {
 		this.content = content;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
+	}
+
+	private void setId(Long id) {
+		this.id = id;
 	}
 
 	public Group getGroup() {
@@ -51,18 +60,37 @@ public class ChatMessage {
 		this.group = group;
 	}
 
-	public String getUser() {
+	public String getUserName() {
 		return userName;
 	}
 
-	private void setUser(String user) {
+	private void setUserName(String user) {
 		this.userName = user;
+	}
+
+	public MessageType getType() {
+		return type;
+	}
+
+	public void setType(MessageType type) {
+		this.type = type;
+	}
+
+	public String getHtmlClassForType() {
+		switch (type) {
+			case JOIN:
+			case LEAVE:
+				return "event-message";
+			case MESSAGE:
+				return "chat-message";
+		}
+		return "error";
 	}
 
 	@Override
 	public String toString() {
 		return String.format(
-				"ChatMessage [id='%s', groupId='%s', groupName='%s', user='%s', content='%s']",
-				id, group.getId(), group.getName(), userName, content);
+				"ChatMessage [id='%s', groupId='%s', groupName='%s', user='%s', type='%s', content='%s']",
+				id, group.getId(), group.getName(), userName, type, content);
 	}
 }

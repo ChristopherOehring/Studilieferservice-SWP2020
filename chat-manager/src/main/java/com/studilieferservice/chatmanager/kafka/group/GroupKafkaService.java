@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -30,16 +31,19 @@ public class GroupKafkaService {
         //users do not need to be saved because users must already exist to be members of a group
         for (User u : users) {
             groupService.addUserToGroup(u, g);
+            groupService.addJoinMessageToGroupAndUser(u, g);
         }
     }
 
-    public void deleteGroupFromKafka(String id, List<String> usersString) {
+    @Transactional
+    public void deleteGroupFromKafka(String id) {
         Group g = groupService.getGroup(id);
 
-        List<User> users = userService.convertUsersFromStringToObject(usersString);
+        for (Iterator<User> iterator = g.getUsers().iterator(); iterator.hasNext();) {
+            User u = iterator.next();
 
-        for (User u : users) {
-            groupService.removeUserFromGroup(u, g);
+            iterator.remove();
+            u.getGroups().remove(g);
         }
 
         groupService.deleteGroup(g);
@@ -60,14 +64,22 @@ public class GroupKafkaService {
 
         //add new users
         for (User u : users) {
-            if (!g.getUsers().contains(u))
-                g.addUser(u);
+            if (!g.getUsers().contains(u)) {
+                groupService.addUserToGroup(u, g);
+                groupService.addJoinMessageToGroupAndUser(u, g);
+            }
         }
 
         //remove existing users
-        for (User u : g.getUsers()) {
-            if (!users.contains(u))
-                g.removeUser(u);
+        for (Iterator<User> iterator = g.getUsers().iterator(); iterator.hasNext();) {
+            User u = iterator.next();
+
+            if (!users.contains(u)) {
+                iterator.remove();
+                u.getGroups().remove(g);
+
+                groupService.addLeaveMessageToGroupAndUser(u, g);
+            }
         }
     }
 }
