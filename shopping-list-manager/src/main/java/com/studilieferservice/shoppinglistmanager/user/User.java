@@ -57,7 +57,7 @@ public class User {
     }
 
     public void removeShoppingList(ShoppingList shoppingList) {
-        shoppingList.setUser(this);
+        shoppingList.setUser(null);
         shoppingLists.remove(shoppingList);
     }
 

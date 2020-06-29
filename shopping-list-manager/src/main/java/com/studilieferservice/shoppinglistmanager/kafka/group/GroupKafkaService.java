@@ -38,6 +38,7 @@ public class GroupKafkaService {
         }
     }
 
+    @Transactional
     public void deleteGroupFromKafka(String id, List<String> usersString) {
         Group g = groupService.getGroup(id);
 
