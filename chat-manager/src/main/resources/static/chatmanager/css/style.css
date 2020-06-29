@@ -140,11 +140,12 @@ button:hover{
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
-    background-color: #303030;
+    background-color: var(--primary);
     box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
-    margin-top: 30px;
-    height: calc(100% - 60px);
-    max-height: 600px;
+    /*margin-top: 30px;*/
+    /*height: calc(100% - 60px);*/
+    /*max-height: 600px;*/
+    height:100%;
     position: relative;
 }
 

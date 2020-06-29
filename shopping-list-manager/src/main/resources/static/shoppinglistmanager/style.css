@@ -34,8 +34,8 @@ body{ /*For full website*/
 
 .OuterBox{ /*box around all elements*/
     position: absolute;
-    height: 90%;
-    width: 25%;
+    height: 100%;
+    width: 100%;
     background-color: var(--primary);
 }
 
@@ -81,7 +81,7 @@ tr{ /*table rows*/
     box-shadow: 5px 5px 10px -4px #000000;
 }
 
-td, th{ /*table columns*/
+tdL, thL{ /*table columns*/
 
     /*positioning*/
     width: 100%;
@@ -143,7 +143,7 @@ input[type=image]{ /*the + and - of each item*/
     text-align: right;
 }
 
-p{ /*fonts for the sum*/
+pp{ /*fonts for the sum*/
     margin-top: 2px;
     margin-right: 1rem;
     color: white;

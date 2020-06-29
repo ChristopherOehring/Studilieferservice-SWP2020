@@ -2,11 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../static/groupmanager/groupMenu.css" th:href="@{/groupmanager/groupMenu.css}"/>
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-    <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
-    <title>Dashboard</title>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="../static/groupmanager/groupMenu.css" th:href="@{/groupmanager/groupMenu.css}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
+<title>Dashboard</title>
 </head>
 <body>
 
@@ -28,7 +31,7 @@
                         <img src="../static/groupmanager/imgs/crown-3-128.png" alt=" " th:src="@{/groupmanager/imgs/crown-3-128.png}">
                     </td>
                     <td class="memTd">
-                        <p th:text="${owner.getUserName()}">Invite your friends!</p>
+                        <p th:text="${owner.getUserName()}"></p>
                     </td>
                     <td class="memTd">
                         <img th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
@@ -40,7 +43,7 @@
                         <img src="../static/groupmanager/imgs/crown-3-128.png" alt=" " th:src="@{/groupmanager/imgs/crown-3-128.png}">
                     </td>
                     <td class="memTd">
-                        <p th:text="${member.getUserName()}">You</p>
+                        <p th:text="${member.getUserName()}"></p>
                     </td>
                     <td class="memTd">
                         <img th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
@@ -48,14 +51,16 @@
                 </tr>
 
                 <!-- List of the other Members -->
-                <tr class="memTr" th:each="member: ${memberList}"> <!-- TODO: adjust -> this is missing the crown and is therefore looking weird-->
-
+                <tr class="memTr" th:each="member: ${memberList}">
                     <td class="memTd">
-                        <p th:text="${member.getUserName()}">Invite your friends!</p>
+                        &emsp;
+                    </td>
+                    <td class="memTd">
+                        <p th:text="${member.getUserName()}"></p>
                     </td>
                     <td class="memTd">
                         <img th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt=""
-                             th:src="@{groupmanager/imgs/checkmark-128.png}">
+                             th:src="@{/groupmanager/imgs/checkmark-128.png}">
                     </td>
                 </tr>
             </table>
@@ -78,8 +83,11 @@
     </div>
 
     <div class="chat">
-        <rewe-digital-include path="https://some.path/to/fragment"></rewe-digital-include>
-        Chat
+        <rewe-digital-include th:path="${'http://chat-manager:8040/chat/' + groupId }"></rewe-digital-include>
+    </div>
+
+    <div class="shopping-list">
+        <rewe-digital-include th:path="${'http://shopping-list-manager:8070/web/shoppingList/' + groupId}"></rewe-digital-include>
     </div>
 
     <div class="shipping-information">
@@ -114,11 +122,5 @@
         <input type="button" id="orderButton" value="order">
     </div>
 
-    <div class="shopping-list">
-        <rewe-digital-include th:path="${'http://' + link + ':9070/web/shoppingList/' + groupId }"></rewe-digital-include>
-        Shopping-List
-    </div>
-
-    <!--Work in progress! <th th:text="*{groupId}"></th>  --> 
 </body>
 </html>

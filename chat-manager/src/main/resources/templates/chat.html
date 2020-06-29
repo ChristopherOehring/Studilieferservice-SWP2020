@@ -2,13 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/chatmanager/css/style.css" th:href="@{/chatmanager/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" href="../static/chatmanager/css/style.css"
+          th:href="@{/chatmanager/css/style.css}" data-rd-options="include"/>
 
     <title>StudiLieferservice</title>
 </head>
 
 <body>
-
+<rewe-digital-content>
 <div id="chat-page">
     <div class="chat-container">
         <!-- <div class="chat-header">
@@ -23,7 +24,7 @@
             </li>
         </ul>
 
-        <form th:action="@{/chat/addMessage}" th:object="${chatMessage}" id="messageForm" method="POST">
+        <form th:action="${'http://' + link + ':9040/chat/addMessage'}" th:object="${chatMessage}" id="messageForm" method="POST">
             <div class="form-group">
                 <div class="input-group clearfix">
                     <label>
@@ -46,6 +47,6 @@
         objDiv.scrollTop = objDiv.scrollHeight;
     }
 </script>
-
+</rewe-digital-content>
 </body>
 </html>

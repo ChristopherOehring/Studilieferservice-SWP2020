@@ -2,17 +2,16 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link rel="stylesheet" type="text/css" href="../static/shoppinglistmanager/style.css"
-          th:href="@{/shoppinglistmanager/style.css}"/>
-    <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <title>StudiLieferservice</title>
+<title>StudiLieferservice</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link rel="stylesheet" type="text/css" href="../static/shoppinglistmanager/style.css"
+      th:href="@{/shoppinglistmanager/style.css}" data-rd-options="include" />
+<link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet' />
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 </head>
 
 <body>
@@ -27,31 +26,31 @@
         <div class="items">
             <table>
                 <tr>
-                    <th>Product&emsp; - &emsp;Price</th>
-                    <th>Sum</th>
-                    <th></th>
-                    <th>Amount</th>
-                    <th></th>
+                    <thL>Product&emsp; - &emsp;Price</thL>
+                    <thL>Sum</thL>
+                    <thL></thL>
+                    <thL>Amount</thL>
+                    <thL></thL>
                 </tr>
 
                 <tr th:if="${!items.isEmpty()}" th:each="itemShoppingList : ${items}">
-                    <td th:text="${itemShoppingList.item.name+' - '+itemShoppingList.item.price+'€'}">produkt</td>
+                    <tdL th:text="${itemShoppingList.item.name+' - '+itemShoppingList.item.price+'€'}">produkt</tdL>
 
-                    <td th:text="${#numbers.formatDecimal(itemShoppingList.item.price*itemShoppingList.amount, 0, 2)+'€'} ">preis</td>
+                    <tdL th:text="${#numbers.formatdLecimal(itemShoppingList.item.price*itemShoppingList.amount, 0, 2)+'€'} ">preis</tdL>
 
-                    <td><form th:action="@{/shoppingList/itemDecrease}" method="POST">
+                    <tdL><form th:action="@{/shoppingList/itemDecrease}" method="POST">
                         <input type="image" th:src="@{/shoppinglistmanager/icons/minus.png}" alt="-">
                         <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
                         <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
-                    </form></td>
+                    </form></tdL>
 
-                    <td th:text="${itemShoppingList.amount}">0</td>
+                    <tdL th:text="${itemShoppingList.amount}">0</tdL>
 
-                    <td><form th:action="@{/shoppingList/itemIncrease}" method="POST">
+                    <tdL><form th:action="@{/shoppingList/itemIncrease}" method="POST">
                         <input type="image" th:src="@{/shoppinglistmanager/icons/plus.png}" alt="+">
                         <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
                         <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
-                    </form></td>
+                    </form></tdL>
                 </tr>
             </table>
         </div>
@@ -63,7 +62,7 @@
         <div class="line"></div>
 
         <div th:if="${totalPrice != 0}" class="sum">
-            <p th:text="${#numbers.formatDecimal(totalPrice, 0, 2)+'€'}">total</p>
+            <pp th:text="${#numbers.formatDecimal(totalPrice, 0, 2)+'€'}">total</pp>
         </div>
 
     </div>

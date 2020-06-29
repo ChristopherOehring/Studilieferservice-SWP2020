@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -41,19 +42,19 @@ public class ChatWebController {
      * @return the HTML page "chat.html" which displays the chat
      */
     @GetMapping("/{groupId}")
-    public ModelAndView getChatForGroup(@PathVariable String groupId) {
-        if (!groupService.getGroup(groupId).getUsers().contains(userService.getUser("userIdFromCookie")))
+    public ModelAndView getChatForGroup(@PathVariable String groupId, @CookieValue("useremail") String email, HttpServletRequest request) {
+        if (!groupService.getGroup(groupId).getUsers().contains(userService.getUser(email)))
             return null;
 
         ModelAndView model = new ModelAndView("chat");
 
         model.addObject("group", groupService.getGroup(groupId));
-        model.addObject("user", userService.getUser("userIdFromCookie"));
+        model.addObject("user", userService.getUser(email));
         model.addObject("messages", groupService.getAllChatMessagesOfGroup(groupService.getGroup(groupId)));
 
         //needed for POST request below
         model.addObject("chatMessage", new ChatMessage());
-
+        model.addObject("link", request.getServerName());
         return model;
     }
 
@@ -93,12 +94,12 @@ public class ChatWebController {
      * the current group-ID and user-ID
      */
     @PostMapping("/addMessage")
-    public String addMessageForUserAndGroup(@ModelAttribute(name = "chatMessage") ChatMessage chatMessage, HttpServletRequest request) {
+    public RedirectView addMessageForUserAndGroup(@ModelAttribute(name = "chatMessage") ChatMessage chatMessage, HttpServletRequest request) {
         Group g = groupService.getGroup(request.getParameter("groupId"));
         User u = userService.getUser(request.getParameter("userId"));
 
         groupService.addTextChatMessageToGroupAndUser(u, g, chatMessage.getContent());
 
-        return "redirect:" + g.getId() + "/" + u.getId();
+        return new RedirectView("http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + g.getId());
     }
 }

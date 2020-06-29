@@ -62,6 +62,9 @@ class ComposableBody implements Composable<ComposableBody>, FragmentSource {
         final StringWriter writer = new StringWriter(template.length());
         int currentIndex = contentRange.start();
         for (final ComposableBody c : children) {
+//            System.out.println(template.substring(currentIndex, startOffset()));
+            System.out.println(currentIndex);
+            System.out.println(c.startOffset());
             writer.write(template, currentIndex, c.startOffset() - currentIndex);
             writer.write(c.body());
             currentIndex = c.endOffset();

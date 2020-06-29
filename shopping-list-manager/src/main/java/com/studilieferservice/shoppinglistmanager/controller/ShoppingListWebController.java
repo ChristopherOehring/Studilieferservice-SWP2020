@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Web Controller: accepts all web requests of this module and returns corresponding HTML pages.
@@ -48,7 +49,8 @@ public class ShoppingListWebController {
      */
     @GetMapping("/{groupId}")
     public ModelAndView getShoppingListForUserAndGroup(@PathVariable String groupId,
-                                                       @CookieValue("useremail") @Nullable String email) {
+                                                       @CookieValue("useremail") @Nullable String email,
+                                                       HttpServletResponse response) {
 
         if (email == null) return new ModelAndView("redirect:noLogin");
 
@@ -60,6 +62,7 @@ public class ShoppingListWebController {
         model.addObject("items", sl.getItems());
         model.addObject("totalPrice", shoppingListService.getTotalPrice(sl));
 
+        //response.addHeader("x-uic-stylesheet", "/shoppinglistmanager/style.css");
         return model;
     }
 
@@ -69,7 +72,7 @@ public class ShoppingListWebController {
      *
      * @param request Spring specific: for accessing the shoppingList-ID and item-ID which are stored in the body of the
      *                HTML page "list.html"
-     * @return a redirection to {@link #getShoppingListForUserAndGroup(String, String) getShoppingListForUserAndGroup}
+     * @return a redirection to {@link #getShoppingListForUserAndGroup(String, String, HttpServletResponse) getShoppingListForUserAndGroup}
      * with the current group-ID and user-ID
      */
     @PostMapping("/itemIncrease")
@@ -89,7 +92,7 @@ public class ShoppingListWebController {
      *
      * @param request Spring specific: for accessing the shoppingList-ID and item-ID which are stored in the body of the
      *                HTML page "list.html"
-     * @return a redirection to {@link #getShoppingListForUserAndGroup(String, String) getShoppingListForUserAndGroup}
+     * @return a redirection to {@link #getShoppingListForUserAndGroup(String, String, HttpServletResponse) getShoppingListForUserAndGroup}
      * with the current group-ID and user-ID
      */
     @PostMapping("/itemDecrease")

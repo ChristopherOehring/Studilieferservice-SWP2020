@@ -129,6 +129,7 @@ public class WebController {
         model.addAttribute("memberList", gruppe.getMembers());
         model.addAttribute("link", request.getServerName());
         model.addAttribute("permission", gruppe.getPermissions(user));
+        model.addAttribute("user", email);
         return "groupMenu";
     }
 
@@ -163,6 +164,7 @@ public class WebController {
         groupService.save(group);
 
         redirectView.setUrl("http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + group.getId());
+
         return redirectView;
     }
 
@@ -187,7 +189,6 @@ public class WebController {
     public RedirectView getList(HttpServletRequest request){
 
         String groupId = request.getParameter("id");
-
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("http://" + request.getServerName() + ":8070/shoppingList/" + groupId);
         return redirectView;
