@@ -29,35 +29,35 @@
     
         <!-- Searchbar -->
         <div class="col1Search">
-            <input type="text" name="myGroupSearch" id="myGroupSearch" placeholder="Search">
+            <input type="text" onkeyup="myFunction()" name="myGroupSearch" id="myGroupSearch" placeholder="Search">
         </div>
     
         <div class="groupList">
             <form  th:action="${'http://' + link + ':9010/web/groupmanager/groupMenuFwd'}" method="GET" >
                 <div class="listBox">
-                    
-                    <!-- Explanation:
-                            - th:each iterates over the groupList with variable "gruppe"
-                            - th:field and th:for belongs together for design purposes
-                            - th:value shows, what is sent to controller when submited
-                            - th:text is the output-text-label what is displayed
-                    -->
-                    <li th:each="gruppe : ${groupsWhereOwner}">
-                        <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
-                        <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
-                    </li>
-                    <li th:each="gruppe : ${groupsWhereAdmin}">
-                        <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
-                        <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
-                    </li>
-                    <li th:each="gruppe : ${groupsWhereMember}">
-                        <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
-                        <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
-                    </li>
-                    <th th:if="${groupsWhereOwner.isEmpty() && groupsWhereMember.isEmpty() && groupsWhereAdmin.isEmpty()}">
+                    <ul id="groupList">
+                        <!-- Explanation:
+                                - th:each iterates over the groupList with variable "gruppe"
+                                - th:field and th:for belongs together for design purposes
+                                - th:value shows, what is sent to controller when submited
+                                - th:text is the output-text-label what is displayed
+                        -->
+                        <li th:each="gruppe : ${groupsWhereOwner}">
+                            <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                            <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
+                        </li>
+                        <li th:each="gruppe : ${groupsWhereAdmin}">
+                            <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                            <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
+                        </li>
+                        <li th:each="gruppe : ${groupsWhereMember}">
+                            <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                            <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
+                        </li>
+                        <th th:if="${groupsWhereOwner.isEmpty() && groupsWhereMember.isEmpty() && groupsWhereAdmin.isEmpty()}">
                         <label>No Groups Available!</label>
                     </th>
-    
+                    </ul>
                 </div>
                 <div class="submitBox">
                     <input type="submit" value="continue" class="submitButton"/>
@@ -158,6 +158,28 @@
         </form>
     </div>
 </div>
+
+<script>
+    function myFunction() {
+        // Declare variables
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('myGroupSearch');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("groupList");
+        li = ul.getElementsByTagName('li');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("label")[0];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+</script>
 
 </body>
 
