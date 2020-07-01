@@ -15,7 +15,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
-
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = ProductService.class)
 public class ProductServiceTest {
@@ -25,10 +24,14 @@ public class ProductServiceTest {
     @MockBean
     private ProductRepository productRepository;
 
-    Product product = new Product("webTest", "3.00", 3.00, "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg");
-    List<Product> productsTest = Arrays.asList(new Product[]{
-            new Product("webTest", "3.00", 3.00, "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg"),
-            new Product("webTest1", "3.00", 3.00, "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg"), });
+    Product product = new Product("webTest", "3.00", 3.00,
+            "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg");
+
+    List<Product> productsTest = Arrays.asList(
+            new Product("webTest", "3.00", 3.00,
+                    "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg"),
+            new Product("webTest1", "3.00", 3.00,
+                    "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg"));
 
     @Test
     public void createProductTest(){
@@ -48,7 +51,6 @@ public class ProductServiceTest {
                 .thenReturn(java.util.Optional.ofNullable(product));
         assertThat(productService.findProductById(product.getName()))
                 .isEqualTo(product);
-
     }
 
     @Test
@@ -57,8 +59,8 @@ public class ProductServiceTest {
                 .thenReturn(productsTest);
         assertThat(productService.findAllWithName(product.getName()))
                 .isEqualTo(productsTest);
-
     }
+
     @Test
     public void listAllProductsTest(){
         Mockito.when(productRepository.findAll())
@@ -67,5 +69,4 @@ public class ProductServiceTest {
                 .isEqualTo(productsTest);
 
     }
-
 }

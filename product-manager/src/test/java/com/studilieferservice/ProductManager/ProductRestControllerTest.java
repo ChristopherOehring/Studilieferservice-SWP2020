@@ -12,9 +12,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.List;
 
-
-
-
 public class ProductRestControllerTest {
 
     @InjectMocks
@@ -23,21 +20,17 @@ public class ProductRestControllerTest {
     @Mock
     private ProductService productService;
 
+    Product product = new Product("Milch", "3.00", 3.00,
+            "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg");
 
-
-    Product product = new Product(
-    "Milch", "3.00", 3.00, "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg");
-
-    List<Product> products = Arrays.asList(new Product[]{
-            product,
-            new Product("webTest1", "3.00", 3.00, "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg"), });
+    List<Product> products = Arrays.asList(product,
+            new Product("webTest1", "3.00", 3.00,
+                    "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg"));
 
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
     }
-
-
 
     @Test
     public void createProductPerRestTest(){
@@ -67,8 +60,8 @@ public class ProductRestControllerTest {
 
         assertThat(response).isEqualTo(product);
         assertThat(response.getName()).isEqualTo(productName);
-
     }
+
     @Test
     public void listAllProductsTest(){
         Mockito.when( productService.listAllProducts()).thenReturn(products);
@@ -77,8 +70,5 @@ public class ProductRestControllerTest {
         assertThat(response).isEqualTo(products);
         assertThat(response.size()).isEqualTo(2);
         assertThat(response.get(0).getName()).isEqualTo(product.getName());
-
-
     }
-
 }

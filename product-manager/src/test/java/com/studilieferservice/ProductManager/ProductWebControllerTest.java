@@ -25,9 +25,11 @@ public class ProductWebControllerTest {
 
     private MockMvc mockMvc;
 
-    List<Product> productsTest = Arrays.asList(new Product[]{
-                    new Product("webTest", "3.00", 3.00, "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg"),
-                    new Product("webTest1", "3.00", 3.00, "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg"), });
+    List<Product> productsTest = Arrays.asList(
+            new Product("webTest", "3.00", 3.00,
+                    "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg"),
+            new Product("webTest1", "3.00", 3.00,
+                    "https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg"));
 
     @Before
     public void setup(){
@@ -47,7 +49,5 @@ public class ProductWebControllerTest {
         .andExpect(status().isOk())
         .andExpect(model().attribute("products",productsTest))
         .andExpect(view().name("index"));
-
     }
-
 }
