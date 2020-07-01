@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" href="../static/productmanager/images/css/style.css" th:href="@{../productmanager/images/css/style.css}"/>
+    <link rel="stylesheet" href="../static/productmanager/images/css/darkly/bootstrap.min.css" th:href="@{../productmanager/images/css/darkly/bootstrap.min.css}"/>
+    <script th:src="@{webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{webjars/bootstrap/bootstrap.min.js}"></script>
+</head>
+
+<body>
+<div class="wrapper">
+    <header>
+        <button class="backButton">
+            <a th:href="${'http://' + link + ':9000/web/groupmanager/groupMenu/' + groupId}">
+                <img src="../static/productmanager/images/backButton.png" width="30" height="30"
+                     th:src="@{../productmanager/images/backButton.png}"/>
+                Back
+            </a>
+        </button>
+        <br>
+    </header>
+    <br>
+
+    <div class="columnRight">
+        <h1>Products</h1>
+        <div class="searchBox">
+            <input class="input" type="text" onkeyup="dynamicSearch()" name="name" id="searchName" placeholder="Search" autocomplete="off">
+        </div>
+
+        <hr>
+
+        <div class="card">
+            <div class="card card-body">
+                <table class="productTable" id="productList">
+                    <tr th:each="product:${products}">
+                        <td id="productName" th:text="${product.name}">name</td>
+                        <td th:text="${product.description}">description</td>
+                        <td th:text="${product.price} + ' €'">1.0</td>
+                        <td> <img th:src="@{${product.imageUrl}}" width="47" height="47" alt="img"> </td>
+                        <td id="addButton">
+                            <form th:action="${'http://' + link + ':9070/web/shoppingList/addProduct'}" method="POST">
+                                <input type="hidden" name="groupId" th:value="${groupId}">
+                                <input type="hidden" name="userId" th:value="${userId}">
+                                <input type="hidden" name="itemId" th:value="${product.name}">
+                                <input type="hidden" name="amount" value="1">
+                                <button type="submit" class="btn btn-dark">Add Product</button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <hr>
+
+    </div>
+</div>
+
+<!--dynamically search products-->
+<script>
+    function dynamicSearch() {
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById('searchName');
+        filter = input.value.toUpperCase();
+        table = document.getElementById("productList");
+        tr = table.getElementsByTagName('tr');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+
+</body>
+
+</html>

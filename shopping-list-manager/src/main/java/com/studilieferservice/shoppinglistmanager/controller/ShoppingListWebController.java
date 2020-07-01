@@ -1,9 +1,12 @@
 package com.studilieferservice.shoppinglistmanager.controller;
 
+import com.studilieferservice.shoppinglistmanager.group.Group;
 import com.studilieferservice.shoppinglistmanager.group.GroupService;
+import com.studilieferservice.shoppinglistmanager.item.Item;
 import com.studilieferservice.shoppinglistmanager.item.ItemService;
 import com.studilieferservice.shoppinglistmanager.shoppinglist.ShoppingList;
 import com.studilieferservice.shoppinglistmanager.shoppinglist.ShoppingListService;
+import com.studilieferservice.shoppinglistmanager.user.User;
 import com.studilieferservice.shoppinglistmanager.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -50,7 +53,8 @@ public class ShoppingListWebController {
     @GetMapping("/{groupId}")
     public ModelAndView getShoppingListForUserAndGroup(@PathVariable String groupId,
                                                        @CookieValue("useremail") @Nullable String email,
-                                                       HttpServletResponse response) {
+                                                       //HttpServletResponse response,
+                                                       HttpServletRequest request) {
 
         if (email == null) return new ModelAndView("redirect:noLogin");
 
@@ -59,8 +63,10 @@ public class ShoppingListWebController {
         ShoppingList sl = shoppingListService.getShoppingListByUserAndGroup(
                 userService.getUser(email), groupService.getGroup(groupId));
 
-        model.addObject("items", sl.getItems());
+        model.addObject("shoppingList", sl);
         model.addObject("totalPrice", shoppingListService.getTotalPrice(sl));
+
+        model.addObject("link", request.getServerName());
 
         //response.addHeader("x-uic-stylesheet", "/shoppinglistmanager/style.css");
         return model;
@@ -72,7 +78,7 @@ public class ShoppingListWebController {
      *
      * @param request Spring specific: for accessing the shoppingList-ID and item-ID which are stored in the body of the
      *                HTML page "list.html"
-     * @return a redirection to {@link #getShoppingListForUserAndGroup(String, String, HttpServletResponse) getShoppingListForUserAndGroup}
+     * @return a redirection to {@link #getShoppingListForUserAndGroup(String, String, HttpServletRequest) getShoppingListForUserAndGroup}
      * with the current group-ID and user-ID
      */
     @PostMapping("/itemIncrease")
@@ -83,7 +89,7 @@ public class ShoppingListWebController {
         ShoppingList sl = shoppingListService.getShoppingList(Long.parseLong(shoppingListId));
         shoppingListService.addItemToShoppingList(sl, itemService.getItem(itemName), 1);
 
-        return "redirect:" + sl.getGroup().getId() + "/" + sl.getUser().getId();
+        return "redirect:http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + sl.getGroup().getId();
     }
 
     /**
@@ -92,7 +98,7 @@ public class ShoppingListWebController {
      *
      * @param request Spring specific: for accessing the shoppingList-ID and item-ID which are stored in the body of the
      *                HTML page "list.html"
-     * @return a redirection to {@link #getShoppingListForUserAndGroup(String, String, HttpServletResponse) getShoppingListForUserAndGroup}
+     * @return a redirection to {@link #getShoppingListForUserAndGroup(String, String, HttpServletRequest) getShoppingListForUserAndGroup}
      * with the current group-ID and user-ID
      */
     @PostMapping("/itemDecrease")
@@ -103,7 +109,19 @@ public class ShoppingListWebController {
         ShoppingList sl = shoppingListService.getShoppingList(Long.parseLong(shoppingListId));
         shoppingListService.removeItemFromShoppingList(sl, itemService.getItem(itemName), 1);
 
-        return "redirect:" + sl.getGroup().getId() + "/" + sl.getUser().getId();
+        return "redirect:http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + sl.getGroup().getId();
+    }
+
+    @PostMapping("/addProduct")
+    public String addProduct(HttpServletRequest request) {
+        Group group = new Group(request.getParameter("groupId"), "");
+        User user = new User(request.getParameter("userId"), "");
+        Item item = new Item(request.getParameter("itemId"), 0);
+
+        shoppingListService.addItemToShoppingList(shoppingListService.getShoppingListByUserAndGroup(user, group), item,
+                Integer.parseInt(request.getParameter("amount")));
+
+        return "redirect:http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + group.getId();
     }
 
     @GetMapping("/noLogin")

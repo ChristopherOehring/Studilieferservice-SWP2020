@@ -117,6 +117,7 @@ public class ShoppingListService {
                 relation.setItem(null);
             }
         }
+        shoppingListRepository.save(shoppingList);
     }
 
     public double getTotalPrice(ShoppingList shoppingList) {
