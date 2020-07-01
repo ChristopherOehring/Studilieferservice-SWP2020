@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +34,7 @@ public class WebController {
     }
 
     @GetMapping("/fwd")
-    public String fwd(Model model, HttpServletRequest request){
+    public String fwd(Model model, HttpServletRequest request) {
         System.out.println(request.getRequestURL());
         System.out.println(request.getServerName());
         model.addAttribute("link", request.getServerName());
@@ -45,16 +44,18 @@ public class WebController {
 
     /**
      * get request on / invokes the index.html of the user-manager
+     *
      * @param
      * @return returns "index" which results in invocation of the index.html
      */
     @GetMapping("/index")
-    public String index(){
+    public String index() {
         return "index";
     }
 
     /**
      * get request on /register invokes the registerForm.html of the user-manager
+     *
      * @param model
      * @return returns "registerForm" which results in invocation of the registerForm.html
      */
@@ -68,23 +69,23 @@ public class WebController {
 
     /**
      * Meant to be used by a webpage to create a new user
-     * @param bindingResult
-     * @param  user
      *
+     * @param bindingResult
+     * @param user
      * @return HTML view
      */
     @PostMapping("/register")
     public String registerUser(@Valid User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-
+        boolean isCreated = userService.createUser(user);
+        if (bindingResult.hasErrors() || !isCreated) {
             return "redirect:regerror";
         }
-        userService.createUser(user);
         return "redirect:login";
     }
 
     /**
      * get request on /editaccount invokes the editaccount.html of the user-manager
+     *
      * @param model
      * @return returns "editaccount" which results in invocation of the editaccount.html
      */
@@ -96,6 +97,7 @@ public class WebController {
 
     /**
      * get request on /login invokes the login.html of the user-manager
+     *
      * @param model
      * @return returns "login" which results in invocation of the login.html
      */
@@ -109,7 +111,6 @@ public class WebController {
     }
 
     /**
-     *
      * @param model
      * @return returns "login" which results in invocation of the login.html
      */
@@ -118,8 +119,10 @@ public class WebController {
                              HttpServletResponse response,
                              HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        Cookie c = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("useremail")).findFirst().orElse(null);
-        if(!(c == null)){
+        Cookie c = Arrays.stream(cookies).filter(cookie -> cookie.getName()
+                .equals("useremail")).findFirst().orElse(null);
+        if (!(c == null)) {
+
             c.setMaxAge(0);
             response.addCookie(c);
         }
@@ -128,16 +131,17 @@ public class WebController {
 
     /**
      * Meant to be used by a webpage to login
+     *
      * @return HTML view
      */
     @GetMapping("/loginFwd")
     public RedirectView loginUser(@RequestParam(name = "email") @Nullable String email,
-                            @RequestParam(name = "password") @Nullable String password,
-                            HttpServletRequest request,
-                            HttpServletResponse response) {
+                                  @RequestParam(name = "password") @Nullable String password,
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) {
         System.out.println(request.getQueryString());
         System.out.println(email + ", " + password);
-        if(userService.login(email, password)) {
+        if (userService.login(email, password)) {
             Cookie c = new Cookie("useremail", email);
             c.setPath("/");
             response.addCookie(c);
@@ -152,24 +156,25 @@ public class WebController {
     }
 
     @GetMapping("/regerror")
-    public String regerror(Model model){
+    public String regerror(Model model) {
         return "views/regerror";
     }
 
     /**
      * Meant to be used by a webpage to edit user profile
+     *
      * @param user
      * @return HTML view
      */
+
     @PostMapping("/edit")
-    public String editUser(@Valid User user) {
+    public RedirectView editUser(@Valid User user, HttpServletRequest request) {
 
         userService.edit(user);
-        return "views/successedLogin";
+        return new RedirectView("http://" + request.getServerName() + ":9010/web/groupmanager/userMenu");
     }
 
     /**
-     *
      * @return HTML view
      */
     @GetMapping("/about")
@@ -177,21 +182,4 @@ public class WebController {
         return "views/about";
     }
 
-    /**
-     *
-     * @return
-     */
-    @GetMapping("/groupmanager")
-    public RedirectView localRedirect() {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://localhost:8010/web/group/index");
-        return redirectView;
-    }
-
-/*    @GetMapping ("/shoppingList")
-    public RedirectView localRedirect2() {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://localhost:8010/web/group/index");
-        return redirectView;
-    }*/
 }

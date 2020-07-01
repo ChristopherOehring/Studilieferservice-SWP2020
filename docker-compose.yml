@@ -77,7 +77,7 @@ services:
     image: studi-lieferservice/product-manager:latest
     ports:
       - 9060:8060
-  chat-manager:
-    image: studi-lieferservice/chat-manager:latest
-    ports:
-      - 9040:8040
+ # chat-manager:
+  #  image: studi-lieferservice/chat-manager:latest
+   # ports:
+    #  - 9040:8040
