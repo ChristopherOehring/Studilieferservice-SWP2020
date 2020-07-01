@@ -16,7 +16,7 @@ import static com.studilieferservice.usermanager.kafka.user.UserEventType.UPDATE
 public class UserService {
     private final ApplicationEventPublisher eventPublisher;
     private final UserRepository userRepository;
-    private User currentUser;
+    private User currentUser ;
     final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
@@ -31,13 +31,19 @@ public class UserService {
      * @param user
      * @return the saved user
      */
-    public User createUser(User user) {
+    public boolean createUser(User user) {
+
         user.setPassword(encoder.encode(user.getPassword()));
         setCurrentUser(null);
-        User saved = userRepository.save(user);
 
-        eventPublisher.publishEvent(new UserEvent(user, this, NEW));
-        return saved;
+        if(!(userRepository.existsById(user.getEmail()))){
+            User saved =  userRepository.save(user) ;
+            eventPublisher.publishEvent(new UserEvent(saved, this, NEW));
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -51,8 +57,7 @@ public class UserService {
      */
     public boolean login(String email, String password) {
         System.out.println("Login attempt: "  + email);
-        User user1 = findOne(email);
-        //userRepository.findByEmail(user.getEmail());
+        User user1 = userRepository.getOne(email);
 
         if (user1 == null || !encoder.matches(password, user1.getPassword())) {
             System.out.println(user1);
@@ -61,6 +66,7 @@ public class UserService {
             return false;
         } else {
             System.out.println("success!");
+            currentUser = user1;
             return true;
         }
     }
@@ -81,18 +87,9 @@ public class UserService {
         currentUser.setZip(user.getZip());
         currentUser.setPassword(currentUser.getPassword());
         currentUser.setEmail(currentUser.getEmail());
+
         eventPublisher.publishEvent(new UserEvent(currentUser,this, UPDATE));
         return userRepository.save(currentUser);
-    }
-
-    /**
-     * fetch the user with the given email from DB
-     *
-     * @param email
-     * @return user if exist in DB, otherwise null.
-     */
-    public User findOne(String email) {
-        return userRepository.findById(email).orElse(null);
     }
 
     /**
