@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 // TODO: 5/31/20 Fix the version, so that it only goes up by one if something actually changes. (not important)
 
@@ -28,7 +25,7 @@ import java.util.Objects;
  *
  * @author Manuel Jirsak
  * @author Christopher Oehring
- * @version 1.8 6/24/20
+ * @version 1.9 7/01/20
  */
 
 @Entity(name = "Gruppe")
@@ -82,6 +79,16 @@ public class Gruppe {
      */
     @ManyToMany
     private List<User> adminList = new ArrayList<>();
+
+    //TODO change map to list
+    //@ManyToMany
+    //@JoinColumn(name = "members")
+    //private Map<User, Boolean> hasUserAcceptedDeliveryDate = new HashMap<>();
+
+    @ManyToMany
+    private List<User> hasAcceptedDeliveryDate = new ArrayList<>();
+
+    private boolean hasEveryoneAcceptedDeliveryDate = false;
 
     /**
      * Saves all outgoing invites of this group, i.e. if there are invitations,
@@ -219,6 +226,7 @@ public class Gruppe {
 
     public boolean removeMember(User user) {
         if (memberList.remove(user)) {
+            //this.hasAcceptedDeliveryDate.remove(user);
             version++;
             return true;
         }
@@ -227,6 +235,7 @@ public class Gruppe {
 
     public boolean removeAdminOrMember(User user) {
         version++;
+        //this.hasAcceptedDeliveryDate.remove(user);
         return (memberList.remove(user) | adminList.remove(user));
     }
 
@@ -259,6 +268,7 @@ public class Gruppe {
     public boolean removeAdmin(User admin) {
         if (this.adminList.remove(admin)) {
             version++;
+            this.hasAcceptedDeliveryDate.remove(admin);
             return true;
         }
         return false;
@@ -268,6 +278,35 @@ public class Gruppe {
         version++;
         removeAdminOrMember(owner);
         this.owner = owner;
+    }
+
+    public boolean hasAcceptedDeliveryDate(User user) {
+        return this.hasAcceptedDeliveryDate.contains(user);
+    }
+
+    public void acceptDeliveryDate(User user) {
+        if (!this.hasAcceptedDeliveryDate.contains(user)) this.hasAcceptedDeliveryDate.add(user);
+    }
+
+    public void acceptNoLongerDeliveryDate(User user) {
+        this.hasAcceptedDeliveryDate.remove(user);
+    }
+
+    public boolean hasEveryoneAcceptedDeliveryDate() {
+        this.hasEveryoneAcceptedDeliveryDate = true;
+        for(User u: this.memberList) {
+            if (!this.hasAcceptedDeliveryDate(u)) this.hasEveryoneAcceptedDeliveryDate= false;
+        }
+        return this.hasEveryoneAcceptedDeliveryDate;
+    }
+
+    //TODO do we need this one? IMO the only important thing is to know if everyone has accepted the date ~ Manu 7/01/20
+    public List<User> getHasAcceptedDeliveryDate() {
+        return hasAcceptedDeliveryDate;
+    }
+
+    public boolean isHasEveryoneAcceptedDeliveryDate() {
+        return hasEveryoneAcceptedDeliveryDate;
     }
 
     /**
@@ -305,9 +344,10 @@ public class Gruppe {
     // lookup
 
     /**
-     * IS USER OWNER????
-     * @param user USER WHO MAY BE OWNER????
-     * @return YES, IF USER IS OWNER, NO, IF USER IS NOT THE OWNER!!!!
+     * Checks whether provided user is the owner
+     * @param user hmmm, take a guess
+     * @return true, if user is owner, false if user is not the owner
+     *         Who would have thought that...
      */
     public boolean isOwner(User user) {
         return user == this.owner;
@@ -350,6 +390,7 @@ public class Gruppe {
                 ", adminList=" + adminList +
                 ", invites=" + invites +
                 ", version=" + version +
+                //", isDeliveryDateAcceptedByEveryone="+ hasEveryoneAcceptedDeliveryDate() +
                 '}';
     }
 

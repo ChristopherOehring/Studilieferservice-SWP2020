@@ -29,7 +29,7 @@ import java.util.UUID;
  *
  * @author Christopher Oehring
  * @author Manuel Jirsak
- * @version 2.7 6/24/20 //TODO: 6/18/20 shouldn't it be version "2".5, as it is the completely rewritten version of the prototype? ~ Manu
+ * @version 2.8 7/01/20 //TODO: 6/18/20 shouldn't it be version "2".5, as it is the completely rewritten version of the prototype? ~ Manu
  */
 @RequestMapping("/api/group-service")
 @RestController
@@ -143,6 +143,9 @@ public class GroupController {
         Optional<User> ownerOptional = userService.findById(body.getOwnerEmail());
         if (ownerOptional.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User " + body.getOwnerEmail() + " not found");
+        if (body.getGroupName()==null || body.getGroupName().isBlank()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have to set a group name");
+        }
         Gruppe group = new Gruppe();
         group.setId(UUID.randomUUID().toString());
         group.setGroupName(body.getGroupName());
@@ -463,5 +466,82 @@ public class GroupController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User " + body.getEmail() + " is not a member of this group");
     }
+
+    @PutMapping(path = "/confirmDate")
+    public ResponseEntity<?> confirmDeliveryDate(@RequestBody GroupAndUserBody body) {
+        Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
+        if (optionalGruppe.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No group with id " + body.getGroupId() + " was found!");
+        Gruppe gruppe = optionalGruppe.get();
+        for (User u: gruppe.getMembers()) {
+            if(u.getEmail().equals(body.getEmail())) {
+                gruppe.acceptDeliveryDate(u);
+                groupService.save(gruppe);
+                return ResponseEntity.status(HttpStatus.OK).body("Member "+u.getEmail()+" has accepted the delivery date");
+            }
+        }
+        for (User a: gruppe.getAdmins()) {
+            if(a.getEmail().equals(body.getEmail())) {
+                gruppe.acceptDeliveryDate(a);
+                groupService.save(gruppe);
+                return ResponseEntity.status(HttpStatus.OK).body("Admin "+a.getEmail()+" has accepted the delivery date");
+            }
+        }
+        if (gruppe.getOwner().getEmail().equals(body.getEmail())) {
+            gruppe.acceptDeliveryDate(gruppe.getOwner());
+            groupService.save(gruppe);
+            return ResponseEntity.status(HttpStatus.OK).body("Owner "+gruppe.getOwner().getEmail()+" has accepted the delivery date");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User "+body.getEmail()+" is not part of this group");
+    }
+
+    @DeleteMapping(path = "/confirmDate")
+    public ResponseEntity<?> confirmNoLongerDeliveryDate(@RequestBody GroupAndUserBody body) {
+        Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
+        if (optionalGruppe.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No group with id " + body.getGroupId() + " was found!");
+        Gruppe gruppe = optionalGruppe.get();
+        for (User u: gruppe.getMembers()) {
+            if(u.getEmail().equals(body.getEmail())) {
+                gruppe.acceptNoLongerDeliveryDate(u);
+                return ResponseEntity.status(HttpStatus.OK).body("Member "+u.getEmail()+" no longer accepts the delivery date");
+            }
+        }
+        for (User a: gruppe.getAdmins()) {
+            if(a.getEmail().equals(body.getEmail())) {
+                gruppe.acceptNoLongerDeliveryDate(a);
+                return ResponseEntity.status(HttpStatus.OK).body("Admin "+a.getEmail()+" no longer accepts the delivery date");
+            }
+        }
+        if (gruppe.getOwner().getEmail().equals(body.getEmail())) {
+            gruppe.acceptNoLongerDeliveryDate(gruppe.getOwner());
+            return ResponseEntity.status(HttpStatus.OK).body("Owner "+gruppe.getOwner().getEmail()+" no longer accepts the delivery date");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User "+body.getEmail()+" is not part of this group");
+    }
+
+    @GetMapping(path = "/confirmDate")
+    public ResponseEntity<?> hasUserAcceptedDeliveryDate(@RequestBody GroupAndUserBody body) {
+        Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
+        if (optionalGruppe.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No group with id " + body.getGroupId() + " was found!");
+        Gruppe gruppe = optionalGruppe.get();
+        for (User u: gruppe.getMembers()) {
+            if(u.getEmail().equals(body.getEmail())) {
+                return ResponseEntity.status(HttpStatus.OK).body(gruppe.hasAcceptedDeliveryDate(u));
+            }
+        }
+        for (User a: gruppe.getAdmins()) {
+            if(a.getEmail().equals(body.getEmail())) {
+                return ResponseEntity.status(HttpStatus.OK).body(gruppe.hasAcceptedDeliveryDate(a));
+            }
+        }
+        if (gruppe.getOwner().getEmail().equals(body.getEmail())) {
+            return ResponseEntity.status(HttpStatus.OK).body(gruppe.hasAcceptedDeliveryDate(gruppe.getOwner()));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User "+body.getEmail()+" is not part of this group");
+    }
+
+    //TODO when ordering, check whether everyone has confirmed the date
 
 }
