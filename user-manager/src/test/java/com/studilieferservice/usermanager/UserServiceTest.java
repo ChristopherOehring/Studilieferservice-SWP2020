@@ -56,7 +56,6 @@ public class UserServiceTest {
                 .thenReturn(user);
         boolean response = userService.login(user.getEmail(), password);
         assertThat(response).isEqualTo(true);
-
     }
 
     @Test
@@ -69,6 +68,5 @@ public class UserServiceTest {
         assertThat(userService.login(user.getEmail(), "ss123456")).isEqualTo(true);
         assertThat(userService.getCurrentUser()).isEqualTo(user);
         assertThat(userService.edit(user)).isEqualTo(user);
-
     }
 }

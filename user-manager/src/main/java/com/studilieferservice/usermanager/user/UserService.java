@@ -5,8 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import static com.studilieferservice.usermanager.kafka.user.UserEventType.NEW;
-import static com.studilieferservice.usermanager.kafka.user.UserEventType.UPDATE;
+import com.studilieferservice.usermanager.kafka.user.UserEventType;
 
 /**
  * just a normal service for handling JpaRepositories
@@ -38,7 +37,7 @@ public class UserService {
 
         if(!(userRepository.existsById(user.getEmail()))){
             User saved =  userRepository.save(user) ;
-            eventPublisher.publishEvent(new UserEvent(saved, this, NEW));
+            eventPublisher.publishEvent(new UserEvent(saved, this, UserEventType.NEW));
             return true;
         }
         else{
@@ -57,7 +56,7 @@ public class UserService {
      */
     public boolean login(String email, String password) {
         System.out.println("Login attempt: "  + email);
-        User user1 = userRepository.getOne(email);
+        User user1 = userRepository.findById(email).orElse(null);
 
         if (user1 == null || !encoder.matches(password, user1.getPassword())) {
             System.out.println(user1);
@@ -88,7 +87,7 @@ public class UserService {
         currentUser.setPassword(currentUser.getPassword());
         currentUser.setEmail(currentUser.getEmail());
 
-        eventPublisher.publishEvent(new UserEvent(currentUser,this, UPDATE));
+        eventPublisher.publishEvent(new UserEvent(currentUser,this, UserEventType.UPDATE));
         return userRepository.save(currentUser);
     }
 

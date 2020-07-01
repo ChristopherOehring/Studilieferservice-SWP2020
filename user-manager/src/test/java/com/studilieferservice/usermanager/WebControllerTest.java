@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.mockito.*;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -52,10 +51,9 @@ public class WebControllerTest {
             "muster@web.com", "ss123456");
 
     @Test
-    public void webControllerTest() throws Exception {
+    public void webControllerTest() {
         assertThat(webController).isNotNull();
     }
-
 
     @Test
     public void fwdTest() throws Exception {
@@ -83,12 +81,11 @@ public class WebControllerTest {
     public void logoutFormTest() {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
-        Model model = mock(Model.class);
 
         Cookie myCookie = new Cookie("useremail", user.getEmail());
         Cookie[] myCookies = {myCookie};
         when(request.getCookies()).thenReturn(myCookies);
-        String myResponse = webController.logoutForm(model, response, request);
+        String myResponse = webController.logoutForm(response, request);
         assertThat(myResponse).isEqualTo("redirect:index");
 
     }
@@ -123,7 +120,6 @@ public class WebControllerTest {
         this.mockMvc.perform(get("/web/usermanager/regerror"))
                 .andExpect(view().name("views/regerror"))
                 .andExpect(status().is2xxSuccessful());
-
     }
 
     @Test
@@ -131,20 +127,17 @@ public class WebControllerTest {
         this.mockMvc.perform(get("/web/usermanager/about"))
                 .andExpect(view().name("views/about"))
                 .andExpect(status().is2xxSuccessful());
-
     }
 
     @Test
-    public void registerUserTest() throws Exception {
+    public void registerUserTest() {
 
         BindingResult bindingResult = mock(BindingResult.class);
         Mockito.when(userRepository.save(user)).thenReturn(user);
         Mockito.when(userService.createUser(user)).thenReturn(true);
 
         assertThat(webController.registerUser(user, bindingResult)).isEqualTo("redirect:login");
-
     }
-
 
     @Test
     public void editUserTest() throws Exception {

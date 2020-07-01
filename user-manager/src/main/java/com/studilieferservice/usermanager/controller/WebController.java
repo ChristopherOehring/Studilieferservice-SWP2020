@@ -1,7 +1,6 @@
 package com.studilieferservice.usermanager.controller;
 
 import com.studilieferservice.usermanager.user.User;
-import com.studilieferservice.usermanager.user.UserRepository;
 import com.studilieferservice.usermanager.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -25,12 +24,10 @@ import java.util.Arrays;
 public class WebController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
 
     @Autowired
-    public WebController(UserService userService, UserRepository userRepository) {
+    public WebController(UserService userService) {
         this.userService = userService;
-        this.userRepository = userRepository;
     }
 
     @GetMapping("/fwd")
@@ -111,18 +108,16 @@ public class WebController {
     }
 
     /**
-     * @param model
+     * @param
      * @return returns "login" which results in invocation of the login.html
      */
     @GetMapping("/logout")
-    public String logoutForm(Model model,
-                             HttpServletResponse response,
+    public String logoutForm(HttpServletResponse response,
                              HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         Cookie c = Arrays.stream(cookies).filter(cookie -> cookie.getName()
                 .equals("useremail")).findFirst().orElse(null);
         if (!(c == null)) {
-
             c.setMaxAge(0);
             response.addCookie(c);
         }
