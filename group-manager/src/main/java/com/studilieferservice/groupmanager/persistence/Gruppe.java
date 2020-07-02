@@ -25,7 +25,7 @@ import java.util.*;
  *
  * @author Manuel Jirsak
  * @author Christopher Oehring
- * @version 1.9 7/01/20
+ * @version 1.10 7/02/20
  */
 
 @Entity(name = "Gruppe")
@@ -227,7 +227,7 @@ public class Gruppe {
 
     public boolean removeMember(User user) {
         if (memberList.remove(user)) {
-            //this.hasAcceptedDeliveryDate.remove(user);
+            this.hasAcceptedDeliveryDate.remove(user);
             version++;
             return true;
         }
@@ -236,7 +236,7 @@ public class Gruppe {
 
     public boolean removeAdminOrMember(User user) {
         version++;
-        //this.hasAcceptedDeliveryDate.remove(user);
+        this.hasAcceptedDeliveryDate.remove(user);
         return (memberList.remove(user) | adminList.remove(user));
     }
 
@@ -281,31 +281,77 @@ public class Gruppe {
         this.owner = owner;
     }
 
+    /**
+     * Check whether provided user has already accepted the delivery
+     * date set by a group admin or the owner
+     * @param user user you want to know if he agrees <br>
+     *             Must be part of this group
+     * @return true if user is saved in the list of users that already agreed
+     */
     public boolean hasAcceptedDeliveryDate(User user) {
         return this.hasAcceptedDeliveryDate.contains(user);
     }
 
+    /**
+     * Call this to add a user to the list of users that accept
+     * the delivery date <br>
+     * user is only added, if he did not accept before, list cannot
+     * contain the same user more than once
+     * @param user user you want to add to the list
+     */
     public void acceptDeliveryDate(User user) {
         if (!this.hasAcceptedDeliveryDate.contains(user)) this.hasAcceptedDeliveryDate.add(user);
     }
 
+    /**
+     * Call this to remove a user to the list of users
+     * that accept the delivery date <br>
+     * nothing would happen, if you tried to remove
+     * a user who is not saved in this list
+     * @param user user you want to remove from the list
+     */
     public void acceptNoLongerDeliveryDate(User user) {
         this.hasAcceptedDeliveryDate.remove(user);
     }
 
+    /**
+     * Call this method to check whether everyone has accepted
+     * the delivery date set by a group admin or the owner <br>
+     * This method also updates "hasEveryoneAcceptedDeliveryDate",
+     * which indicates whether there are users in this group, who
+     * still have to accept the date; this parameter is returned
+     * every time a group is returned
+     * @return true if every user in this group has accepted the date
+     */
     public boolean hasEveryoneAcceptedDeliveryDate() {
         this.hasEveryoneAcceptedDeliveryDate = true;
         for(User u: this.memberList) {
-            if (!this.hasAcceptedDeliveryDate(u)) this.hasEveryoneAcceptedDeliveryDate= false;
+            if (!this.hasAcceptedDeliveryDate(u)) this.hasEveryoneAcceptedDeliveryDate = false;
         }
+        for(User a: this.adminList) {
+            if (!this.hasAcceptedDeliveryDate(a)) this.hasEveryoneAcceptedDeliveryDate = false;
+        }
+        if (!this.hasAcceptedDeliveryDate(this.getOwner())) this.hasEveryoneAcceptedDeliveryDate = false;
         return this.hasEveryoneAcceptedDeliveryDate;
     }
 
     //TODO do we need this one? IMO the only important thing is to know if everyone has accepted the date ~ Manu 7/01/20
+    /**
+     * no practical use, just for http requests, which return the group,
+     * so that the returned list also contains this list showing which
+     * user in this group has accepted the delivery date
+     * @return list containing every user in this group that has accepted the date
+     */
     public List<User> getHasAcceptedDeliveryDate() {
         return hasAcceptedDeliveryDate;
     }
 
+    /**
+     * no practical use, just for http requests, which return the group,
+     * so that the returned list also contains this value indicating
+     * whether every user in this group has accepted the delivery date
+     * @return true if every user in this group has accepted the date
+     */
     public boolean isHasEveryoneAcceptedDeliveryDate() {
         return hasEveryoneAcceptedDeliveryDate;
     }
