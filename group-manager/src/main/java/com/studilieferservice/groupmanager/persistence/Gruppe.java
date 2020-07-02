@@ -25,7 +25,7 @@ import java.util.*;
  *
  * @author Manuel Jirsak
  * @author Christopher Oehring
- * @version 1.10 7/02/20
+ * @version 1.10.1 7/02/20
  */
 
 @Entity(name = "Gruppe")
@@ -357,6 +357,16 @@ public class Gruppe {
     }
 
     /**
+     * Resets the list, which contains the users that have accepted the
+     * delivery date set by a group admin or the owner <br>
+     * This method is called, when something is changed in the delivery data
+     */
+    public void resetDeliveryDateAcceptance() {
+        this.hasAcceptedDeliveryDate = new ArrayList<>();
+        this.hasEveryoneAcceptedDeliveryDate = false;
+    }
+
+    /**
      * Gives any user special rights (like changing delivery data or
      * adding users to the group), i.e. promoting them to a group admin
      * @param user just a plain user, for examples or explanation see
@@ -437,7 +447,6 @@ public class Gruppe {
                 ", adminList=" + adminList +
                 ", invites=" + invites +
                 ", version=" + version +
-                //", isDeliveryDateAcceptedByEveryone="+ hasEveryoneAcceptedDeliveryDate() +
                 '}';
     }
 

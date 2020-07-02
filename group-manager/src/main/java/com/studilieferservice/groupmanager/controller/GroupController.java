@@ -29,7 +29,7 @@ import java.util.UUID;
  *
  * @author Christopher Oehring
  * @author Manuel Jirsak
- * @version 2.9 7/02/20
+ * @version 2.9.1 7/02/20
  */
 @RequestMapping("/api/group-service")
 @RestController
@@ -390,7 +390,8 @@ public class GroupController {
     /**
      * Changes the delivery data of a group <br>
      * Can be reached with a POST request at api/group-service/deliveryData <br>
-     * You can have the delivery data returned to you (along with all group information) when with a GET request at api/group-service/group
+     * You can have the delivery data returned to you (along with all group information) when with a GET request at api/group-service/group <br>
+     * Also, every time the delivery Data changes, all delivery date confirmations get deleted
      *
      * @param body A {@link GroupDeliveryBody - you can find an example there}, which contains the group id and the place to deliver to (consisting of city-name, zip code, street and house number)
      * @return A response entity containing the updated group (if something changed, otherwise just "nothing changed") or explaining what went wrong (400: some data is invalid; 404: group cannot be found)
@@ -425,7 +426,7 @@ public class GroupController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not update delivery data - Check that your date matches the valid form of DD/MM/YYYY");
         }
-        //gruppe.setDeliveryDate(body.getDate());
+        gruppe.resetDeliveryDateAcceptance();
         groupService.save(gruppe);
         return ResponseEntity.status(HttpStatus.OK).body(gruppe);
     }
