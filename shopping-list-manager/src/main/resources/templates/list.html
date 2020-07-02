@@ -26,31 +26,33 @@
         <div class="items">
             <table>
                 <tr>
-                    <th class="columns">Product&emsp; - &emsp;Price</th>
-                    <th class="columns">Sum</th>
-                    <th class="columns"></th>
-                    <th class="columns">Amount</th>
-                    <th class="columns"></th>
+                    <th class="column">Product</th>
+                    <th class="column">Price</th>
+                    <th class="column">Sum</th>
+                    <th class="column">Amount</th>
                 </tr>
 
                 <tr th:if="${!shoppingList.items.isEmpty()}" th:each="itemShoppingList : ${shoppingList.items}">
-                    <td class="columns" th:text="${itemShoppingList.item.name+' - '+itemShoppingList.item.price+'€'}">produkt</td>
+                    <td class="column" th:text="${itemShoppingList.item.name}">produkt</td>
+                    <td class="column" th:text="${itemShoppingList.item.price+'€'}">preis</td>
 
-                    <td class="columns" th:text="${#numbers.formatDecimal(itemShoppingList.item.price*itemShoppingList.amount, 0, 2)+'€'} ">preis</td>
+                    <td class="column" th:text="${#numbers.formatDecimal(itemShoppingList.item.price*itemShoppingList.amount, 0, 2)+'€'} ">summe</td>
 
-                    <td class="columns"><form th:action="${'http://' + link + ':9070/web/shoppingList/itemDecrease'}" method="POST">
+                    <td class="column">
+                        <form class="column inline-group" th:action="${'http://' + link + ':9070/web/shoppingList/itemDecrease'}" method="POST">
                         <input type="image" th:src="@{/shoppinglistmanager/icons/minus.png}" alt="-">
                         <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
                         <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
-                    </form></td>
+                        </form>
 
-                    <td class="columns" th:text="${itemShoppingList.amount}">0</td>
+                        <div class="column inline-group amount" th:text="${itemShoppingList.amount}">0</div>
 
-                    <td class="columns"><form th:action="${'http://' + link + ':9070/web/shoppingList/itemIncrease'}" method="POST">
+                        <form class="column inline-group" th:action="${'http://' + link + ':9070/web/shoppingList/itemIncrease'}" method="POST">
                         <input type="image" th:src="@{/shoppinglistmanager/icons/plus.png}" alt="+">
                         <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
                         <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
-                    </form></td>
+                        </form>
+                    </td>
                 </tr>
             </table>
         </div>

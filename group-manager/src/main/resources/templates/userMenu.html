@@ -29,7 +29,7 @@
     
         <!-- Searchbar -->
         <div class="col1Search">
-            <input type="text" onkeyup="myFunction()" name="myGroupSearch" id="myGroupSearch" placeholder="Search">
+            <input type="text" onkeyup="searchGroups()" name="myGroupSearch" id="myGroupSearch" placeholder="Search">
         </div>
     
         <div class="groupList">
@@ -54,9 +54,9 @@
                             <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
                             <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
                         </li>
-                        <th th:if="${groupsWhereOwner.isEmpty() && groupsWhereMember.isEmpty() && groupsWhereAdmin.isEmpty()}">
+                        <li th:if="${groupsWhereOwner.isEmpty() && groupsWhereMember.isEmpty() && groupsWhereAdmin.isEmpty()}">
                         <label>No Groups Available!</label>
-                    </th>
+                        </li>
                     </ul>
                 </div>
                 <div class="submitBox">
@@ -159,8 +159,9 @@
     </div>
 </div>
 
+<!--dynamically search groups-->
 <script>
-    function myFunction() {
+    function searchGroups() {
         // Declare variables
         var input, filter, ul, li, a, i, txtValue;
         input = document.getElementById('myGroupSearch');

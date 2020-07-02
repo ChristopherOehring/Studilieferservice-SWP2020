@@ -52,8 +52,8 @@ h1{ /*the title itself*/
 .items{ /*box around the itemlist*/
     margin-top: 1rem;
     margin-left: 0.5rem;
-    padding-right: 1rem;
-    height: 75%;
+    /*padding-right: 1rem;*/
+    height: calc(100% - 240px); /*75%*/
     overflow: scroll;
 
         /*#SCROLLBAR FOR FIREFOX#*/
@@ -81,10 +81,10 @@ tr{ /*table rows*/
     box-shadow: 5px 5px 10px -4px #000000;
 }
 
-.columns{ /*table columns*/
+.column{ /*table columns*/
 
     /*positioning*/
-    width: 100%;
+    /*width: 100%;*/
     margin-right: 0px;
     margin-bottom: 1rem;
     padding: 0.5rem;
@@ -92,6 +92,13 @@ tr{ /*table rows*/
     /*fonts*/
     color: white;
     font-family: var(--secondaryFont);
+}
+.column .inline-group{
+    display: inline;
+}
+
+.column .inline-group .amount{
+    padding-inline: 10px;
 }
 
 input[type=image]{ /*the + and - of each item*/

@@ -165,6 +165,10 @@ form{
 li{
     display: inline;
     list-style-type: none;
+    margin-right: 0.5rem;
+}
+
+.list {
     margin-left: 0.5rem;
 }
 

@@ -20,11 +20,11 @@
                     <a class="nav-link" href="/web/usermanager/register">Register</a>
                 </li>
                 
-                <li>
+                <li class="list">
                     <a class="nav-link" href="/web/usermanager/login">Login</a>
                 </li>
                 
-                <li>
+                <li class="list">
                     <a class="nav-link" href="/web/usermanager/about">About</a>
                 </li>
             </ul>
@@ -37,7 +37,7 @@
 
         <div class="box">
             <div class="text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-            <input type="text" class="input" th:field="*{email}" id="email" placeholder=" " autocomplete="off" />
+            <input type="text" class="input" th:field="*{email}" id="email" placeholder=" " />
             <label for="email" class="label">E-Mail</label> 
         </div>
 

@@ -15,7 +15,7 @@
 
 html{
     background-color: #363636;
-    margin: 0px;
+    margin: 0;
 }
 
 /*  ############
@@ -30,14 +30,13 @@ html{
 
 #logo{
     width: 10rem;
-
 }
   
 h1{
     text-align: center;
     color: white;
     font-family: "Patua One";
-    margin-top: 8rem;
+    margin-top: 3rem; /*8*/
     margin-bottom: 2rem;
 }
 
@@ -118,8 +117,8 @@ form{
     width: 100px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 5rem;
-    margin-bottom: 10rem;
+    margin-top: 3rem; /*5*/
+    margin-bottom: 2rem; /*10*/
 }
 
 /* #submit is submit-input-button inside of .submit div*/
@@ -158,6 +157,11 @@ nav{
 li{
     display: inline;
     list-style-type: none;
+    margin-right: 0.5rem;
+}
+
+.list {
+    margin-left: 0.5rem;
 }
 
 a:link, a:visited {
