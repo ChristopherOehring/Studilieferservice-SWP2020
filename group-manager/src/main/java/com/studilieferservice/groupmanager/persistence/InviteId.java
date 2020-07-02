@@ -31,7 +31,7 @@ public class InviteId implements Serializable {
         return groupId;
     }
 
-    private void setGroupId(String groupId) {
+    public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 
@@ -39,7 +39,7 @@ public class InviteId implements Serializable {
         return email;
     }
 
-    private void setEmail(String userId) {
+    public void setEmail(String userId) {
         this.email = userId;
     }
 

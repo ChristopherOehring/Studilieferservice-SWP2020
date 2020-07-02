@@ -177,4 +177,14 @@ public class WebController {
         return "views/about";
     }
 
+    /**
+     *
+     * @return
+     */
+    @GetMapping("/groupmanager")
+    public RedirectView localRedirect() {
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://localhost:8010/web/group/index");
+        return redirectView;
+    }
 }

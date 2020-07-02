@@ -75,6 +75,7 @@ public class WebController {
         model.addAttribute("link", request.getServerName());
 
         model.addAttribute("creationForm", new CreationForm());
+        model.addAttribute("groupAndUserBody", new GroupAndUserBody());
 
         model.addAttribute("groupsWhereMember", groupService.findAllWhereMember(email));
         model.addAttribute("groupsWhereAdmin", groupService.findAllWhereAdmin(email));
@@ -123,6 +124,7 @@ public class WebController {
             return "customError404";
         }
 
+        model.addAttribute("groupAndUserBody", new GroupAndUserBody());
         model.addAttribute("groupId", groupId);
         model.addAttribute("owner", gruppe.getOwner());
         model.addAttribute("adminList", gruppe.getAdmins());
@@ -211,51 +213,46 @@ public class WebController {
 
         inviteService.addInvite(new Invite(gruppe, user));
 
-        return "redirect:groupMenu";//fixme
+        return "redirect:groupMenuFwd";//fixme
     }
 
     /**
      * used to accept an invite
-     * @param body is used by thymeleaf in the html page
+     * @param
      * @return redirects to the userMenu
      */
-    @PutMapping("/acceptInvite")
-    public String acceptInvite(@RequestBody GroupAndUserBody body) {
-        Optional<User> optionalUser = userService.findById(body.getEmail());
-        if(optionalUser.isEmpty()) System.out.println("No user with email "+body.getEmail()+" was found!");
+    @PostMapping("/acceptInvite")
+    public String acceptInvite(@ModelAttribute(name = "groupId") String groupId, @ModelAttribute(name = "email") String email) {
+        System.out.println("accept invite:" + email + ", " + groupId);
+
+        inviteService.removeInvite(groupId, email);
+
+        Optional<User> optionalUser = userService.findById(email);
+        if(optionalUser.isEmpty()) System.out.println("No user with email "+email+" was found!");
         User user = optionalUser.get();
 
-        Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
-        if (optionalGruppe.isEmpty()) System.out.println("No group with id "+body.getGroupId()+" was found!");
+        Optional<Gruppe> optionalGruppe = groupService.findById(groupId);
+        if (optionalGruppe.isEmpty()) System.out.println("No group with id "+groupId+" was found!");
         Gruppe gruppe = optionalGruppe.get();
 
-        inviteService.removeInvite(new Invite(gruppe, user));
         gruppe.addMember(user);
-
+        groupService.save(gruppe);
         return "redirect:userMenu";
     }
 
     /**
      * used to decline an invite
-     * @param body is used by thymeleaf in the html page
+     * @param
      * @return redirects to the userMenu
      */
-    @PutMapping("/declineInvite")
-    public String declineInvite(@RequestBody GroupAndUserBody body) {
-        Optional<User> optionalUser = userService.findById(body.getEmail());
-        if(optionalUser.isEmpty()) System.out.println("No user with email "+body.getEmail()+" was found!");
-        User user = optionalUser.get();
+    @PostMapping("/declineInvite")
+    public String declineInvite(@ModelAttribute(name = "groupId") String groupId, @ModelAttribute(name = "email") String email) {
+        System.out.println("decline invite:" + email + ", " + groupId);
 
-        Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
-        if (optionalGruppe.isEmpty()) System.out.println("No group with id "+body.getGroupId()+" was found!");
-        Gruppe gruppe = optionalGruppe.get();
-
-        inviteService.removeInvite(new Invite(gruppe, user));
+        inviteService.removeInvite(groupId, email);
 
         return "redirect:userMenu";
     }
-    //stürzt ab wenn nutzer keine invites hat
-    //save-group keine WebPage, sondern nur Weiterleitung
 
     @GetMapping("/noLogin")
     public RedirectView noLogin(HttpServletRequest request){

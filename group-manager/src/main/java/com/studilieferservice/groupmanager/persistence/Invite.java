@@ -46,7 +46,7 @@ public class Invite {
         return id;
     }
 
-    private void setId(InviteId id) {
+    public void setId(InviteId id) {
         this.id = id;
     }
 
@@ -54,7 +54,7 @@ public class Invite {
         return group;
     }
 
-    private void setGroup(Gruppe group) {
+    public void setGroup(Gruppe group) {
         this.group = group;
     }
 
@@ -62,7 +62,7 @@ public class Invite {
         return user;
     }
 
-    private void setUser(User user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

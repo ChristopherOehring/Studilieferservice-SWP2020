@@ -67,15 +67,13 @@
         </div>
 
         <div class="inviteMember">
-            <form action="">
-
+            <form th:action="${'http://' + link + ':9010/web/groupmanager/invite'}" th:object="${groupAndUserBody}" method="POST">
                 <div class="inviteUsername">
-                    <input type="text" name="inviteEmail" id="inviteEmail" placeholder="username"
-                           th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                    <input type="text" th:field="*{email}" placeholder="user-email" style="border-bottom: none">
                 </div>
-
+                <input type="hidden" name="groupId" id="groupId" th:value="${groupId}">
                 <div class="inviteButton">
-                    <input type="button" value="add a new friend" id="inviteButton">
+                    <input type="submit" value="invite someone" id="inviteButton">
                 </div>
             </form>
             

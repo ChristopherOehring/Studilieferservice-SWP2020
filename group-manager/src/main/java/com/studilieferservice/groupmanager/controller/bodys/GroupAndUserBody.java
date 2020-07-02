@@ -25,11 +25,21 @@ public class GroupAndUserBody {
         this.email = email;
     }
 
+    public GroupAndUserBody(){}
+
     public String getGroupId() {
         return groupId;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
