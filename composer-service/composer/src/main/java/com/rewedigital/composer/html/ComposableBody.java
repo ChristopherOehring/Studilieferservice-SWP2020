@@ -62,14 +62,33 @@ class ComposableBody implements Composable<ComposableBody>, FragmentSource {
         final StringWriter writer = new StringWriter(template.length());
         int currentIndex = contentRange.start();
         for (final ComposableBody c : children) {
-//            System.out.println(template.substring(currentIndex, startOffset()));
-            System.out.println(currentIndex);
-            System.out.println(c.startOffset());
             writer.write(template, currentIndex, c.startOffset() - currentIndex);
             writer.write(c.body());
             currentIndex = c.endOffset();
         }
-        writer.write(template, currentIndex, contentRange.end() - currentIndex);
+        int end = contentRange.end();
+        if(template.contains("</rewe-digital-content>")) {
+            end = template.indexOf("</rewe-digital-content>");
+            System.out.println("changing the end to " + end + " (@ComposableBody.body");
+        }
+
+        /*
+        System.out.println(currentIndex);
+        System.out.println(contentRange.end());
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println(template.substring(0, currentIndex));
+        System.out.println("-------------------------------------------------------------");
+        System.out.println(template.substring(currentIndex, end));
+        System.out.println("-------------------------------------------------------------");
+        System.out.println(template.substring(end));
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+         */
+        writer.write(template, currentIndex, end - currentIndex);
+        /*
+        System.out.println("*****************************************************************");
+        System.out.println(writer.toString());
+        System.out.println("*****************************************************************");
+        */
         return writer.toString();
     }
 
