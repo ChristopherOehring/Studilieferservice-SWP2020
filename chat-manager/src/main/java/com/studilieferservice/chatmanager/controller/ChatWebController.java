@@ -98,7 +98,7 @@ public class ChatWebController {
         Group g = groupService.getGroup(request.getParameter("groupId"));
         User u = userService.getUser(request.getParameter("userId"));
 
-        groupService.addTextChatMessageToGroupAndUser(u, g, chatMessage.getContent());
+        if(!chatMessage.getContent().equals("")) groupService.addTextChatMessageToGroupAndUser(u, g, chatMessage.getContent());
 
         return new RedirectView("http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + g.getId());
     }
