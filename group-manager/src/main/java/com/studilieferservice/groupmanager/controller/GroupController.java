@@ -29,7 +29,7 @@ import java.util.UUID;
  *
  * @author Christopher Oehring
  * @author Manuel Jirsak
- * @version 2.8 7/01/20 //TODO: 6/18/20 shouldn't it be version "2".5, as it is the completely rewritten version of the prototype? ~ Manu
+ * @version 2.9.1 7/02/20
  */
 @RequestMapping("/api/group-service")
 @RestController
@@ -390,7 +390,8 @@ public class GroupController {
     /**
      * Changes the delivery data of a group <br>
      * Can be reached with a POST request at api/group-service/deliveryData <br>
-     * You can have the delivery data returned to you (along with all group information) when with a GET request at api/group-service/group
+     * You can have the delivery data returned to you (along with all group information) when with a GET request at api/group-service/group <br>
+     * Also, every time the delivery Data changes, all delivery date confirmations get deleted
      *
      * @param body A {@link GroupDeliveryBody - you can find an example there}, which contains the group id and the place to deliver to (consisting of city-name, zip code, street and house number)
      * @return A response entity containing the updated group (if something changed, otherwise just "nothing changed") or explaining what went wrong (400: some data is invalid; 404: group cannot be found)
@@ -425,13 +426,13 @@ public class GroupController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not update delivery data - Check that your date matches the valid form of DD/MM/YYYY");
         }
-        //gruppe.setDeliveryDate(body.getDate());
+        gruppe.resetDeliveryDateAcceptance();
         groupService.save(gruppe);
         return ResponseEntity.status(HttpStatus.OK).body(gruppe);
     }
 
     /**
-     * Changes the owner of the group, afterwards, the former owner is saved as admin
+     * Changes the owner of the group, afterwards, the former owner is saved as admin <br>
      * Can be reached with a POST request at api/group-service/group/owner
      *
      * @param body A {@link GroupAndUserBody}, which contains the groupId and the identifying email of the user
@@ -467,6 +468,14 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User " + body.getEmail() + " is not a member of this group");
     }
 
+    /**
+     * Use to confirm/accept the delivery date set by a group admin (or by the owner) <br>
+     * Use this together with your email address and the group id <br>
+     * Can be reached with a PUT request at api/group-service/confirmDate
+     *
+     * @param body common json body consisting of group id and user email (see {@link GroupAndUserBody})
+     * @return OK if user is part of the group, NOT_FOUND if either group or user do not exist
+     */
     @PutMapping(path = "/confirmDate")
     public ResponseEntity<?> confirmDeliveryDate(@RequestBody GroupAndUserBody body) {
         Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
@@ -475,26 +484,48 @@ public class GroupController {
         Gruppe gruppe = optionalGruppe.get();
         for (User u: gruppe.getMembers()) {
             if(u.getEmail().equals(body.getEmail())) {
-                gruppe.acceptDeliveryDate(u);
-                groupService.save(gruppe);
-                return ResponseEntity.status(HttpStatus.OK).body("Member "+u.getEmail()+" has accepted the delivery date");
+                if(!gruppe.hasAcceptedDeliveryDate(u)) {
+                    gruppe.acceptDeliveryDate(u); //adds user to list of members that already have accepted
+                    gruppe.hasEveryoneAcceptedDeliveryDate(); //actualizes list
+                    groupService.save(gruppe);
+                    //TODO test, if group is updated whenever someone accepts/rejects a delivery date
+                    return ResponseEntity.status(HttpStatus.OK).body("Member " + u.getEmail() + " has accepted the delivery date");
+                }
+                return ResponseEntity.status(HttpStatus.OK).body("Member " + u.getEmail() + " has already accepted the delivery date");
             }
         }
         for (User a: gruppe.getAdmins()) {
             if(a.getEmail().equals(body.getEmail())) {
-                gruppe.acceptDeliveryDate(a);
-                groupService.save(gruppe);
-                return ResponseEntity.status(HttpStatus.OK).body("Admin "+a.getEmail()+" has accepted the delivery date");
+                if(!gruppe.hasAcceptedDeliveryDate(a)) {
+                    gruppe.acceptDeliveryDate(a); //adds user to list of members that already accepted
+                    gruppe.hasEveryoneAcceptedDeliveryDate(); //actualizes list
+                    groupService.save(gruppe);
+                    return ResponseEntity.status(HttpStatus.OK).body("Admin " + a.getEmail() + " has accepted the delivery date");
+                }
+                return ResponseEntity.status(HttpStatus.OK).body("Admin " + a.getEmail() + " has already accepted the delivery date");
             }
         }
         if (gruppe.getOwner().getEmail().equals(body.getEmail())) {
-            gruppe.acceptDeliveryDate(gruppe.getOwner());
-            groupService.save(gruppe);
-            return ResponseEntity.status(HttpStatus.OK).body("Owner "+gruppe.getOwner().getEmail()+" has accepted the delivery date");
+            if(!gruppe.hasAcceptedDeliveryDate(gruppe.getOwner())) {
+                gruppe.acceptDeliveryDate(gruppe.getOwner()); //adds user to list of members that already accepted
+                gruppe.hasEveryoneAcceptedDeliveryDate(); //actualizes list
+                groupService.save(gruppe);
+                return ResponseEntity.status(HttpStatus.OK).body("Owner " + gruppe.getOwner().getEmail() + " has accepted the delivery date");
+            }
+            return ResponseEntity.status(HttpStatus.OK).body("Owner " + gruppe.getOwner().getEmail() + " has already accepted the delivery date");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User "+body.getEmail()+" is not part of this group");
     }
 
+    /**
+     * Use to reject/decline the delivery date set by a group admin (or by the owner) <br>
+     * Use this together with your email address and the group id
+     * (if you've already accepted the delivery date) to delete your agreement<br>
+     * Can be reached with a DELETE request at api/group-service/confirmDate
+     *
+     * @param body common json body consisting of group id and user email (see {@link GroupAndUserBody})
+     * @return OK if user is part of the group, NOT_FOUND if either group or user do not exist
+     */
     @DeleteMapping(path = "/confirmDate")
     public ResponseEntity<?> confirmNoLongerDeliveryDate(@RequestBody GroupAndUserBody body) {
         Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
@@ -503,23 +534,47 @@ public class GroupController {
         Gruppe gruppe = optionalGruppe.get();
         for (User u: gruppe.getMembers()) {
             if(u.getEmail().equals(body.getEmail())) {
-                gruppe.acceptNoLongerDeliveryDate(u);
-                return ResponseEntity.status(HttpStatus.OK).body("Member "+u.getEmail()+" no longer accepts the delivery date");
+                if(gruppe.hasAcceptedDeliveryDate(u)) {
+                    gruppe.acceptNoLongerDeliveryDate(u); //deletes user from list of members that already accepted
+                    gruppe.hasEveryoneAcceptedDeliveryDate(); //actualizes list
+                    groupService.save(gruppe);
+                    return ResponseEntity.status(HttpStatus.OK).body("Member " + u.getEmail() + " no longer accepts the delivery date");
+                }
+                return ResponseEntity.status(HttpStatus.OK).body("Member " + u.getEmail() + " already does not accept the date");
             }
         }
         for (User a: gruppe.getAdmins()) {
             if(a.getEmail().equals(body.getEmail())) {
-                gruppe.acceptNoLongerDeliveryDate(a);
-                return ResponseEntity.status(HttpStatus.OK).body("Admin "+a.getEmail()+" no longer accepts the delivery date");
+                if(gruppe.hasAcceptedDeliveryDate(a)) {
+                    gruppe.acceptNoLongerDeliveryDate(a); //deletes user from list of members that already accepted
+                    gruppe.hasEveryoneAcceptedDeliveryDate(); //actualizes list
+                    groupService.save(gruppe);
+                    return ResponseEntity.status(HttpStatus.OK).body("Admin " + a.getEmail() + " no longer accepts the delivery date");
+                }
+                return ResponseEntity.status(HttpStatus.OK).body("Admin " + a.getEmail() + " already does not accept the date");
             }
         }
         if (gruppe.getOwner().getEmail().equals(body.getEmail())) {
-            gruppe.acceptNoLongerDeliveryDate(gruppe.getOwner());
-            return ResponseEntity.status(HttpStatus.OK).body("Owner "+gruppe.getOwner().getEmail()+" no longer accepts the delivery date");
+            if(gruppe.hasAcceptedDeliveryDate(gruppe.getOwner())) {
+                gruppe.acceptNoLongerDeliveryDate(gruppe.getOwner()); //deletes user from list of members that already accepted
+                gruppe.hasEveryoneAcceptedDeliveryDate(); //actualizes list
+                groupService.save(gruppe);
+                return ResponseEntity.status(HttpStatus.OK).body("Owner " + gruppe.getOwner().getEmail() + " no longer accepts the delivery date");
+            }
+            return ResponseEntity.status(HttpStatus.OK).body("Owner " + gruppe.getOwner().getEmail() + " already does not accept the date");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User "+body.getEmail()+" is not part of this group");
     }
 
+    /**
+     * Use to see if a specific user has accepted delivery date
+     * set by a group admin (or by the owner) <br>
+     * Use this together with the email address of the relevant user and the group id <br>
+     * Can be reached with a GET request at api/group-service/confirmDate
+     *
+     * @param body common json body consisting of group id and user email (see {@link GroupAndUserBody})
+     * @return OK and true/false if user is part of the group, NOT_FOUND if either group or user do not exist
+     */
     @GetMapping(path = "/confirmDate")
     public ResponseEntity<?> hasUserAcceptedDeliveryDate(@RequestBody GroupAndUserBody body) {
         Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
