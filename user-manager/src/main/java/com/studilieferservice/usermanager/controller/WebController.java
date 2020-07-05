@@ -87,8 +87,9 @@ public class WebController {
      * @return returns "editaccount" which results in invocation of the editaccount.html
      */
     @GetMapping("/editaccount")
-    public String editForm(Model model) {
-        model.addAttribute("user", userService.getCurrentUser());
+    public String editForm(Model model, @CookieValue("useremail") @Nullable String email, HttpServletRequest request) {
+        model.addAttribute("user", userService.getUser(email));
+        model.addAttribute("link", request.getServerName());
         return "views/editaccount";
     }
 
@@ -118,6 +119,8 @@ public class WebController {
         Cookie c = Arrays.stream(cookies).filter(cookie -> cookie.getName()
                 .equals("useremail")).findFirst().orElse(null);
         if (!(c == null)) {
+            c.setValue("");
+            c.setPath("/");
             c.setMaxAge(0);
             response.addCookie(c);
         }
@@ -161,11 +164,10 @@ public class WebController {
      * @param user
      * @return HTML view
      */
-
     @PostMapping("/edit")
-    public RedirectView editUser(@Valid User user, HttpServletRequest request) {
+    public RedirectView editUser(@Valid User user, HttpServletRequest request, @CookieValue("useremail") @Nullable String email) {
 
-        userService.edit(user);
+        userService.edit(email, user);
         return new RedirectView("http://" + request.getServerName() + ":9010/web/groupmanager/userMenu");
     }
 

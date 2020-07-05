@@ -15,9 +15,13 @@
 
     <h1>Dashboard</h1>
 
-    <a href="#">    <!-- TODO: adjust link to edit-account -->
-        <img src="../static/groupmanager/imgs/services-128.png" th:src="@{/groupmanager/imgs/services-128.png}" alt="" id="editImg">
-    </a>
+    <button class="backButton">
+        <a th:href="${'http://' + link + ':9010/web/groupmanager/userMenu'}">
+            <img src="../static/groupmanager/imgs/backButton.png" width="30" height="30"
+                 th:src="@{/groupmanager/imgs/backButton.png}"/>
+            Back
+        </a>
+    </button>
 
     <div class="members-bar">
         <div class="memberTitleBox">
@@ -28,25 +32,25 @@
                 <!-- List of Admins -->
                 <tr class="memTr"> <!-- TODO: adjust -->
                     <td class="memTd">
-                        <img src="../static/groupmanager/imgs/crown-3-128.png" alt=" " th:src="@{/groupmanager/imgs/crown-3-128.png}">
+                        <img class="image" src="../static/groupmanager/imgs/crown-3-128.png" alt=" " th:src="@{/groupmanager/imgs/crown-3-128.png}">
                     </td>
                     <td class="memTd">
                         <p th:text="${owner.getUserName()}"></p>
                     </td>
                     <td class="memTd">
-                        <img th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <img class="image" th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
                     </td>
                 </tr>
 
                 <tr class="memTr" th:each="member: ${adminList}"> <!-- TODO: adjust -->
                     <td class="memTd">
-                        <img src="../static/groupmanager/imgs/crown-3-128.png" alt=" " th:src="@{/groupmanager/imgs/crown-3-128.png}">
+                        <img class="image" src="../static/groupmanager/imgs/crown-3-128.png" alt=" " th:src="@{/groupmanager/imgs/crown-3-128.png}">
                     </td>
                     <td class="memTd">
                         <p th:text="${member.getUserName()}"></p>
                     </td>
                     <td class="memTd">
-                        <img th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <img class="image" th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
                     </td>
                 </tr>
 
@@ -59,7 +63,7 @@
                         <p th:text="${member.getUserName()}"></p>
                     </td>
                     <td class="memTd">
-                        <img th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt=""
+                        <img class="image" th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt=""
                              th:src="@{/groupmanager/imgs/checkmark-128.png}">
                     </td>
                 </tr>
@@ -69,9 +73,9 @@
         <div class="inviteMember">
             <form th:action="${'http://' + link + ':9010/web/groupmanager/invite'}" th:object="${groupAndUserBody}" method="POST">
                 <div class="inviteUsername">
-                    <input type="text" th:field="*{email}" placeholder="user-email" style="border-bottom: none">
+                    <input class="username" name="email" type="text" th:field="*{email}" placeholder="user-email" style="border-bottom: none">
                 </div>
-                <input type="hidden" name="groupId" id="groupId" th:value="${groupId}">
+                <input type="hidden" name="groupId" id="groupId" th:field="*{groupId}">
                 <div class="inviteButton">
                     <input type="submit" value="invite someone" id="inviteButton">
                 </div>

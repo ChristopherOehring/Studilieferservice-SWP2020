@@ -74,7 +74,7 @@ public class GroupService {
 
     public ChatMessage addJoinMessageToGroupAndUser(User user, Group group) {
         String content = user.getName() + " joined!";
-        ChatMessage m = new ChatMessage(userService.getUser(user.getId()).getName(), content, MessageType.JOIN);
+        ChatMessage m = new ChatMessage(userService.getUser(user.getId()).getName(), content, MessageType.INFO);
         m = chatMessageService.createChatMessage(m);
         groupRepository.findById(group.getId()).orElseThrow().addMessage(m);
         return m;
@@ -82,9 +82,19 @@ public class GroupService {
 
     public ChatMessage addLeaveMessageToGroupAndUser(User user, Group group) {
         String content = user.getName() + " left!";
-        ChatMessage m = new ChatMessage(userService.getUser(user.getId()).getName(), content, MessageType.LEAVE);
+        ChatMessage m = new ChatMessage(userService.getUser(user.getId()).getName(), content, MessageType.INFO);
         m = chatMessageService.createChatMessage(m);
         groupRepository.findById(group.getId()).orElseThrow().addMessage(m);
         return m;
+    }
+
+    public void addUpdateMessageToGroupAndUser(User user, String oldName) {
+        String content = oldName + " changed name to " + user.getName() + "!";
+
+        for (Group group : user.getGroups()) {
+            ChatMessage m = new ChatMessage(userService.getUser(user.getId()).getName(), content, MessageType.INFO);
+            m = chatMessageService.createChatMessage(m);
+            groupRepository.findById(group.getId()).orElseThrow().addMessage(m);
+        }
     }
 }

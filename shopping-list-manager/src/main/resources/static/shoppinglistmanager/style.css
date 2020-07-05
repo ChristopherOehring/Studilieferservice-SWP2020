@@ -93,6 +93,11 @@ tr{ /*table rows*/
     color: white;
     font-family: var(--secondaryFont);
 }
+
+.column .inline-container{
+    white-space: nowrap;
+}
+
 .column .inline-group{
     display: inline;
 }

@@ -2,8 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <link rel="stylesheet" href="../static/productmanager/images/css/style.css" th:href="@{../productmanager/images/css/style.css}"/>
-    <link rel="stylesheet" href="../static/productmanager/images/css/darkly/bootstrap.min.css" th:href="@{../productmanager/images/css/darkly/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="../static/productmanager/css/darkly/bootstrap.min.css" th:href="@{../productmanager/css/darkly/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="../static/productmanager/css/style.css" th:href="@{../productmanager/css/style.css}"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <script th:src="@{webjars/jquery/jquery.min.js}"></script>
     <script th:src="@{webjars/bootstrap/bootstrap.min.js}"></script>
 </head>
@@ -33,18 +34,29 @@
         <div class="card">
             <div class="card card-body">
                 <table class="productTable" id="productList">
+                    <tr class="th-tr">
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Image</th>
+                        <th></th>
+                    </tr>
+
+                    <tr class="spacer"><th class="spacer"></th><th class="spacer"></th>
+                        <th class="spacer"></th><th class="spacer"></th><th class="spacer"></th></tr>
+
                     <tr th:each="product:${products}">
                         <td id="productName" th:text="${product.name}">name</td>
                         <td th:text="${product.description}">description</td>
                         <td th:text="${product.price} + ' €'">1.0</td>
-                        <td> <img th:src="@{${product.imageUrl}}" width="47" height="47" alt="img"> </td>
+                        <td> <img class="image" th:src="@{${product.imageUrl}}" alt="img"> </td>
                         <td id="addButton">
                             <form th:action="${'http://' + link + ':9070/web/shoppingList/addProduct'}" method="POST">
                                 <input type="hidden" name="groupId" th:value="${groupId}">
                                 <input type="hidden" name="userId" th:value="${userId}">
                                 <input type="hidden" name="itemId" th:value="${product.name}">
                                 <input type="hidden" name="amount" value="1">
-                                <button type="submit" class="btn btn-dark">Add Product</button>
+                                <button type="submit" class="addbtn">Add Product</button>
                             </form>
                         </td>
                     </tr>

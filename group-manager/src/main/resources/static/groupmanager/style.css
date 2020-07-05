@@ -2,7 +2,7 @@
   #### VARIABLES ####
   ###################*/
 
-  :root{
+:root{
     /*## COLORS ###*/
     --primary: #363636;
     --secondary: #474747;
@@ -295,6 +295,23 @@ table{
     background-color: transparent;
 }
 
+.logout{
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    width: 2rem;
+    height: 2rem;
+}
 
+.settings{
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    width: 2rem;
+    height: 2rem;
+}
 
-
+.image{
+    height: 1.5rem;
+    width: 1.5rem;
+}

@@ -100,7 +100,7 @@ public class WebControllerTest {
 
     @Test
     public void editFormTest() throws Exception {
-        when(userService.getCurrentUser())
+        when(userService.getUser(user.getEmail()))
                 .thenReturn(user);
         this.mockMvc.perform(get("/web/usermanager/editaccount"))
                 .andExpect(model().attribute("user", user))

@@ -47,7 +47,7 @@ public class UserControllerTest {
 
     @Test
     public void editTest() {
-        Mockito.when(userService.edit(user)).thenReturn(user);
+        Mockito.when(userService.edit(user.getEmail(), user)).thenReturn(user);
         ResponseEntity<?> response = userController.edit(user);
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(response.getBody()).isEqualTo(user);

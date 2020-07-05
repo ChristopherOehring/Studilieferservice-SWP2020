@@ -49,5 +49,6 @@ public class UserService {
     public void updateUserFromKafka(String email, String username) {
         User u = userRepository.findById(email).orElseThrow();
         u.setName(username);
+        userRepository.save(u);
     }
 }

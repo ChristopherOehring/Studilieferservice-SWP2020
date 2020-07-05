@@ -66,7 +66,7 @@ public class UserServiceTest {
         user.setPassword(encoder.encode(user.getPassword()));
         Mockito.when(userRepository.getOne(user.getEmail())).thenReturn(user);
         assertThat(userService.login(user.getEmail(), "ss123456")).isEqualTo(true);
-        assertThat(userService.getCurrentUser()).isEqualTo(user);
-        assertThat(userService.edit(user)).isEqualTo(user);
+        assertThat(userService.getUser(user.getEmail())).isEqualTo(user);
+        assertThat(userService.edit(user.getEmail(), user)).isEqualTo(user);
     }
 }

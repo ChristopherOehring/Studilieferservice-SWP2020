@@ -3,6 +3,8 @@
     --secondary: #474747;
     --lineColor: #909090;
 
+    --secondaryFont: "Roboto";
+
     --colTopMargin: 20%;
 }
 
@@ -10,13 +12,25 @@ body{
     height: 100%;
     margin: 0;
     background-color: var(--primary);
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 
 h1{
-    font-family: Arial;
+    font-family: var(--secondaryFont);
     margin-top: 3rem;
     text-align: center;
     color: white;
+}
+
+.image{
+    /*display: block;*/
+    max-width: 200px;
+    max-height: 80px;
+    width: auto;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .searchBox{
@@ -30,7 +44,7 @@ h1{
 
 ::placeholder {
     color: white;
-    font-family: Arial;
+    font-family: var(--secondaryFont);
 }
 
 .input{
@@ -44,24 +58,22 @@ h1{
     background: none;
     color: white;
     font-size: 1.2rem;
-    font-family: "Roboto";
+    font-family: var(--secondaryFont);
 }
 
 .backButton{
     text-align: center;
-    display: table-cell;
     vertical-align: middle;
     border: none;
     text-decoration: none;
     display: inline-block;
-    size: 16px 40px;
     background: none;
     color: white;
 }
 
 .backButton a{
     padding-top: 50px;
-    font-family: Arial;
+    font-family: var(--secondaryFont);
     font-size: 20px;
     text-decoration: none;
     color: white;
@@ -81,16 +93,53 @@ a.backButton:hover{
 
 .productTable {
     border-collapse: separate;
-    border-spacing: 15px;
+    border-spacing: 0 15px;
     width: 100%;
+}
+
+th{
+    width: 20%;
+}
+
+.th-tr{
+    outline: none;
+    text-indent: 1.1rem;
 }
 
 td{
     vertical-align: center;
     padding: 1rem;
+    width: 20%;
 }
 
 tr{
-    outline: thin solid;
-    border-color: white;
+    padding-top: 15px;
+    outline: #4a4a4a solid thin;
+}
+
+.addbtn{
+    background-color: transparent;
+    border: 1px solid white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    transition: 0.5s;
+
+    /*fonts*/
+    color: white;
+    font-family: var(--secondaryFont);
+    font-size: 1rem;
+}
+
+.addbtn:hover{
+    background-color: white;
+    color: var(--primary);
+}
+
+#productName{
+    font-size: 28px;
+}
+
+.spacer{
+    outline: none;
+    border-bottom: 1px solid #4a4a4a;
 }

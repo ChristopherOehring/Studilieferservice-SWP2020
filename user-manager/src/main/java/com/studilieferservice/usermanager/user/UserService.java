@@ -15,7 +15,6 @@ import com.studilieferservice.usermanager.kafka.user.UserEventType;
 public class UserService {
     private final ApplicationEventPublisher eventPublisher;
     private final UserRepository userRepository;
-    private User currentUser ;
     final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
@@ -33,7 +32,6 @@ public class UserService {
     public boolean createUser(User user) {
 
         user.setPassword(encoder.encode(user.getPassword()));
-        setCurrentUser(null);
 
         if(!(userRepository.existsById(user.getEmail()))){
             User saved =  userRepository.save(user) ;
@@ -65,7 +63,6 @@ public class UserService {
             return false;
         } else {
             System.out.println("success!");
-            currentUser = user1;
             return true;
         }
     }
@@ -76,36 +73,21 @@ public class UserService {
      * @param user
      * @return the updated user
      */
-    public User edit(User user) {
+    public User edit(String email, User user) {
+        User u = userRepository.findById(email).orElseThrow();
 
-        currentUser.setFirstName(user.getFirstName());
-        currentUser.setLastName(user.getLastName());
-        currentUser.setUserName(user.getUserName());
-        currentUser.setStreet(user.getStreet());
-        currentUser.setCity(user.getCity());
-        currentUser.setZip(user.getZip());
-        currentUser.setPassword(currentUser.getPassword());
-        currentUser.setEmail(currentUser.getEmail());
+        u.setFirstName(user.getFirstName());
+        u.setLastName(user.getLastName());
+        u.setUserName(user.getUserName());
+        u.setStreet(user.getStreet());
+        u.setCity(user.getCity());
+        u.setZip(user.getZip());
 
-        eventPublisher.publishEvent(new UserEvent(currentUser,this, UserEventType.UPDATE));
-        return userRepository.save(currentUser);
+        eventPublisher.publishEvent(new UserEvent(u,this, UserEventType.UPDATE));
+        return userRepository.save(u);
     }
 
-    /**
-     * to get the current user
-     *
-     * @return user
-     */
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    /**
-     * to set the current user variable
-     *
-     * @param currentUser
-     */
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
+    public User getUser(String email) {
+        return userRepository.findById(email).orElseThrow();
     }
 }

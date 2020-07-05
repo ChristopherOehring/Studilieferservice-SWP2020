@@ -41,22 +41,9 @@ html{
 h1{
     text-align: center;
     color: white;
-    font-family: "Patua One";
+    font-family: var(--headingFont);
     margin-top: 5rem;
     margin-bottom: 5rem;
-}
-
-a{
-    position: absolute;
-    text-decoration: none;
-    font-size: 16px;
-    color: white;
-    font-family: var(--secondaryFont);
-    padding: 0.5rem 1rem;
-    border: 1px white solid;
-    border-radius: 10px;
-    top: 1rem;
-    left: 1rem;
 }
 
 /*########*/
@@ -68,7 +55,8 @@ table{
 }
 
 table.center{
-    margin-left: 40%;
+    margin-left: calc(50% + 12px);
+    transform: translateX(-50%);
 }
 
 tr:first-child{
@@ -119,4 +107,37 @@ p{
 #submit:hover{
     color: #363636;
     background-color: white;
+}
+
+.backButton{
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    background: none;
+    color: white;
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    height: 2rem;
+}
+
+.backButton a{
+    font-family: var(--secondaryFont);
+    font-size: 20px;
+    text-decoration: none;
+    color: white;
+    line-height: 16px;
+    display: block;
+    text-align: center;
+}
+
+a.backButton:hover{
+    text-decoration: none;
+    color: var(--secondary);
+}
+
+img{
+    vertical-align: middle;
 }

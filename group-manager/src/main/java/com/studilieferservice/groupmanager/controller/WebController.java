@@ -58,7 +58,7 @@ public class WebController {
     @GetMapping("/userMenu")
     public String userMenu(Model model,
                            @CookieValue("useremail") @Nullable String email,
-                           final HttpServletResponse response,
+                           //final HttpServletResponse response,
                            HttpServletRequest request){
 
         if (email == null) return "redirect:noLogin";
@@ -179,7 +179,10 @@ public class WebController {
     public RedirectView groupMenuFwd(@PathParam("list") String list,
                                      HttpServletRequest request){
         System.out.println(list);
-        return new RedirectView("http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + list);
+        if (list != null)
+            return new RedirectView("http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + list);
+        else
+            return new RedirectView("http://" + request.getServerName() + ":9010/web/groupmanager/userMenu/");
     }
 
     /**
@@ -198,17 +201,17 @@ public class WebController {
 
     /**
      * this method is invoked when creating a new invite
-     * @param body is used by thymeleaf in the html page
+     * @param groupAndUserBody is used by thymeleaf in the html page
      * @return redirects to the groupMenu
      */
     @PostMapping("/invite")
-    public String addInvite(@RequestBody GroupAndUserBody body) {
-        Optional<User> optionalUser = userService.findById(body.getEmail());
-        if(optionalUser.isEmpty()) System.out.println("No user with email "+body.getEmail()+" was found!");
+    public String addInvite(@ModelAttribute(name = "groupAndUserBody") GroupAndUserBody groupAndUserBody) {
+        Optional<User> optionalUser = userService.findById(groupAndUserBody.getEmail());
+        if(optionalUser.isEmpty()) System.out.println("No user with email "+groupAndUserBody.getEmail()+" was found!");
         User user = optionalUser.get();
 
-        Optional<Gruppe> optionalGruppe = groupService.findById(body.getGroupId());
-        if (optionalGruppe.isEmpty()) System.out.println("No group with id "+body.getGroupId()+" was found!");
+        Optional<Gruppe> optionalGruppe = groupService.findById(groupAndUserBody.getGroupId());
+        if (optionalGruppe.isEmpty()) System.out.println("No group with id "+groupAndUserBody.getGroupId()+" was found!");
         Gruppe gruppe = optionalGruppe.get();
 
         inviteService.addInvite(new Invite(gruppe, user));

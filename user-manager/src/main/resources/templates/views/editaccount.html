@@ -2,14 +2,21 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
 
 <head>
-    <link rel="stylesheet" href="../../static/usermanager/css/editaccount.css" th:href="@{/usermanager/css/editaccount.cs}">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../static/usermanager/css/editaccount.css" th:href="@{/usermanager/css/editaccount.css}">
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
     <title>Edit Account</title>
 </head>
 
 <body>
-    <a href="">back</a> <!-- TODO: Link back to Dashboard -->
+    <button class="backButton">
+        <a th:href="${'http://' + link + ':9010/web/groupmanager/userMenu/'}">
+            <img src="../../static/usermanager/img/backButton.png" width="30" height="30"
+                 th:src="@{/usermanager/img/backButton.png}"/>
+            Back
+        </a>
+    </button>
 
     <h1>Edit your Account</h1>
 
@@ -57,11 +64,13 @@
         <table class="center">
             <tr>
                 <td><p>ZIP</p></td>
-                <td><input type="text" class="inputField" th:field="*{zip}" id="city"/></td>
+                <td><input type="text" class="inputField" th:field="*{zip}" id="zip"/></td>
                 <td><div class="red_p" th:if="${#fields.hasErrors('zip')}" th:errors="*{zip}"></div></td>
             </tr>
         </table>
 
+        <input type="hidden" name="email" value="place@holder.com">
+        <input type="hidden" name="password" value="placeholder">
     <!--
             <div class="inputField
                 <label for="password" class="inputField-label">Old Password</label> <input

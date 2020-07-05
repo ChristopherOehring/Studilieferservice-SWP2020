@@ -25,7 +25,7 @@ public class ChatMessage {
 	private MessageType type;
 
 	public enum MessageType {
-		JOIN, LEAVE, MESSAGE
+		INFO, MESSAGE
 	}
 
 	public ChatMessage() {}
@@ -78,8 +78,7 @@ public class ChatMessage {
 
 	public String getHtmlClassForType() {
 		switch (type) {
-			case JOIN:
-			case LEAVE:
+			case INFO:
 				return "event-message";
 			case MESSAGE:
 				return "chat-message";

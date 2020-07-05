@@ -74,7 +74,7 @@ public class UserController {
         if (isUserDataValid(user)) {
             return ResponseEntity.badRequest().body("User values invalid");
         } else
-            return ResponseEntity.ok(userService.edit(user));
+            return ResponseEntity.ok(userService.edit(user.getEmail(), user));
     }
 
     /**

@@ -32,7 +32,6 @@ public class ChatWebController {
         this.groupService = groupService;
     }
 
-    //TODO need to add user cookie
     /**
      * Web request (GET) for "/[Group-ID]": retrieves the page of the chat for the respective group
      * and user (who belongs to the group). The user is extracted from a browser cookie and thus not passed as a
@@ -59,7 +58,7 @@ public class ChatWebController {
     }
 
     //only for testing without user cookie
-    /**
+    /*
      * Web request (GET) for "/[Group-ID]/[User-ID]": retrieves the page of the chat for the respective group
      * and user (who belongs to the group)
      *
@@ -67,7 +66,7 @@ public class ChatWebController {
      * @param userId The user-ID which is passed as a parameter through the URL
      * @return the HTML page "chat.html" which displays the chat
      */
-    @GetMapping("/{groupId}/{userId}")
+    /*@GetMapping("/{groupId}/{userId}")
     public ModelAndView getChatForGroupAndUser(@PathVariable String groupId, @PathVariable String userId) {
         if (!groupService.getGroup(groupId).getUsers().contains(userService.getUser(userId)))
             return null;
@@ -82,7 +81,7 @@ public class ChatWebController {
         model.addObject("chatMessage", new ChatMessage());
 
         return model;
-    }
+    }*/
 
     /**
      * Web request (POST) for "/addMessage": adds a message to the currently displayed chat of the group for the given user
@@ -90,7 +89,7 @@ public class ChatWebController {
      * @param chatMessage object for the message which has been entered into the form
      * @param request Spring specific: for accessing the group-ID and user-ID which are stored in the body of the
      *                HTML page "chat.html"
-     * @return a redirection to {@link #getChatForGroupAndUser(String, String) getChatForGroupAndUser} with
+     * @return a redirection to {@link #getChatForGroup(String, String, HttpServletRequest) getChatForGroupAndUser} with
      * the current group-ID and user-ID
      */
     @PostMapping("/addMessage")

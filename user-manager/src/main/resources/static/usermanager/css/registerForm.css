@@ -35,7 +35,7 @@ html{
 h1{
     text-align: center;
     color: white;
-    font-family: "Patua One";
+    font-family: var(--headingFont);
     margin-top: 3rem; /*8*/
     margin-bottom: 2rem;
 }
@@ -50,7 +50,7 @@ h1{
 .label{
     color: #ffffff;
     font-size: 1.2rem;
-    font-family: "Roboto";
+    font-family: var(--secondaryFont);
 }
 
 .input{
@@ -63,7 +63,7 @@ h1{
     background: none;
     color: white;
     font-size: 1.2rem;
-    font-family: "Roboto";
+    font-family: var(--secondaryFont);
 }
 
 .box::after{
@@ -74,7 +74,7 @@ h1{
     width: 100%;
     background: rgb(187, 187, 187);
     transform: scaleX(0);
-    transform-origin: 0%;
+    transform-origin: 0;
     transition: transform 500ms ease;
     top: 2px;
 }
@@ -100,7 +100,7 @@ form{
     left: 20px;
     bottom: -25px;
     transform: translateY(-2rem);
-    transform-origin: 0%;
+    transform-origin: 0;
     transition: transform 400ms;
 }
 
@@ -132,6 +132,7 @@ form{
     border: 2px solid #FFFFFF;
     border-radius: 50px;
     transition: 0.5s;
+    font-family: var(--secondaryFont);
 }
 
 #submit:hover{

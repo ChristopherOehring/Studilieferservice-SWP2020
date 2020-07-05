@@ -1,6 +1,8 @@
 package com.studilieferservice.chatmanager.user;
 
 import com.studilieferservice.chatmanager.group.Group;
+import com.studilieferservice.chatmanager.message.ChatMessage;
+import com.studilieferservice.chatmanager.message.ChatMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +53,9 @@ public class UserService {
         createUser(u);
     }
 
-    public void updateUserFromKafka(String email, String username) {
+    public User updateUserFromKafka(String email, String username) {
         User u = userRepository.findById(email).orElseThrow();
         u.setName(username);
+        return userRepository.save(u);
     }
 }

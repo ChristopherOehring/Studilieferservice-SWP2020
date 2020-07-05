@@ -38,7 +38,7 @@
 
                     <td class="column" th:text="${#numbers.formatDecimal(itemShoppingList.item.price*itemShoppingList.amount, 0, 2)+'€'} ">summe</td>
 
-                    <td class="column">
+                    <td class="column inline-container">
                         <form class="column inline-group" th:action="${'http://' + link + ':9070/web/shoppingList/itemDecrease'}" method="POST">
                         <input type="image" th:src="@{/shoppinglistmanager/icons/minus.png}" alt="-">
                         <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
