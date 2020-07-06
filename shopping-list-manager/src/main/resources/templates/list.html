@@ -38,19 +38,19 @@
 
                     <td class="column" th:text="${#numbers.formatDecimal(itemShoppingList.item.price*itemShoppingList.amount, 0, 2)+'€'} ">summe</td>
 
-                    <td class="column inline-container">
-                        <form class="column inline-group" th:action="${'http://' + link + ':9070/web/shoppingList/itemDecrease'}" method="POST">
-                        <input type="image" th:src="@{/shoppinglistmanager/icons/minus.png}" alt="-">
-                        <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
-                        <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
+                    <td class="column wrap-group">
+                        <form class="column wrap-group inline" th:action="${'http://' + link + ':9070/web/shoppingList/itemDecrease'}" method="POST">
+                            <input type="image" th:src="@{/shoppinglistmanager/icons/minus.png}" alt="-">
+                            <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
+                            <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
                         </form>
 
-                        <div class="column inline-group amount" th:text="${itemShoppingList.amount}">0</div>
+                        <div class="column wrap-group inline amount" th:text="${itemShoppingList.amount}">0</div>
 
-                        <form class="column inline-group" th:action="${'http://' + link + ':9070/web/shoppingList/itemIncrease'}" method="POST">
-                        <input type="image" th:src="@{/shoppinglistmanager/icons/plus.png}" alt="+">
-                        <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
-                        <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
+                        <form class="column wrap-group inline" th:action="${'http://' + link + ':9070/web/shoppingList/itemIncrease'}" method="POST">
+                            <input type="image" th:src="@{/shoppinglistmanager/icons/plus.png}" alt="+">
+                            <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
+                            <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
                         </form>
                     </td>
                 </tr>
@@ -68,7 +68,7 @@
         <div class="line"></div>
 
         <div th:if="${totalPrice != 0}" class="sum">
-            <pp th:text="${#numbers.formatDecimal(totalPrice, 0, 2)+'€'}">total</pp>
+            <div class="total" th:text="${#numbers.formatDecimal(totalPrice, 0, 2)+'€'}">total</div>
         </div>
 
     </div>
