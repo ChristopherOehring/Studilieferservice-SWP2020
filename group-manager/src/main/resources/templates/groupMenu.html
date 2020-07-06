@@ -4,6 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="../static/groupmanager/groupMenu.css" th:href="@{/groupmanager/groupMenu.css}"/>
+    <link rel="stylesheet" type="text/css" href="../static/groupmanager/shoppingList.css" th:href="@{/groupmanager/shoppingList.css}"/>
+    <link rel="stylesheet" type="text/css" href="../static/groupmanager/chat.css" th:href="@{/groupmanager/chat.css}"/>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -35,10 +37,16 @@
                         <img class="image" src="../static/groupmanager/imgs/crown-3-128.png" alt=" " th:src="@{/groupmanager/imgs/crown-3-128.png}">
                     </td>
                     <td class="memTd">
+                        <img class="image" th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                    </td>
+                    <td class="memTd">
                         <p th:text="${owner.getUserName()}"></p>
                     </td>
                     <td class="memTd">
-                        <img class="image" th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        &emsp;
+                    </td>
+                    <td class="memTd">
+                        &emsp;
                     </td>
                 </tr>
 
@@ -47,10 +55,23 @@
                         <img class="image" src="../static/groupmanager/imgs/crown-3-128.png" alt=" " th:src="@{/groupmanager/imgs/crown-3-128.png}">
                     </td>
                     <td class="memTd">
-                        <p th:text="${member.getUserName()}"></p>
+                        <img class="image" th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
                     </td>
                     <td class="memTd">
-                        <img class="image" th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <p th:text="${member.getUserName()}"></p>
+                    </td>
+                    <td th:if="${group.getPermissions(user).equals('owner')}" class="memTd">
+                        <form th:action="${'http://' + link + ':9010/web/groupmanager/demote'}"  method="POST">
+                            <div class="inviteImage">
+                                <input type="image" src="../static/groupmanager/imgs/demote.png" th:src="@{/groupmanager/imgs/demote.png}" alt="-" />
+                            </div>
+                            <input type="hidden" th:name="groupId" th:value="${groupId}" />
+                            <input type="hidden" th:name="email"   th:value="${member.email}" />
+                        </form>
+                        <a th:unless="${group.getPermissions(user).equals('owner')}" >&emsp;</a>
+                    </td>
+                    <td class="memTd">
+                        &emsp;
                     </td>
                 </tr>
 
@@ -60,11 +81,31 @@
                         &emsp;
                     </td>
                     <td class="memTd">
+                        <img class="image" th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt=""
+                             th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                    </td>
+                    <td class="memTd">
                         <p th:text="${member.getUserName()}"></p>
                     </td>
                     <td class="memTd">
-                        <img class="image" th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt=""
-                             th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <form th:if="${group.getPermissions(user).equals('owner')}" th:action="${'http://' + link + ':9010/web/groupmanager/promote'}"  method="POST">
+                            <div class="inviteImage">
+                                <input type="image" src="../static/groupmanager/imgs/promote.png" th:src="@{/groupmanager/imgs/promote.png}" alt="-" />
+                            </div>
+                            <input type="hidden" name="groupId" th:value="${groupId}" />
+                            <input type="hidden" name="email"   th:value="${member.email}" />
+                        </form>
+                        <a th:unless="${group.getPermissions(user).equals('owner')}">&emsp;</a>
+                    </td>
+                    <td class="memTd">
+                        <form th:if="${group.getPermissions(user).equals('admin') || group.getPermissions(user).equals('owner')}" th:action="${'http://' + link + ':9010/web/groupmanager/kick'}"  method="POST">
+                            <div class="inviteImage">
+                                <input type="image" src="../static/groupmanager/imgs/kick.png" th:src="@{/groupmanager/imgs/kick.png}" alt="-" />
+                            </div>
+                            <input type="hidden" name="groupId" th:value="${groupId}" />
+                            <input type="hidden" name="email"   th:value="${member.email}" />
+                        </form>
+                        <a th:unless="${group.getPermissions(user).equals('admin') || group.getPermissions(user).equals('owner')}" >&emsp;</a>
                     </td>
                 </tr>
             </table>
@@ -81,14 +122,6 @@
                 </div>
             </form>
         </div>
-    </div>
-
-    <div class="chat">
-        <rewe-digital-include th:path="${'http://chat-manager:8040/chat/' + groupId }"></rewe-digital-include>
-    </div>
-
-    <div class="shopping-list">
-        <rewe-digital-include th:path="${'http://shopping-list-manager:8070/web/shoppingList/' + groupId}"></rewe-digital-include>
     </div>
 
     <div class="shipping-information">
@@ -144,7 +177,16 @@
         <input type="button" th:href="${'http://' + link + ':9010/web/groupmanager/changeDeliveryAddress'}" id="orderButton" value="order">
     </div>
 
+
+    <div id="chat" class="chat" th:include-html="${'../chat/' + groupId}"></div>
+
+    <div id="shopping-list" class="shopping-list" th:include-html="${'../shoppingList/' + groupId}"></div>
+
+    <div id="valuesScript" style="opacity: 0" th:groupId="${thisGroupId}"></div>
+
     <script>
+        includeHTML();
+
         function openFormDate() {
             document.getElementById("formDate").style.display = "block";
             closeFormAddress();
@@ -162,6 +204,68 @@
         function closeFormAddress() {
             document.getElementById("formAddress").style.display = "none";
         }
+
+        function includeHTML() {
+            var z, i, elmnt, file, xhttp;
+            /* Loop through a collection of all HTML elements: */
+            z = document.getElementsByTagName("*");
+            for (i = 0; i < z.length; i++) {
+                elmnt = z[i];
+                /*search for elements with a certain atrribute:*/
+                file = elmnt.getAttribute("include-html");
+                if (file) {
+                    /* Make an HTTP request using the attribute value as the file name: */
+                    xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4) {
+                            if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+                            if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+                            /* Remove the attribute, and call this function once more: */
+                            elmnt.removeAttribute("include-html");
+                            scroll();
+                            includeHTML();
+                        }
+                    }
+                    xhttp.open("GET", file, true);
+                    xhttp.send();
+                    /* Exit the function: */
+                    return;
+                }
+            }
+        }
+
+        function scroll() {
+            var objDiv = document.getElementById("messageArea");
+            if(objDiv != null) objDiv.scrollTop = objDiv.scrollHeight;
+        }
+
+        /*setInterval(function() {reloadChat()}, 3000)
+
+        function reloadChat() {
+            var elmnt, id, file, xhttp;
+            elmnt = document.getElementById("chat");
+            id = document.getElementById("valuesScript").getAttribute("groupId");
+            file = "../chat/" + id;
+            /!* Make an HTTP request*!/
+            xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        console.log(elmnt.innerHTML + ", " + this.responseText);
+                        if (elmnt.innerHTML != this.responseText) {
+                            alert("new msg!")
+                            elmnt.innerHTML = this.responseText;
+                            scroll();
+                        }
+                    }
+                    if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+                }
+            }
+            xhttp.open("GET", file, true);
+            xhttp.send();
+            /!* Exit the function: *!/
+            return;
+        }*/
     </script>
 </body>
 </html>

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
+import java.lang.reflect.Member;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -125,13 +126,14 @@ public class WebController {
         }
 
         model.addAttribute("groupAndUserBody", new GroupAndUserBody());
-        model.addAttribute("groupId", groupId);
+        model.addAttribute("thisGroupId", groupId);
         model.addAttribute("owner", gruppe.getOwner());
         model.addAttribute("adminList", gruppe.getAdmins());
         model.addAttribute("memberList", gruppe.getMembers());
         model.addAttribute("link", request.getServerName());
         model.addAttribute("permission", gruppe.getPermissions(user));
         model.addAttribute("user", email);
+        model.addAttribute("group", gruppe);
         return "groupMenu";
     }
 
@@ -200,7 +202,74 @@ public class WebController {
     }
 
     /**
-     * this method is invoked when creating a new invite
+     * this method is used to kick a user from the groupMenu
+     * @param groupId The Id of the Group from which the user should be kicked
+     * @param email The email of the user to be kicked
+     * @return redirects to the groupMenu
+     */
+    @PostMapping("/kick")
+    public String kick(@ModelAttribute(name = "groupId") String groupId, @ModelAttribute(name = "email") String email) {
+        Optional<User> optionalUser = userService.findById(email);
+        if(optionalUser.isEmpty()) System.out.println("No user with email "+email+" was found!");
+        User user = optionalUser.get();
+
+        Optional<Gruppe> optionalGruppe = groupService.findById(groupId);
+        if (optionalGruppe.isEmpty()) System.out.println("No group with id "+groupId+" was found!");
+        Gruppe gruppe = optionalGruppe.get();
+
+        gruppe.removeMember(user);
+        groupService.save(gruppe);
+
+        return "redirect:groupMenuFwd?list=" + groupId;
+    }
+
+    /**
+     * this method is used to promote a user from the groupMenu
+     * @param groupId The Id of the Group in which the user should be promoted
+     * @param email The email of the user to be promoted
+     * @return redirects to the groupMenu
+     */
+    @PostMapping("/promote")
+    public String promote(@ModelAttribute(name = "groupId") String groupId, @ModelAttribute(name = "email") String email) {
+        Optional<User> optionalUser = userService.findById(email);
+        if(optionalUser.isEmpty()) System.out.println("No user with email "+email+" was found!");
+        User user = optionalUser.get();
+
+        Optional<Gruppe> optionalGruppe = groupService.findById(groupId);
+        if (optionalGruppe.isEmpty()) System.out.println("No group with id "+groupId+" was found!");
+        Gruppe gruppe = optionalGruppe.get();
+        System.out.println("Promoting " +email+ " in " + groupId);
+        gruppe.promote(user);
+        groupService.save(gruppe);
+
+        return "redirect:groupMenuFwd?list=" + groupId;
+    }
+
+    /**
+     * this method is used to demote a user from the groupMenu
+     * @param groupId The Id of the Group in which the user should be demoted
+     * @param email The email of the user to be demoted
+     * @return redirects to the groupMenu
+     */
+    @PostMapping("/demote")
+    public String demote(@ModelAttribute(name = "groupId") String groupId, @ModelAttribute(name = "email") String email) {
+        Optional<User> optionalUser = userService.findById(email);
+        if(optionalUser.isEmpty()) System.out.println("No user with email "+email+" was found!");
+        User user = optionalUser.get();
+
+        Optional<Gruppe> optionalGruppe = groupService.findById(groupId);
+        if (optionalGruppe.isEmpty()) System.out.println("No group with id "+groupId+" was found!");
+        Gruppe gruppe = optionalGruppe.get();
+
+        System.out.println("Demoting " +email+ " in " + groupId);
+        gruppe.demote(user);
+        groupService.save(gruppe);
+
+        return "redirect:groupMenuFwd?list=" + groupId;
+    }
+
+    /**
+     * this method is invoked when creating a new invite from the groupMenu
      * @param groupAndUserBody is used by thymeleaf in the html page
      * @return redirects to the groupMenu
      */
@@ -216,12 +285,13 @@ public class WebController {
 
         inviteService.addInvite(new Invite(gruppe, user));
 
-        return "redirect:groupMenuFwd";//fixme
+        return "redirect:groupMenuFwd?list=" + groupAndUserBody.getGroupId();
     }
 
     /**
      * used to accept an invite
-     * @param
+     * @param groupId The Id of the Group in which the user was invited
+     * @param email The email of the invited user
      * @return redirects to the userMenu
      */
     @PostMapping("/acceptInvite")
@@ -245,7 +315,8 @@ public class WebController {
 
     /**
      * used to decline an invite
-     * @param
+     * @param groupId The Id of the Group in which the user was invited
+     * @param email The email of the invited user
      * @return redirects to the userMenu
      */
     @PostMapping("/declineInvite")
