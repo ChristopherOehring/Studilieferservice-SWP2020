@@ -25,14 +25,14 @@
 
         <div class="items">
             <table>
-                <tr>
+                <tr class="row">
                     <th class="column">Product</th>
                     <th class="column">Price</th>
                     <th class="column">Sum</th>
                     <th class="column">Amount</th>
                 </tr>
 
-                <tr th:if="${!shoppingList.items.isEmpty()}" th:each="itemShoppingList : ${shoppingList.items}">
+                <tr class="row" th:if="${!shoppingList.items.isEmpty()}" th:each="itemShoppingList : ${shoppingList.items}">
                     <td class="column" th:text="${itemShoppingList.item.name}">produkt</td>
                     <td class="column" th:text="${itemShoppingList.item.price+'€'}">preis</td>
 

@@ -88,15 +88,18 @@ img{
     position: fixed;
     margin-left: 35%;
     top: 65%;
-    height: 15%;
+    height: 22%;
     width: 30%;
-
+    overflow-y: scroll;
+    scrollbar-color: var(--secondary) var(--primary);
+    scrollbar-width: thin;
+    scrollbar-track-color: var(--primary);
 }
 
 .orderButton{ /*button to order*/
     position: fixed;
     margin-left: 45%;
-    bottom: 4rem;
+    bottom: 2rem;
     height: 5%;
     width: 10%;
 }
@@ -161,6 +164,11 @@ h2{ /*"MEMBERS"*/
     font-family: var(--secondaryFont);
 }
 
+.memTr{
+    -webkit-box-shadow: 5px 5px 10px -4px #000000;
+    box-shadow: 5px 5px 10px -4px #000000;
+}
+
 .image{
     width: 1rem;
 }
@@ -186,7 +194,7 @@ h2{ /*"MEMBERS"*/
     background-color: transparent;
     margin-right: auto;
     margin-left: auto;
-    /*width: 78px;*/
+    width: 100%;
     text-align: center;
     font-size: 16px;
 }
@@ -229,8 +237,53 @@ h2{ /*"MEMBERS"*/
     ##############################
 */
 
-input[type="image"]{
+/*input[type="image"]{
     width: 1rem;
+}*/
+
+.edit-btn{
+    background-color: transparent;
+    border: none;
+}
+
+.edit-img{
+    width: 1rem;
+}
+
+.popup-btn{
+    background-color: transparent;
+    border: 1px solid white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    transition: 0.5s;
+    color: white;
+    font-family: var(--secondaryFont);
+    font-size: 1rem;
+}
+
+.popup-btn:hover {
+    background-color: white;
+    color: var(--primary);
+}
+
+.popup-btn.close{
+    position: absolute;
+    right: 0;
+}
+
+.popup-btn.save{
+    position: absolute;
+    right: 78px;
+}
+
+.input{
+    border: none;
+    background-color: transparent;
+    border-bottom: dashed 1px var(--lineColor);
+    font-size: 16px;
+    text-align: center;
+    width: calc(100% - 160px);
+    padding-top: 0.5rem;
 }
 
 .delTable{
@@ -271,4 +324,8 @@ input[type="image"]{
 #orderButton:hover{
     background-color: white;
     color: var(--primary);
+}
+
+.popup{
+    display: none;
 }

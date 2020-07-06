@@ -80,7 +80,6 @@
                     <input type="submit" value="invite someone" id="inviteButton">
                 </div>
             </form>
-            
         </div>
     </div>
 
@@ -95,34 +94,74 @@
     <div class="shipping-information">
         <table class="delTable">
             <tr class="delTr">
-                <td class="delTd">delivery date:</td>
-                <td class="delTd">
-                    <!-- TODO: adjust! -->
-                    Mo, 01.01.2020
-                </td>
-                <td class="delTd">
-                    <input type="image" src="../static/groupmanager/imgs/edit.png"
-                           th:src="@{/groupmanager/imgs/edit.png}"/>
+                <td class="delTd" style="width: 35%">delivery date:</td>
+                <td class="delTd" th:text="${date}" style="width: 55%">Mo, 01.01.2020</td>
+                <td class="delTd" style="width: 10%">
+                    <button class="edit-btn" onclick="openFormDate()">
+                            <img class="edit-img" src="../static/groupmanager/imgs/edit.png"
+                                 th:src="@{/groupmanager/imgs/edit.png}" alt="+"/>
+                    </button>
                 </td>
             </tr>
+        </table>
+
+        <div class="popup" id="formDate">
+            <form th:action="${'http://' + link + ':9010/web/groupmanager/changeDeliveryDate'}" method="POST">
+                <input type="hidden" name="groupId" th:value="${groupId}">
+                <input class="input" type="text" name="deliveryDate" placeholder="date">
+                <button class="popup-btn save" type="submit">Save</button>
+                <button class="popup-btn close" type="button" onclick="closeFormDate()">Close</button>
+            </form>
+        </div>
+
+        <table class="delTable">
             <tr class="delTr">
-                <td class="delTd">delivery adress:</td>
-                <td class="delTd">
-                    <!-- TODO: adjust! -->
-                    123456 Model City, <br>
-                    Modelstreet 42
+                <td class="delTd" style="width: 35%">delivery adress:</td>
+                <td class="delTd" style="width: 55%">
+                    <div th:text="${address.get(1) + ', ' + address.get(0) + ','}">123456, Model City,</div>
+                    <div th:text="${address.get(2) + ', ' + address.get(3)}">Modelstreet, 42</div>
                 </td>
-                <td class="delTd">
-                    <input type="image" src="../static/groupmanager/imgs/edit.png"
-                           th:src="@{/groupmanager/imgs/edit.png}"/>
+                <td class="delTd" style="width: 10%">
+                    <button class="edit-btn" onclick="openFormAddress()">
+                        <img class="edit-img" src="../static/groupmanager/imgs/edit.png"
+                             th:src="@{/groupmanager/imgs/edit.png}" alt="+"/>
+                    </button>
                 </td>
             </tr>
-    </table>        
+        </table>
+
+        <div class="popup" id="formAddress">
+            <form th:action="${'http://' + link + ':9010/web/groupmanager/changeDeliveryAddress'}" method="POST">
+                <input type="hidden" name="groupId" th:value="${groupId}">
+                <input class="input" type="text" name="deliveryAddress" placeholder="address">
+                <button class="popup-btn save" type="submit">Save</button>
+                <button class="popup-btn close" type="button" onclick="closeFormAddress()">Close</button>
+            </form>
+        </div>
     </div>
 
     <div class="orderButton">
-        <input type="button" id="orderButton" value="order">
+        <input type="button" th:href="${'http://' + link + ':9010/web/groupmanager/changeDeliveryAddress'}" id="orderButton" value="order">
     </div>
 
+    <script>
+        function openFormDate() {
+            document.getElementById("formDate").style.display = "block";
+            closeFormAddress();
+        }
+
+        function closeFormDate() {
+            document.getElementById("formDate").style.display = "none";
+        }
+
+        function openFormAddress() {
+            document.getElementById("formAddress").style.display = "block";
+            closeFormDate();
+        }
+
+        function closeFormAddress() {
+            document.getElementById("formAddress").style.display = "none";
+        }
+    </script>
 </body>
 </html>

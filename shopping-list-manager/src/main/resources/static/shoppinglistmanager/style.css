@@ -68,7 +68,7 @@ table{ /*some settings for the table itself*/
     border-spacing: 0rem 1rem; /*space betw cols = 0rem ### space betw rows 1rem*/
 }
 
-tr{ /*table rows*/
+.row{ /*table rows*/
 
     /*positioning and color*/
     width: 100%;
