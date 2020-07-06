@@ -52,8 +52,8 @@ public class UserServiceTest {
     public void loginTest() {
         String password = "ss123456";
         user.setPassword(encoder.encode(user.getPassword()));
-        Mockito.when(userRepository.getOne(user.getEmail()))
-                .thenReturn(user);
+        Mockito.when(userRepository.findById(user.getEmail()))
+                .thenReturn(java.util.Optional.ofNullable(user));
         boolean response = userService.login(user.getEmail(), password);
         assertThat(response).isEqualTo(true);
     }
@@ -64,7 +64,7 @@ public class UserServiceTest {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         Mockito.when(userRepository.save(user)).thenReturn(user);
         user.setPassword(encoder.encode(user.getPassword()));
-        Mockito.when(userRepository.getOne(user.getEmail())).thenReturn(user);
+        Mockito.when(userRepository.findById(user.getEmail())).thenReturn(java.util.Optional.ofNullable(user));
         assertThat(userService.login(user.getEmail(), "ss123456")).isEqualTo(true);
         assertThat(userService.getUser(user.getEmail())).isEqualTo(user);
         assertThat(userService.edit(user.getEmail(), user)).isEqualTo(user);

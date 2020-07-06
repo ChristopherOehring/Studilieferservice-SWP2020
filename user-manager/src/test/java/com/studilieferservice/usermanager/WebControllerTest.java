@@ -103,7 +103,6 @@ public class WebControllerTest {
         when(userService.getUser(user.getEmail()))
                 .thenReturn(user);
         this.mockMvc.perform(get("/web/usermanager/editaccount"))
-                .andExpect(model().attribute("user", user))
                 .andExpect(view().name("views/editaccount"));
     }
 
