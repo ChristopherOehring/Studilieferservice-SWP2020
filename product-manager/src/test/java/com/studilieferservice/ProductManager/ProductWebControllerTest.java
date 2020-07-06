@@ -5,17 +5,14 @@ import com.studilieferservice.ProductManager.product.Product;
 import com.studilieferservice.ProductManager.product.ProductService;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.mockito.Mockito;
 import java.util.Arrays;
 import java.util.List;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 public class ProductWebControllerTest {
     @InjectMocks
     private ProductWebController productWebController;
@@ -39,15 +36,13 @@ public class ProductWebControllerTest {
 
     @Test
     public void listProductsTest() throws Exception{
-        String name = "";
-
         Mockito.when(productService.listAllProducts()).thenReturn(productsTest);
-        Mockito.when(productService.findAllWithName(name)).thenReturn(productsTest);
 
-        this.mockMvc.perform(get("/products")
-        .param("name",name))
-        .andExpect(status().isOk())
-        .andExpect(model().attribute("products",productsTest))
-        .andExpect(view().name("index"));
+       this.mockMvc.perform(get("/product/listProducts"))
+               .andExpect(status().isOk())
+               .andExpect(model().attribute("link",instanceOf(String.class)))
+               .andExpect(model().attribute("products",productsTest))
+        .andExpect(view().name("products"))
+        ;
     }
 }

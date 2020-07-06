@@ -26,9 +26,7 @@ public class ProductWebController {
 
         model.addObject("groupId", request.getParameter("groupId"));
         model.addObject("userId", request.getParameter("userId"));
-
         model.addObject("link", request.getServerName());
-
         model.addObject("products", productService.listAllProducts());
 
         return model;
