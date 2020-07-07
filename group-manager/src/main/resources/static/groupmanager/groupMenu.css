@@ -96,6 +96,19 @@ img{
     scrollbar-track-color: var(--primary);
 }
 
+/*## SCROLLBAR FOR BROWSERS != FIREFOX##*/
+.shipping-information::-webkit-scrollbar {
+    width: 5px;  /* width of the entire scrollbar */
+}
+.shipping-information::-webkit-scrollbar-track {
+    background: var(--primary);  /* color of the tracking area */
+}
+.shipping-information::-webkit-scrollbar-thumb {
+    background-color: var(--secondary);    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid var(--primary);  /* creates padding around scroll thumb */
+}
+
 .orderButton{ /*button to order*/
     position: fixed;
     margin-left: 45%;
@@ -146,6 +159,20 @@ h2{ /*"MEMBERS"*/
 
     border-bottom: 0.5px  solid var(--lineColor);
 }
+
+/*## SCROLLBAR FOR BROWSERS != FIREFOX##*/
+.membersList::-webkit-scrollbar {
+    width: 5px;  /* width of the entire scrollbar */
+}
+.membersList::-webkit-scrollbar-track {
+    background: var(--primary);  /* color of the tracking area */
+}
+.membersList::-webkit-scrollbar-thumb {
+    background-color: var(--secondary);    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid var(--primary);  /* creates padding around scroll thumb */
+}
+
 .inviteList{
     margin-top: 0.5rem;
     width: 100%;
@@ -157,6 +184,19 @@ h2{ /*"MEMBERS"*/
     scrollbar-track-color: var(--primary);
 
     border-bottom: 0.5px  solid var(--lineColor);
+}
+
+/*## SCROLLBAR FOR BROWSERS != FIREFOX##*/
+.inviteList::-webkit-scrollbar {
+    width: 5px;  /* width of the entire scrollbar */
+}
+.inviteList::-webkit-scrollbar-track {
+    background: var(--primary);  /* color of the tracking area */
+}
+.inviteList::-webkit-scrollbar-thumb {
+    background-color: var(--secondary);    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid var(--primary);  /* creates padding around scroll thumb */
 }
 
 .memTable{
@@ -332,7 +372,7 @@ h2{ /*"MEMBERS"*/
     ######################
 */
 
-#orderButton{
+#orderButton, #confirmButton, #unconfirmButton{
     width: 100%;
     background-color: transparent;
     border: 1px solid white;
