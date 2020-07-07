@@ -27,6 +27,9 @@ public class InviteService {
 
     public void addInvite(Invite invite){
         User user = invite.getUser();
+        if(user.getInvites().contains(invite) || invite.getGroup().getPermissions(user) != null) {
+            return;
+        }
         user.addInvite(invite);
         userService.save(user);
     }

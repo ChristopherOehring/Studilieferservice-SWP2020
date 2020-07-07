@@ -87,10 +87,7 @@ public class Invite {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Invite invite = (Invite) o;
-        return id.equals(invite.id) &&
-                group.equals(invite.group) &&
-                user.equals(invite.user) &&
-                createdOn.equals(invite.createdOn);
+        return id.equals(invite.id);
     }
 
     @Override

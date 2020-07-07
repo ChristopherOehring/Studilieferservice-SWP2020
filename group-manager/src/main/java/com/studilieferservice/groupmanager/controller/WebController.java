@@ -83,6 +83,7 @@ public class WebController {
         model.addAttribute("invites", user.getInvites());
         System.out.println(user.getInvites());
         model.addAttribute("user", email);
+        model.addAttribute("userName", user.getUserName());
 
         model.addAttribute("groupManagerSrc", groupManagerSrc);
         return "userMenu";
@@ -106,21 +107,19 @@ public class WebController {
         Optional<Gruppe> optionalGruppe = groupService.findById(groupId);
         if (optionalGruppe.isEmpty()){
             System.out.println("Error 404: group \"" + groupId + "\" not found");
-            model.addAttribute("subject", "group: \"" + groupId + "\"");
-            return "customError404";
+            return "redirect:groupMenuFwd";
         }
         Optional<User> optionalUser = userService.findById(email);
         if(optionalUser.isEmpty()) {
             System.out.println("Error 404: user \"" + email + "\" not found");
             model.addAttribute("subject", "user: \"" + email + "\"");
-            return "customError404";
+            return "redirect:groupMenuFwd";
         }
         Gruppe gruppe = optionalGruppe.get();
         User user = optionalUser.get();
-        System.out.println("line 120!");
         if(gruppe.getPermissions(user) == null) {
-            model.addAttribute("subject", String.format("groupMenu of group %s for user %s", groupId, email));
-            return "customError404";
+            System.out.println(String.format("groupMenu of group %s for user %s not found", groupId, email));
+            return "redirect:groupMenuFwd";
         }
 
 //        if (gruppe.getDeliveryDate() != null)
@@ -385,7 +384,7 @@ public class WebController {
 
         inviteService.removeInvite(groupId, email);
 
-        return "redirect:groupMenuFwd?list=" + groupId;
+        return "redirect:userMenu";
     }
 
     /**
@@ -401,7 +400,7 @@ public class WebController {
 
         inviteService.removeInvite(groupId, email);
 
-        return "redirect:userMenu";
+        return "redirect:groupMenuFwd?list=" + groupId;
     }
 
     @PostMapping("/confirmDate")

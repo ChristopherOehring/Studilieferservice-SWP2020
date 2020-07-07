@@ -96,7 +96,7 @@ public class ChatWebController {
     public RedirectView addMessageForUserAndGroup(@ModelAttribute(name = "chatMessage") ChatMessage chatMessage, HttpServletRequest request) {
         Group g = groupService.getGroup(request.getParameter("groupId"));
         User u = userService.getUser(request.getParameter("userId"));
-
+        if (!g.getUsers().contains(u)) return new RedirectView("http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu");
         if(!chatMessage.getContent().equals("")) groupService.addTextChatMessageToGroupAndUser(u, g, chatMessage.getContent());
 
         return new RedirectView("http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + g.getId());
