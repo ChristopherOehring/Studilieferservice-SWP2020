@@ -9,8 +9,12 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.security.InvalidParameterException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.studilieferservice.groupmanager.service.GroupEventType.*;
@@ -160,5 +164,60 @@ public class GroupService {
                 .filter(g -> g.getPermissions(user) == null)
                 .collect(Collectors.toList());
         return result;
+    }
+
+    /**
+     * Creates a new group
+     * @param groupName the name of the new group
+     * @param owner the user who is creating the group
+     * @return the groupId of the new group
+     */
+    public String createGroup(String groupName, User owner){
+        Gruppe group = new Gruppe();
+        group.setGroupName(groupName);
+        group.setId(UUID.randomUUID().toString());
+
+
+        group.setOwner(owner);
+
+        group.setDeliveryDate(LocalDate.now().plusDays(2).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+
+        List<String> address = new ArrayList<>();
+        address.add(owner.getCity());
+        address.add(owner.getZip());
+
+        //splits the single "street" string into the street and the house number as two separate strings
+        if (!owner.getStreet().matches(".*\\d.*")) {
+            address.add(owner.getStreet());
+            address.add("");
+        } else {
+            String street = owner.getStreet();
+            StringBuilder number = new StringBuilder();
+
+            int index;
+            if (Character.isAlphabetic(street.charAt(street.length()-1))) {
+                number.append(street.charAt(street.length() - 1));
+                index = 2;
+            } else
+                index = 1;
+
+            for (int i = street.length() - index; i > 0; i--)
+            {
+                if (Character.isDigit(street.charAt(i)))
+                    number.insert(0, street.charAt(i));
+                else if(Character.isAlphabetic(street.charAt(i)) || Character.isSpaceChar(street.charAt(i))) {
+                    street = street.substring(0, i);
+                    break;
+                }
+            }
+            address.add(street);
+            address.add(number.toString());
+        }
+
+        group.setDeliveryPlace(address);
+
+        System.out.println(group);
+        save(group);
+        return group.getId();
     }
 }

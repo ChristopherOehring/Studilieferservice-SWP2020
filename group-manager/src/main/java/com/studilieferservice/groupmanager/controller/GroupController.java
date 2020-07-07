@@ -146,12 +146,8 @@ public class GroupController {
         if (body.getGroupName()==null || body.getGroupName().isBlank()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You have to set a group name");
         }
-        Gruppe group = new Gruppe();
-        group.setId(UUID.randomUUID().toString());
-        group.setGroupName(body.getGroupName());
-        group.setOwner(ownerOptional.get());
-        groupService.save(group);
-        return ResponseEntity.status(HttpStatus.CREATED).body(group);
+        String groupId = groupService.createGroup(body.getGroupName(), ownerOptional.get());
+        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.findById(groupId));
     }
 
     /**

@@ -168,10 +168,6 @@ public class WebController {
 
         System.out.println("creating group " + form.getGroupName() + " with owner " + form.getUser());
 
-        Gruppe group = new Gruppe();
-        group.setGroupName(form.getGroupName());
-        group.setId(UUID.randomUUID().toString());
-
         Optional<User> optionalUser = userService.findById(form.getUser());
         if(optionalUser.isEmpty()) {
             redirectView.setContextRelative(true);
@@ -179,49 +175,9 @@ public class WebController {
             return redirectView;
         }
         User user = optionalUser.get();
+        String groupId = groupService.createGroup(form.getGroupName(), user);
 
-        group.setOwner(user);
-
-        group.setDeliveryDate(LocalDate.now().plusDays(2).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-
-        List<String> address = new ArrayList<>();
-        address.add(user.getCity());
-        address.add(user.getZip());
-
-        //splits the single "street" string into the street and the house number as two separate strings
-        if (!user.getStreet().matches(".*\\d.*")) {
-            address.add(user.getStreet());
-            address.add("");
-        } else {
-            String street = user.getStreet();
-            StringBuilder number = new StringBuilder();
-
-            int index;
-            if (Character.isAlphabetic(street.charAt(street.length()-1))) {
-                number.append(street.charAt(street.length() - 1));
-                index = 2;
-            } else
-                index = 1;
-
-            for (int i = street.length() - index; i > 0; i--)
-            {
-                if (Character.isDigit(street.charAt(i)))
-                    number.insert(0, street.charAt(i));
-                else if(Character.isAlphabetic(street.charAt(i)) || Character.isSpaceChar(street.charAt(i))) {
-                    street = street.substring(0, i);
-                    break;
-                }
-            }
-            address.add(street);
-            address.add(number.toString());
-        }
-
-        group.setDeliveryPlace(address);
-
-        System.out.println(group);
-        groupService.save(group);
-
-        redirectView.setUrl("http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + group.getId());
+        redirectView.setUrl("http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + groupId);
 
         return redirectView;
     }
