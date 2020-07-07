@@ -1,5 +1,6 @@
 package com.studilieferservice.shoppinglistmanager.controller;
 
+import com.studilieferservice.shoppinglistmanager.controller.bodies.GroupBody;
 import com.studilieferservice.shoppinglistmanager.controller.bodies.ItemAndShoppingListBody;
 import com.studilieferservice.shoppinglistmanager.group.Group;
 import com.studilieferservice.shoppinglistmanager.group.GroupService;
@@ -203,6 +204,16 @@ public class ShoppingListRestController {
         int amountNew = shoppingListService.removeItemFromShoppingList(body.shoppingList, body.item, body.amount);
         return ResponseEntity.status(HttpStatus.CREATED).body("Removed Item from ShoppingList: amount="+body.amount
                 +", newTotalAmount="+amountNew+", "+body.item.toString()+", "+body.shoppingList.toString());
+    }
+
+    @PutMapping("/removeAllProductsForGroup")
+    public ResponseEntity<?> removeAllItemsFromShoppingListForAllUsersOfGroup(@RequestBody GroupBody groupBody) {
+        Group g = groupService.getGroup(groupBody.groupId);
+
+        shoppingListService.deleteAllItemsFromShoppingListsForGroup(g);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Removed all Items from all Users for Group: \""
+                + g.getName() + "\" with id: " + g.getId());
     }
 
     /**

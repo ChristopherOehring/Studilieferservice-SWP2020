@@ -120,6 +120,17 @@ public class ShoppingListService {
         shoppingListRepository.save(shoppingList);
     }
 
+    public void deleteAllItemsFromShoppingListsForGroup(Group group) {
+        for (ShoppingList shoppingList : group.getShoppingLists()) {
+            ShoppingList sl = shoppingListRepository.findById(shoppingList.getId()).orElseThrow();
+            for (int i = 0; i < sl.getItems().size(); i++) {
+                Item item = itemService.getItem(sl.getItems().get(i).getItem().getName());
+
+                deleteItemFromShoppingList(sl, item);
+            }
+        }
+    }
+
     public double getTotalPrice(ShoppingList shoppingList) {
         double total = 0;
 

@@ -88,7 +88,7 @@ public class GroupService {
         return m;
     }
 
-    public void addUpdateMessageToGroupAndUser(User user, String oldName) {
+    public void addUpdateMessageToUser(User user, String oldName) {
         String content = oldName + " changed name to " + user.getName() + "!";
 
         for (Group group : user.getGroups()) {
@@ -96,5 +96,15 @@ public class GroupService {
             m = chatMessageService.createChatMessage(m);
             groupRepository.findById(group.getId()).orElseThrow().addMessage(m);
         }
+    }
+
+    @Transactional
+    public ChatMessage addOrderMessageToGroupAndUser(User user, Group group, String date, String address) {
+        String content = user.getName() + " has placed an order with the delivery date: " + date
+                + " and the delivery address: " + address + "!";
+        ChatMessage m = new ChatMessage(userService.getUser(user.getId()).getName(), content, MessageType.INFO);
+        m = chatMessageService.createChatMessage(m);
+        groupRepository.findById(group.getId()).orElseThrow().addMessage(m);
+        return m;
     }
 }

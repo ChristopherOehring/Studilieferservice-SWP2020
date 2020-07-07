@@ -8,18 +8,22 @@ import com.studilieferservice.groupmanager.persistence.User;
 import com.studilieferservice.groupmanager.service.GroupService;
 import com.studilieferservice.groupmanager.service.InviteService;
 import com.studilieferservice.groupmanager.service.UserService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -394,9 +398,77 @@ public class WebController {
     }
 
     @PostMapping("/order")
-    public String order(@ModelAttribute(name = "groupId") String groupId) {
+    public String order(@ModelAttribute(name = "groupId") String groupId,
+                        @ModelAttribute(name = "email") String email,
+                        @ModelAttribute(name = "date") String date,
+                        @ModelAttribute(name = "address") ArrayList<String> addressList) {
 
+        Gruppe group = groupService.findById(groupId).orElseThrow();
+        User user = userService.findById(email).orElseThrow();
 
+        String address = addressList.get(1) + " " + addressList.get(0).replace("[", "") + ", "
+                + addressList.get(2) + " " + addressList.get(3).replace("]", "");
+
+        group.acceptNoLongerDeliveryDate(userService.findById(group.getOwner().getEmail()).orElseThrow());
+        for (User u : group.getAdmins()) {
+            group.acceptNoLongerDeliveryDate(userService.findById(u.getEmail()).orElseThrow());
+        }
+        for (User u : group.getMembers()) {
+            group.acceptNoLongerDeliveryDate(userService.findById(u.getEmail()).orElseThrow());
+        }
+        groupService.save(group);
+
+        //REST request to chat-manager to add info message
+        String urlRequest = "http://chat-manager:8040/chat/addOrder";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        String body = "{ \"groupId\": \"" + group.getId() + "\", \"userId\": \"" + user.getEmail() + "\", \"date\": \""
+                + date + "\", \"address\": \"" + address + "\" }";
+
+        try {
+            JSONObject jsonObject = new JSONObject(body);
+
+            HttpEntity<String> restRequest = new HttpEntity<>(jsonObject.toString(), headers);
+
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.postForObject(urlRequest, restRequest , String.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //REST request to shopping-list-manager to get complete shopping list
+        urlRequest = "http://shopping-list-manager:8070/shoppingList/getComplete/" + groupId;
+
+        String completeShoppingList = "error";
+        try {
+            HttpEntity<String> restRequest = new HttpEntity<>(headers);
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<String> response = restTemplate.exchange(urlRequest, HttpMethod.GET, restRequest, String.class);
+
+            completeShoppingList = response.getBody(); //complete shopping list of group
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(completeShoppingList);
+
+        //REST request to shopping-list-manager to clear shopping lists
+        urlRequest = "http://shopping-list-manager:8070/shoppingList/removeAllProductsForGroup";
+
+        body = "{ \"groupId\": \"" + group.getId() + "\" }";
+
+        try {
+            JSONObject jsonObject = new JSONObject(body);
+
+            HttpEntity<String> restRequest = new HttpEntity<>(jsonObject.toString(), headers);
+
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.put(urlRequest, restRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return "redirect:groupMenuFwd?list=" +groupId;
     }

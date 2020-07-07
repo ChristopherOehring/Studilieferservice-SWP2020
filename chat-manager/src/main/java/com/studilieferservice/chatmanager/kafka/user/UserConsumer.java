@@ -57,7 +57,7 @@ public class UserConsumer {
         if (userMessage.getType().equals("UPDATE")) {
             String oldName = userService.getUser(payload.getId()).getName();
             User u = userService.updateUserFromKafka(payload.getId(), payload.getName());
-            groupService.addUpdateMessageToGroupAndUser(u, oldName);
+            groupService.addUpdateMessageToUser(u, oldName);
         } else {
             userService.createUserFromKafka(payload.getId(), payload.getName());
         }
