@@ -63,6 +63,19 @@ h1{ /*the title itself*/
 
 }
 
+/*## SCROLLBAR FOR BROWSERS != FIREFOX##*/
+.items::-webkit-scrollbar {
+    width: 5px;  /* width of the entire scrollbar */
+}
+.items::-webkit-scrollbar-track {
+    background: var(--primary);  /* color of the tracking area */
+}
+.items::-webkit-scrollbar-thumb {
+    background-color: var(--secondary);    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid var(--primary);  /* creates padding around scroll thumb */
+}
+
 table{ /*some settings for the table itself*/
     width: 100%;
     border-spacing: 0rem 1rem; /*space betw cols = 0rem ### space betw rows 1rem*/

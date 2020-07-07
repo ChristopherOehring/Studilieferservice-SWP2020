@@ -387,7 +387,22 @@ h2{ /*"MEMBERS"*/
     font-size: 1rem;
 }
 
-#orderButton:hover{
+#orderButtonDisabled{
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid grey;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    transition: 0.5s;
+    margin-bottom: 1.5rem;
+
+    /*fonts*/
+    color: grey;
+    font-family: var(--secondaryFont);
+    font-size: 1rem;
+}
+
+#orderButton:hover, #confirmButton:hover, #unconfirmButton:hover{
     background-color: white;
     color: var(--primary);
 }

@@ -131,6 +131,19 @@ input {
     scrollbar-track-color: var(--primary);
 }
 
+/*## SCROLLBAR FOR BROWSERS != FIREFOX##*/
+#messageArea::-webkit-scrollbar {
+    width: 5px;  /* width of the entire scrollbar */
+}
+#messageArea::-webkit-scrollbar-track {
+    background: var(--primary);  /* color of the tracking area */
+}
+#messageArea::-webkit-scrollbar-thumb {
+    background-color: var(--secondary);    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid var(--primary);  /* creates padding around scroll thumb */
+}
+
 
 #chat-page {
     position: relative;

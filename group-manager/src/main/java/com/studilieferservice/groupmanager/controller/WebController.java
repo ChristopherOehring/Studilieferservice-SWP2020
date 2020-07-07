@@ -385,7 +385,13 @@ public class WebController {
         return "redirect:groupMenuFwd?list=" +groupId;
     }
 
+    @PostMapping("/order")
+    public String order(@ModelAttribute(name = "groupId") String groupId) {
 
+
+
+        return "redirect:groupMenuFwd?list=" +groupId;
+    }
 
     @GetMapping("/noLogin")
     public RedirectView noLogin(HttpServletRequest request){

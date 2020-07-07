@@ -37,7 +37,8 @@
                         <img class="image" src="../static/groupmanager/imgs/crown-3-128.png" alt=" " th:src="@{/groupmanager/imgs/crown-3-128.png}">
                     </td>
                     <td class="memTd">
-                        <img class="image" th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <img class="image" th:if="${currGroup.hasAcceptedDeliveryDate(owner)}" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <div th:unless="${currGroup.hasAcceptedDeliveryDate(owner)}">&emsp;</div>
                     </td>
                     <td class="memTd">
                         <p th:text="${owner.getUserName()}"></p>
@@ -55,7 +56,8 @@
                         <img class="image" src="../static/groupmanager/imgs/crown-3-128.png" alt=" " th:src="@{/groupmanager/imgs/crown-3-128.png}">
                     </td>
                     <td class="memTd">
-                        <img class="image" th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <img class="image" th:if="${currGroup.hasAcceptedDeliveryDate(member)}" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <div th:unless="${currGroup.hasAcceptedDeliveryDate(member)}">&emsp;</div>
                     </td>
                     <td class="memTd">
                         <p th:text="${member.getUserName()}"></p>
@@ -81,8 +83,8 @@
                         &emsp;
                     </td>
                     <td class="memTd">
-                        <img class="image" th:if="member.hasSubmitted" src="../static/groupmanager/imgs/checkmark-128.png" alt=""
-                             th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <img class="image" th:if="${currGroup.hasAcceptedDeliveryDate(member)}" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <div th:unless="${currGroup.hasAcceptedDeliveryDate(member)}">&emsp;</div>
                     </td>
                     <td class="memTd">
                         <p th:text="${member.getUserName()}"></p>
@@ -202,22 +204,36 @@
         </div>
     </div>
 
-    <div th:if="hasAcceptedDate" class="orderButton">
-        <form th:action="${'http://' + link + ':9010/web/groupmanager/order'}" method="POST">
-            <input type="button" id="orderButton" value="order">
-            <input type="hidden" name="groupId" th:value="${currGroup.id}">
-            <input type="hidden" name="email" th:value="${currUser.email}">
-        </form>
+    <div class="orderButton">
+        <table><tr>
+            <td>
+                <div th:unless="${hasAcceptedDate}">
+                    <form th:action="${'http://' + link + ':9010/web/groupmanager/confirmDate'}" method="POST">
+                        <input type="submit" id="confirmButton" value="Ready">
+                        <input type="hidden" name="groupId" th:value="${currGroup.id}">
+                        <input type="hidden" name="email" th:value="${currUser.email}">
+                    </form>
+                </div>
+                <div th:if="${hasAcceptedDate}">
+                    <form th:action="${'http://' + link + ':9010/web/groupmanager/unconfirmDate'}" method="POST">
+                        <input type="submit" id="unconfirmButton" value="not Ready">
+                        <input type="hidden" name="groupId" th:value="${currGroup.id}">
+                        <input type="hidden" name="email" th:value="${currUser.email}">
+                    </form>
+                </div>
+            </td>
+            <td th:if="${mayOrder}">
+                &emsp;
+            </td>
+            <td th:if="${mayOrder}">
+                <form th:action="${'http://' + link + ':9010/web/groupmanager/order'}" method="POST">
+                    <input type="submit" id="orderButton" value="order">
+                    <input type="hidden" name="groupId" th:value="${currGroup.id}">
+                    <input type="hidden" name="email" th:value="${currUser.email}">
+                </form>
+            </td>
+        </tr></table>
     </div>
-    <div th:unless="hasAcceptedDate" class="orderButton">
-        <form th:action="${'http://' + link + ':9010/web/groupmanager/confirmDate'}" method="POST">
-            <input type="button" id="orderButton" value="Confirm Date">
-            <input type="hidden" name="groupId" th:value="${currGroup.id}">
-            <input type="hidden" name="email" th:value="${currUser.email}">
-        </form>
-    </div>
-
-
     <div id="chat" class="chat" th:include-html="${'../chat/' + groupId}"></div>
 
     <div id="shopping-list" class="shopping-list" th:include-html="${'../shoppingList/' + groupId}"></div>
