@@ -124,8 +124,9 @@
                     <input type="submit" value="invite someone" id="inviteButton">
                 </div>
             </form>
-            <form th:unless="${currGroup.getPermissions(currUser.email).equals('admin') || currGroup.getPermissions(currUser.email).equals('owner')}"><div class="inviteUsername">
-                <input disabled class="username" name="email" type="text" placeholder="insufficient permissions" style="border-bottom: none">
+            <form th:unless="${currGroup.getPermissions(currUser.email).equals('admin') || currGroup.getPermissions(currUser.email).equals('owner')}">
+                <div class="inviteUsername">
+                    <input disabled class="username" name="email" type="text" placeholder="insufficient permissions" style="border-bottom: none">
                 </div>
                 <div class="inviteButtonDisabled">
                     <input type="submit" value="invite someone" id="inviteButtonDisabled">
@@ -159,11 +160,22 @@
         <table class="delTable">
             <tr class="delTr">
                 <td class="delTd" style="width: 35%">delivery date:</td>
-                <td class="delTd" th:text="${date}" style="width: 55%">Mo, 01.01.2020</td>
-                <td class="delTd" style="width: 10%">
+                <td class="delTd" th:text="${date}" style="width: 55%">01.01.2020</td>
+                <td class="delTd" style="width: 10%"
+                    th:if="${currGroup.getPermissions(currUser.email).equals('admin') ||
+                    currGroup.getPermissions(currUser.email).equals('owner')}">
                     <button class="edit-btn" onclick="openFormDate()">
                             <img class="edit-img" src="../static/groupmanager/imgs/edit.png"
                                  th:src="@{/groupmanager/imgs/edit.png}" alt="+"/>
+                    </button>
+                </td>
+                <!--td below could maybe be deleted-->
+                <td class="delTd" style="width: 10%"
+                    th:unless="${currGroup.getPermissions(currUser.email).equals('admin') ||
+                    currGroup.getPermissions(currUser.email).equals('owner')}">
+                    <button class="edit-btn">
+                        <img class="edit-img" src="../static/groupmanager/imgs/edit.png"
+                             th:src="@{/groupmanager/imgs/edit.png}" alt="+" style="filter: opacity(0%)"/>
                     </button>
                 </td>
             </tr>
@@ -172,7 +184,7 @@
         <div class="popup" id="formDate">
             <form th:action="${'http://' + link + ':9010/web/groupmanager/changeDeliveryDate'}" method="POST">
                 <input type="hidden" name="groupId" th:value="${groupId}">
-                <input class="input" type="text" name="deliveryDate" placeholder="date">
+                <input class="input" type="text" name="deliveryDate" placeholder="DD.MM.YYYY">
                 <button class="popup-btn save" type="submit">Save</button>
                 <button class="popup-btn close" type="button" onclick="closeFormDate()">Close</button>
             </form>
@@ -182,13 +194,24 @@
             <tr class="delTr">
                 <td class="delTd" style="width: 35%">delivery adress:</td>
                 <td class="delTd" style="width: 55%">
-                    <div th:text="${address.get(1) + ', ' + address.get(0) + ','}">123456, Model City,</div>
-                    <div th:text="${address.get(2) + ', ' + address.get(3)}">Modelstreet, 42</div>
+                    <div th:text="${address.get(1) + ' ' + address.get(0) + ','}">123456 Model City,</div>
+                    <div th:text="${address.get(2) + ' ' + address.get(3)}">Modelstreet 42</div>
                 </td>
-                <td class="delTd" style="width: 10%">
+                <td class="delTd" style="width: 10%"
+                    th:if="${currGroup.getPermissions(currUser.email).equals('admin') ||
+                    currGroup.getPermissions(currUser.email).equals('owner')}">
                     <button class="edit-btn" onclick="openFormAddress()">
                         <img class="edit-img" src="../static/groupmanager/imgs/edit.png"
                              th:src="@{/groupmanager/imgs/edit.png}" alt="+"/>
+                    </button>
+                </td>
+                <!--td below could maybe be deleted-->
+                <td class="delTd" style="width: 10%"
+                    th:unless="${currGroup.getPermissions(currUser.email).equals('admin') ||
+                    currGroup.getPermissions(currUser.email).equals('owner')}">
+                    <button class="edit-btn">
+                        <img class="edit-img" src="../static/groupmanager/imgs/edit.png"
+                             th:src="@{/groupmanager/imgs/edit.png}" alt="+" style="filter: opacity(0%)"/>
                     </button>
                 </td>
             </tr>
@@ -197,7 +220,7 @@
         <div class="popup" id="formAddress">
             <form th:action="${'http://' + link + ':9010/web/groupmanager/changeDeliveryAddress'}" method="POST">
                 <input type="hidden" name="groupId" th:value="${groupId}">
-                <input class="input" type="text" name="deliveryAddress" placeholder="address">
+                <input class="input" type="text" name="deliveryAddress" placeholder="zip, city, street, house no.">
                 <button class="popup-btn save" type="submit">Save</button>
                 <button class="popup-btn close" type="button" onclick="closeFormAddress()">Close</button>
             </form>
@@ -209,14 +232,14 @@
             <td>
                 <div th:unless="${hasAcceptedDate}">
                     <form th:action="${'http://' + link + ':9010/web/groupmanager/confirmDate'}" method="POST">
-                        <input type="submit" id="confirmButton" value="Ready">
+                        <input type="submit" id="confirmButton" value="ready">
                         <input type="hidden" name="groupId" th:value="${currGroup.id}">
                         <input type="hidden" name="email" th:value="${currUser.email}">
                     </form>
                 </div>
                 <div th:if="${hasAcceptedDate}">
                     <form th:action="${'http://' + link + ':9010/web/groupmanager/unconfirmDate'}" method="POST">
-                        <input type="submit" id="unconfirmButton" value="not Ready">
+                        <input type="submit" id="unconfirmButton" value="not ready">
                         <input type="hidden" name="groupId" th:value="${currGroup.id}">
                         <input type="hidden" name="email" th:value="${currUser.email}">
                     </form>
@@ -234,6 +257,7 @@
             </td>
         </tr></table>
     </div>
+
     <div id="chat" class="chat" th:include-html="${'../chat/' + groupId}"></div>
 
     <div id="shopping-list" class="shopping-list" th:include-html="${'../shoppingList/' + groupId}"></div>

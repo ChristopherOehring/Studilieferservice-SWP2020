@@ -94,7 +94,7 @@ h2{ /* font-style of the subheadings */
 /*Searchbars are at column 1 -My Groups- and column 3 -AllGroups-*/
 
 .col1Search{ /*boxes around the searchbars*/
-    margin-top: 0px;
+    margin-top: 0;
     height: 3rem;
     border-bottom: 1px solid var(--lineColor); /*bottumline unter the search-box*/
 }
@@ -163,13 +163,29 @@ h2{ /* font-style of the subheadings */
   # LISTS ELEMENTS #
   ##################*/
 
+.empty{
+    text-align: center;
+    margin-left: 0;
+    margin-right: 0;
+    font-size: 16px;
+    width: 100%;
+    color: white;
+    font-family: var(--secondaryFont);
+}
+
 li{ /*li is a box around of a label and radio button*/
 
     /*turn off list bullets*/
     list-style-type: none;
-    margin-top: 1rem;
+    /*margin-top: 1rem;*/
     /*margin-left: 2rem;*/
     margin-right: 3rem; /*2*/
+}
+
+li.border{
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 25px;
 }
 
 /*## RADIO BUTTONS & LABELS ##*/
@@ -185,8 +201,8 @@ label { /*text inside list element .. Edit font here*/
     display: inline-block;
     padding: 5px 10px;
     text-align: center;
-    margin-left: 0px;
-    margin-right: 0px;
+    margin-left: 0;
+    margin-right: 0;
 
     /*fonts*/
     font-size: 16px;
@@ -195,13 +211,17 @@ label { /*text inside list element .. Edit font here*/
     font-family: var(--secondaryFont);
 }
 
+label.border{
+    border-bottom: 1px solid #4a4a4a;
+}
+
 /* Change when list element is hovered */
-label:hover{
+.lbl:hover{
     background-color: var(--secondary);
 }
 
 /* Change when radio-button is checked */
-input[type=radio]:checked + label {
+input[type=radio]:checked + .lbl {
     background-color: var(--secondary);
     padding: 4px 9px;
     border: 1px solid white;

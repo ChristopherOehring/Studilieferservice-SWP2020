@@ -17,11 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
-import java.lang.reflect.Member;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * provides a web-controller at /web <br>
@@ -59,7 +58,6 @@ public class WebController {
     @GetMapping("/userMenu")
     public String userMenu(Model model,
                            @CookieValue("useremail") @Nullable String email,
-                           //final HttpServletResponse response,
                            HttpServletRequest request){
 
         if (email == null) return "redirect:noLogin";
@@ -125,6 +123,16 @@ public class WebController {
             return "customError404";
         }
 
+//        if (gruppe.getDeliveryDate() != null)
+//            model.addAttribute("date", gruppe.getDeliveryDate());
+//        else
+//            model.addAttribute("date", "-");
+//
+//        if (gruppe.getDeliveryPlace() != null)
+//            model.addAttribute("address", gruppe.getDeliveryPlace());
+//        else
+//            model.addAttribute("address", Arrays.asList("-","","",""));
+
         model.addAttribute("groupAndUserBody", new GroupAndUserBody());
         model.addAttribute("thisGroupId", groupId);
         model.addAttribute("owner", gruppe.getOwner());
@@ -154,6 +162,11 @@ public class WebController {
             HttpServletRequest request) {
         RedirectView redirectView = new RedirectView();
 
+        if (form.groupName.isBlank()){
+            redirectView.setUrl("http://" + request.getServerName() + ":9010/web/groupmanager/userMenu/");
+            return redirectView;
+        }
+
         System.out.println("creating group " + form.getGroupName() + " with owner " + form.getUser());
 
         Gruppe group = new Gruppe();
@@ -169,6 +182,43 @@ public class WebController {
         User user = optionalUser.get();
 
         group.setOwner(user);
+
+        group.setDeliveryDate(LocalDate.now().plusDays(2).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+
+        List<String> address = new ArrayList<>();
+        address.add(user.getCity());
+        address.add(user.getZip());
+
+        //splits the single "street" string into the street and the house number as two separate strings
+        if (!user.getStreet().matches(".*\\d.*")) {
+            address.add(user.getStreet());
+            address.add("");
+        } else {
+            String street = user.getStreet();
+            StringBuilder number = new StringBuilder();
+
+            int index;
+            if (Character.isAlphabetic(street.charAt(street.length()-1))) {
+                number.append(street.charAt(street.length() - 1));
+                index = 2;
+            } else
+                index = 1;
+
+            for (int i = street.length() - index; i > 0; i--)
+            {
+                if (Character.isDigit(street.charAt(i)))
+                    number.insert(0, street.charAt(i));
+                else if(Character.isAlphabetic(street.charAt(i)) || Character.isSpaceChar(street.charAt(i))) {
+                    street = street.substring(0, i);
+                    break;
+                }
+            }
+            address.add(street);
+            address.add(number.toString());
+        }
+
+        group.setDeliveryPlace(address);
+
         System.out.println(group);
         groupService.save(group);
 
@@ -282,7 +332,10 @@ public class WebController {
     @PostMapping("/invite")
     public String addInvite(@ModelAttribute(name = "groupId") String groupId, @ModelAttribute(name = "email") String email) {
         Optional<User> optionalUser = userService.findById(email);
-        if(optionalUser.isEmpty()) System.out.println("No user with email "+email+" was found!");
+        if(optionalUser.isEmpty()) {
+            System.out.println("No user with email "+email+" was found!");
+            return "redirect:groupMenuFwd?list=" + groupId;
+        }
         User user = optionalUser.get();
 
         Optional<Gruppe> optionalGruppe = groupService.findById(groupId);
@@ -396,5 +449,55 @@ public class WebController {
     @GetMapping("/noLogin")
     public RedirectView noLogin(HttpServletRequest request){
         return new RedirectView("http://" + request.getServerName() + ":9080/web/usermanager/login");
+    }
+
+    @PostMapping("/changeDeliveryDate")
+    public String changeDeliveryDate(HttpServletRequest request) {
+        String groupId = request.getParameter("groupId");
+        String date = request.getParameter("deliveryDate");
+
+        //maybe dont do this validation for demo
+        if (!groupService.findById(groupId).orElseThrow().isValidDate(date) &&
+                !groupService.findById(groupId).orElseThrow().getDeliveryDate().isEmpty())
+            return "redirect:http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + groupId;
+
+        Gruppe group = groupService.findById(groupId).orElseThrow();
+        group.setDeliveryDate(date.trim());
+        groupService.save(group);
+
+        return "redirect:http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + groupId;
+    }
+
+    @PostMapping("/changeDeliveryAddress")
+    public String changeDeliveryAddress(HttpServletRequest request) {
+        String groupId = request.getParameter("groupId");
+        String address = request.getParameter("deliveryAddress");
+
+        ArrayList<String> list = new ArrayList<>();
+        Collections.addAll(list, address.split(","));
+        list.replaceAll(String::trim);
+
+        //maybe dont do this validation for demo
+        if (list.size() != 4 || list.get(0).isBlank() || list.get(1).isBlank() || list.get(2).isBlank() || list.get(3).isBlank()
+                || !list.get(1).matches("[a-z A-Z-À-ÿ]*") || !list.get(0).matches("[0-9]*")
+                || !list.get(2).matches("[a-z A-Z-À-ÿ]*") || !list.get(3).matches("[0-9]*[a-zA-Z]?"))
+            return "redirect:http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + groupId;
+
+        //if (list.size() == 4) //can be removed when validation above is active
+            Collections.swap(list, 0, 1); //only this line is necessary
+        //else {
+        //    if (list.size() > 4)
+        //        list = new ArrayList<>(list.subList(0, 3));
+        //    else {
+        //        while (list.size() < 4)
+        //            list.add("");
+        //    }
+        //}
+
+        Gruppe group = groupService.findById(groupId).orElseThrow();
+        group.setDeliveryPlace(list);
+        groupService.save(group);
+
+        return "redirect:http://" + request.getServerName() + ":9000/web/groupmanager/groupMenu/" + groupId;
     }
 }

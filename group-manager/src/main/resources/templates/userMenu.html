@@ -50,22 +50,31 @@
                                 - th:value shows, what is sent to controller when submited
                                 - th:text is the output-text-label what is displayed
                         -->
-                        <li th:each="gruppe : ${groupsWhereOwner}">
-                            <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
-                            <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
-                        </li>
-                        <li th:each="gruppe : ${groupsWhereAdmin}">
-                            <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
-                            <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
-                        </li>
-                        <li th:each="gruppe : ${groupsWhereMember}">
-                            <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
-                            <label th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
-                        </li>
-                        <li th:if="${groupsWhereOwner.isEmpty() && groupsWhereMember.isEmpty() && groupsWhereAdmin.isEmpty()}">
-                        <label>No Groups Available!</label>
-                        </li>
+                        <th:block th:each="gruppe : ${groupsWhereOwner}">
+                            <li>
+                                <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                                <label class="lbl" th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
+                            </li>
+                            <li class="border"><label class="border"></label></li>
+                        </th:block>
+                        <th:block th:each="gruppe : ${groupsWhereAdmin}">
+                            <li>
+                                <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                                <label class="lbl" th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
+                            </li>
+                            <li class="border"><label class="border"></label></li>
+                        </th:block>
+                        <th:block th:each="gruppe : ${groupsWhereMember}">
+                            <li>
+                                <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                                <label class="lbl" th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
+                            </li>
+                            <li class="border"><label class="border"></label></li>
+                        </th:block>
                     </ul>
+                    <div class="empty" th:if="${groupsWhereOwner.isEmpty() && groupsWhereMember.isEmpty() && groupsWhereAdmin.isEmpty()}">
+                        No Groups Available!
+                    </div>
                 </div>
                 <div class="submitBox">
                     <input type="submit" value="continue" class="submitButton"/>

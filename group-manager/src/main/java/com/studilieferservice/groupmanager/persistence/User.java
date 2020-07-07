@@ -55,6 +55,10 @@ public class User {
      */
     private String userName;
 
+    private String street;
+    private String city;
+    private String zip;
+
     private long version;
 
     @JsonIgnore
@@ -75,12 +79,18 @@ public class User {
     public User(@JsonProperty("email") String email,
                 @JsonProperty("firstName") String firstName,
                 @JsonProperty("lastName") String lastName,
-                @JsonProperty("userName") String userName) {
+                @JsonProperty("userName") String userName,
+                @JsonProperty("street") String street,
+                @JsonProperty("city") String city,
+                @JsonProperty("zip") String zip) {
         if (isValidEmailAddress(email) && isValidName(firstName) && isValidName(lastName)) {
             this.email = email;
             this.firstName = simplifyName(firstName);
             this.lastName = simplifyName(lastName);
             this.userName = userName;
+            this.street = street;
+            this.city = city;
+            this.zip = zip;
             this.version = 0;
         }
         else if(!isValidName(firstName) || !isValidName(lastName)) {
@@ -124,6 +134,30 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
     }
 
     public long getVersion() {

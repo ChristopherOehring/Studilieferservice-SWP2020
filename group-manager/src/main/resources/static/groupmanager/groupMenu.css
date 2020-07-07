@@ -24,7 +24,7 @@
 */
 
 body{
-    margin: 0px;
+    margin: 0;
     background-color: var(--primary);
 }
 
@@ -200,7 +200,7 @@ h2{ /*"MEMBERS"*/
 }
 
 .memTable{
-    border-spacing: 0rem 1rem;
+    border-spacing: 0 1rem;
     width: 100%;
     height: 10%;
 }
@@ -353,7 +353,7 @@ h2{ /*"MEMBERS"*/
 }
 
 .delTable{
-    border-spacing: 0rem 1rem;
+    border-spacing: 0 1rem;
     width: 100%;
     height: 10%;
 }
