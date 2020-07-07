@@ -130,10 +130,15 @@ public class WebController {
         model.addAttribute("owner", gruppe.getOwner());
         model.addAttribute("adminList", gruppe.getAdmins());
         model.addAttribute("memberList", gruppe.getMembers());
+        model.addAttribute("pendingInvites", gruppe.getInvites());
         model.addAttribute("link", request.getServerName());
         model.addAttribute("permission", gruppe.getPermissions(user));
-        model.addAttribute("user", email);
-        model.addAttribute("group", gruppe);
+        model.addAttribute("currUser", user);
+        model.addAttribute("currGroup", gruppe);
+        model.addAttribute("hasAcceptedDate", gruppe.hasAcceptedDeliveryDate(user));
+        model.addAttribute("mayOrder", gruppe.hasEveryoneAcceptedDeliveryDate());
+        model.addAttribute("address", gruppe.getDeliveryPlace());
+        model.addAttribute("date", gruppe.getDeliveryDate());
         return "groupMenu";
     }
 
@@ -270,22 +275,23 @@ public class WebController {
 
     /**
      * this method is invoked when creating a new invite from the groupMenu
-     * @param groupAndUserBody is used by thymeleaf in the html page
+     * @param groupId The Id of the Group to which the user should be invited
+     * @param email The email of the user to be invited
      * @return redirects to the groupMenu
      */
     @PostMapping("/invite")
-    public String addInvite(@ModelAttribute(name = "groupAndUserBody") GroupAndUserBody groupAndUserBody) {
-        Optional<User> optionalUser = userService.findById(groupAndUserBody.getEmail());
-        if(optionalUser.isEmpty()) System.out.println("No user with email "+groupAndUserBody.getEmail()+" was found!");
+    public String addInvite(@ModelAttribute(name = "groupId") String groupId, @ModelAttribute(name = "email") String email) {
+        Optional<User> optionalUser = userService.findById(email);
+        if(optionalUser.isEmpty()) System.out.println("No user with email "+email+" was found!");
         User user = optionalUser.get();
 
-        Optional<Gruppe> optionalGruppe = groupService.findById(groupAndUserBody.getGroupId());
-        if (optionalGruppe.isEmpty()) System.out.println("No group with id "+groupAndUserBody.getGroupId()+" was found!");
+        Optional<Gruppe> optionalGruppe = groupService.findById(groupId);
+        if (optionalGruppe.isEmpty()) System.out.println("No group with id "+groupId+" was found!");
         Gruppe gruppe = optionalGruppe.get();
 
         inviteService.addInvite(new Invite(gruppe, user));
 
-        return "redirect:groupMenuFwd?list=" + groupAndUserBody.getGroupId();
+        return "redirect:groupMenuFwd?list=" + groupId;
     }
 
     /**
@@ -314,19 +320,72 @@ public class WebController {
     }
 
     /**
-     * used to decline an invite
+     * used to decline an invite from the userMenu
      * @param groupId The Id of the Group in which the user was invited
      * @param email The email of the invited user
      * @return redirects to the userMenu
      */
     @PostMapping("/declineInvite")
-    public String declineInvite(@ModelAttribute(name = "groupId") String groupId, @ModelAttribute(name = "email") String email) {
+    public String declineInvite(@ModelAttribute(name = "groupId") String groupId,
+                                @ModelAttribute(name = "email") String email) {
+        System.out.println("decline invite:" + email + ", " + groupId);
+
+        inviteService.removeInvite(groupId, email);
+
+        return "redirect:groupMenuFwd?list=" + groupId;
+    }
+
+    /**
+     * used to withdraw an invite from the groupMenu
+     * @param groupId The Id of the Group in which the user was invited
+     * @param email The email of the invited user
+     * @return redirects to the userMenu
+     */
+    @PostMapping("/withdrawInvite")
+    public String withdrawInvite(@ModelAttribute(name = "groupId") String groupId,
+                                @ModelAttribute(name = "email") String email) {
         System.out.println("decline invite:" + email + ", " + groupId);
 
         inviteService.removeInvite(groupId, email);
 
         return "redirect:userMenu";
     }
+
+    @PostMapping("/confirmDate")
+    public String confirmDate(@ModelAttribute(name = "groupId") String groupId,
+                              @ModelAttribute(name = "email") String email) {
+        Optional<User> optionalUser = userService.findById(email);
+        if(optionalUser.isEmpty()) System.out.println("No user with email "+email+" was found!");
+        User user = optionalUser.get();
+
+        Optional<Gruppe> optionalGruppe = groupService.findById(groupId);
+        if (optionalGruppe.isEmpty()) System.out.println("No group with id "+groupId+" was found!");
+        Gruppe gruppe = optionalGruppe.get();
+
+        gruppe.acceptDeliveryDate(user);
+        groupService.save(gruppe);
+
+        return "redirect:groupMenuFwd?list=" + groupId;
+    }
+
+    @PostMapping("/unconfirmDate")
+    public String unconfirmDate(@ModelAttribute(name = "groupId") String groupId,
+                                @ModelAttribute(name = "email") String email) {
+        Optional<User> optionalUser = userService.findById(email);
+        if(optionalUser.isEmpty()) System.out.println("No user with email "+email+" was found!");
+        User user = optionalUser.get();
+
+        Optional<Gruppe> optionalGruppe = groupService.findById(groupId);
+        if (optionalGruppe.isEmpty()) System.out.println("No group with id "+groupId+" was found!");
+        Gruppe gruppe = optionalGruppe.get();
+
+        gruppe.acceptNoLongerDeliveryDate(user);
+        groupService.save(gruppe);
+
+        return "redirect:groupMenuFwd?list=" +groupId;
+    }
+
+
 
     @GetMapping("/noLogin")
     public RedirectView noLogin(HttpServletRequest request){
