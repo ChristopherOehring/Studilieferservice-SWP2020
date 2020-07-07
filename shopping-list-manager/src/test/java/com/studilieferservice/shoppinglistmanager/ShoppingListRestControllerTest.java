@@ -32,6 +32,13 @@ public class ShoppingListRestControllerTest {
     @Mock
     private ShoppingListService shoppingListService;
 
+    @Mock
+            private UserService userService;
+    @Mock
+    private  GroupService groupService;
+    @Mock
+    private  ItemService itemService;
+
     ShoppingList shoppingList1;
 
     User user = new User("email@web.com","tester");
@@ -70,14 +77,12 @@ public class ShoppingListRestControllerTest {
 
     @Test
     public void createUserTest(){
-        User user = mock(User.class);
         ResponseEntity<?> response = shoppingListRestController.createUser(user);
         assertThat(response.getStatusCodeValue()).isEqualTo(201);
     }
 
     @Test
     public void createGroupTest(){
-        Group group = mock(Group.class);
         ResponseEntity<?> response = shoppingListRestController.createGroup(group);
         assertThat(response.getStatusCodeValue()).isEqualTo(201);
 
@@ -85,7 +90,6 @@ public class ShoppingListRestControllerTest {
 
     @Test
     public void createItemTest(){
-        Item item = mock(Item.class);
         ResponseEntity<?> response = shoppingListRestController.createItem(item);
         assertThat(response.getStatusCodeValue()).isEqualTo(201);
     }
