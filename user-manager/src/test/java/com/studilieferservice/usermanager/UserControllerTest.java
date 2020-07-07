@@ -61,4 +61,5 @@ public class UserControllerTest {
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(response.getBody()).isEqualTo("Successful login");
     }
+
 }
