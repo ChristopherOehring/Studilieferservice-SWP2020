@@ -41,8 +41,6 @@ public class WebController {
 
     /**
      * get request on / invokes the index.html of the user-manager
-     *
-     * @param
      * @return returns "index" which results in invocation of the index.html
      */
     @GetMapping("/index")
@@ -53,7 +51,8 @@ public class WebController {
     /**
      * get request on /register invokes the registerForm.html of the user-manager
      *
-     * @param model
+     * @param model a Autowired Object of class "Model", which is then used by thymeleaf
+     * @param request Contains all kinds of information about how this method was called (through a browser)
      * @return returns "registerForm" which results in invocation of the registerForm.html
      */
     @GetMapping("/register")
@@ -68,7 +67,7 @@ public class WebController {
      * Meant to be used by a webpage to create a new user
      *
      * @param bindingResult
-     * @param user
+     * @param user The user that should be registred
      * @return HTML view
      */
     @PostMapping("/register")
@@ -83,7 +82,9 @@ public class WebController {
     /**
      * get request on /editaccount invokes the editaccount.html of the user-manager
      *
-     * @param model
+     * @param model a Autowired Object of class "Model", which is then used by thymeleaf
+     * @param email the userEmail, as found in the "useremail" cookie
+     * @param request Contains all kinds of information about how this method was called (through a browser)
      * @return returns "editaccount" which results in invocation of the editaccount.html
      */
     @GetMapping("/editaccount")
@@ -96,7 +97,8 @@ public class WebController {
     /**
      * get request on /login invokes the login.html of the user-manager
      *
-     * @param model
+     * @param model a Autowired Object of class "Model", which is then used by thymeleaf
+     * @param request Contains all kinds of information about how this method was called (through a browser)
      * @return returns "login" which results in invocation of the login.html
      */
     @GetMapping("/login")
@@ -109,7 +111,10 @@ public class WebController {
     }
 
     /**
-     * @param
+     * Deletes the cookie which represents the user which is logged in
+     *
+     * @param response Can be used to set properties of the http response
+     * @param request Contains all kinds of information about how this method was called (through a browser)
      * @return returns "login" which results in invocation of the login.html
      */
     @GetMapping("/logout")
@@ -128,7 +133,11 @@ public class WebController {
     }
 
     /**
-     * Meant to be used by a webpage to login
+     * Meant to be used by a webpage to login. This method checks the login data. If it is correct it will set the cookie "useremail", which is used to store the login and
+     * then redirect to the userMenu. Otherwise it redirects to the login page.
+     *
+     * @param email the user email
+     * @param password the user passwor
      *
      * @return HTML view
      */
@@ -161,7 +170,8 @@ public class WebController {
     /**
      * Meant to be used by a webpage to edit user profile
      *
-     * @param user
+     * @param user a user Object with the edited information
+     * @param email the email of the user, that should be edited
      * @return HTML view
      */
     @PostMapping("/edit")
@@ -172,7 +182,7 @@ public class WebController {
     }
 
     /**
-     * @return HTML view
+     * @return HTML view: about
      */
     @GetMapping("/about")
     public String about() {
@@ -183,6 +193,7 @@ public class WebController {
      *
      * @return
      */
+    @Deprecated
     @GetMapping("/groupmanager")
     public RedirectView localRedirect() {
         RedirectView redirectView = new RedirectView();
