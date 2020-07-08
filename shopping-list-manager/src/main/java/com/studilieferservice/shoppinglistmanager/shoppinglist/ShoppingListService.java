@@ -123,9 +123,8 @@ public class ShoppingListService {
     public void deleteAllItemsFromShoppingListsForGroup(Group group) {
         for (ShoppingList shoppingList : group.getShoppingLists()) {
             ShoppingList sl = shoppingListRepository.findById(shoppingList.getId()).orElseThrow();
-            for (int i = 0; i < sl.getItems().size(); i++) {
+            for (int i = 0; sl.getItems().size() > 0;) {
                 Item item = itemService.getItem(sl.getItems().get(i).getItem().getName());
-
                 deleteItemFromShoppingList(sl, item);
             }
         }
