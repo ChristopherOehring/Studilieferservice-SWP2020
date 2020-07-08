@@ -126,16 +126,6 @@ public class WebController {
             return "redirect:groupMenuFwd";
         }
 
-//        if (gruppe.getDeliveryDate() != null)
-//            model.addAttribute("date", gruppe.getDeliveryDate());
-//        else
-//            model.addAttribute("date", "-");
-//
-//        if (gruppe.getDeliveryPlace() != null)
-//            model.addAttribute("address", gruppe.getDeliveryPlace());
-//        else
-//            model.addAttribute("address", Arrays.asList("-","","",""));
-
         model.addAttribute("groupAndUserBody", new GroupAndUserBody());
         model.addAttribute("thisGroupId", groupId);
         model.addAttribute("owner", gruppe.getOwner());
@@ -448,11 +438,12 @@ public class WebController {
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<String> response = restTemplate.exchange(urlRequest, HttpMethod.GET, restRequest, String.class);
 
-            completeShoppingList = response.getBody(); //complete shopping list of group
+            completeShoppingList = "{\n\t\"date\": \""+date+"\",\n\t\"address\": \""+address+"\",";
+            completeShoppingList += Objects.requireNonNull(response.getBody()).substring(1);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(completeShoppingList);
+        System.out.println(completeShoppingList); //complete shopping list of group
 
         //REST request to shopping-list-manager to clear shopping lists
         urlRequest = "http://shopping-list-manager:8070/shoppingList/removeAllProductsForGroup";
