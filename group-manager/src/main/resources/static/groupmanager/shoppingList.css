@@ -1,0 +1,178 @@
+/*###################
+  #### VARIABLES ####
+  ###################*/
+
+:root{
+    /*## COLORS ###*/
+    --primary: #363636;
+    --secondary: #474747;
+    --lineColor: #909090;
+
+    /*## FONTS ##*/
+    --headingFont: "Patua One";
+    --secondaryFont: "Roboto";
+
+    /*## STANDARD STRUCTURE ##*/
+    --colTopMargin: 20%;
+    --colHeight: 70%;
+}
+
+/*DELETE ME*/
+.element{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+
+/*##############
+  #### BODY ####
+  ##############*/
+
+body{ /*For full website*/
+    margin: 0;
+}
+
+.OuterBox{ /*box around all elements*/
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: var(--primary);
+}
+
+.title{ /*box around title for positioning*/
+    border-bottom: 1px solid var(--lineColor);
+    text-align: center;
+}
+
+h1{ /*the title itself*/
+    color: white;
+    font-family: var(--headingFont);
+}
+
+.items{ /*box around the itemlist*/
+    margin-top: 1rem;
+    margin-left: 0.5rem;
+    /*padding-right: 1rem;*/
+    height: calc(100% - 240px); /*75%*/
+    overflow: scroll;
+
+        /*#SCROLLBAR FOR FIREFOX#*/
+    scrollbar-color: var(--secondary) var(--primary);
+    scrollbar-width: thin;
+    scrollbar-track-color: var(--primary);
+
+}
+
+/*## SCROLLBAR FOR BROWSERS != FIREFOX##*/
+.items::-webkit-scrollbar {
+    width: 5px;  /* width of the entire scrollbar */
+}
+.items::-webkit-scrollbar-track {
+    background: var(--primary);  /* color of the tracking area */
+}
+.items::-webkit-scrollbar-thumb {
+    background-color: var(--secondary);    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid var(--primary);  /* creates padding around scroll thumb */
+}
+
+table{ /*some settings for the table itself*/
+    width: 100%;
+    border-spacing: 0rem 1rem; /*space betw cols = 0rem ### space betw rows 1rem*/
+}
+
+row{ /*table rows*/
+
+    /*positioning and color*/
+    width: 100%;
+    margin: 0.5rem;
+    text-align: center;
+    background-color: var(--secondary);
+
+    /*box-shadow*/
+    -webkit-box-shadow: 5px 5px 10px -4px #000000; 
+    box-shadow: 5px 5px 10px -4px #000000;
+}
+
+.column{ /*table columns*/
+
+    /*positioning*/
+    /*width: 100%;*/
+    margin-right: 0;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+
+    /*fonts*/
+    color: white;
+    font-family: var(--secondaryFont);
+}
+
+.column.wrap-group{
+    white-space: nowrap;
+}
+
+.column.wrap-group .inline{
+    display: inline;
+}
+
+.column.wrap-group .inline.amount{
+    /*padding-inline: 10px;*/
+    padding: 0;
+}
+
+input[type=image]{ /*the + and - of each item*/
+    width: 15px;
+    height: 15px;
+}
+
+.addProduct{ /* box around addProduct button for positioning */
+    text-align: center;
+    margin-top: 5%;
+}
+
+.addProductButton{ /*submitbutton styling*/
+    /*positioning and boxform*/
+    width: auto;
+    text-align: center;
+    padding-top: 0.2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 0.2rem;
+    background-color: transparent;
+
+    /* border */
+    border-radius: 30px;
+    border: 2px solid white;
+
+    /*font*/
+    font-size: 16px;
+    color: white;
+    font-family: var(--secondaryFont);
+
+    /*animation time for hover*/
+    transition: 0.5s;
+}
+
+/* Change when button is hovered */
+.addProductButton:hover{
+    background-color: white;
+    color: var(--primary);
+}
+
+.line{ /*the line between button and sum*/ 
+    margin-top: 5%;
+    width: 100%;
+    border-bottom: 1px solid var(--lineColor);
+}
+
+.sum{ /*box around the sum*/
+    text-align: right;
+}
+
+.total{ /*fonts for the sum*/
+    margin-top: 2px;
+    margin-right: 1rem;
+    color: white;
+    font-family: var(--secondaryFont);
+    font-size: 22px;
+}

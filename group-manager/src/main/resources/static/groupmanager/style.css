@@ -1,0 +1,337 @@
+/*###################
+  #### VARIABLES ####
+  ###################*/
+
+:root{
+    /*## COLORS ###*/
+    --primary: #363636;
+    --secondary: #474747;
+    --lineColor: #909090;
+
+    /*## FONTS ##*/
+    --headingFont: "Patua One";
+    --secondaryFont: "Roboto";
+
+    /*## STANDARD STRUCTURE ##*/
+    --colTopMargin: 20%;
+    --colHeight: 70%;
+}
+
+/*#################################################################################################
+  #################################################################################################*/
+
+/*############################
+  #### STANDARD STRUCTURE ####
+  ############################*/
+
+body{
+    height: 100%;
+    margin: 0;
+    background-color: var(--primary);
+}
+
+h1{   /*h1 is the heading "Groups"*/
+    margin-top: 3rem;
+    text-align: center;
+    color: white;
+    font-family: var(--headingFont);
+}
+
+.col1{ /*My Groups - Column*/
+    position: fixed;
+    width: 25%;
+    height: var(--colHeight);
+    left: 5%;
+    top: var(--colTopMargin);
+}
+
+.col2{ /*Join Requstes - Column*/
+    position: fixed;
+    width: 25%;
+    height: var(--colHeight);
+    left: 37.5%;
+    top: var(--colTopMargin);
+}
+
+
+.col3{ /*Create new Group - Column*/
+    position: fixed;
+    width: 25%;
+    height: var(--colHeight);
+    right: 5%;
+    top: var(--colTopMargin);
+}
+
+
+/*#################################################################################################
+  #################################################################################################*/
+
+/*###################
+  #### SUBTITLES ####
+  ###################*/
+
+.subtitle{ /*the box around the subheadings "My Groups", "Join Requsts", "All Groups", "Create new Group"*/
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid var(--lineColor); /*line under the block*/
+}
+
+h2{ /* font-style of the subheadings */
+    text-align: center;
+    color: white;
+    font-family: var(--secondaryFont);
+
+    margin-bottom: 0.5rem;
+}
+
+/*###################
+  ###################*/
+
+/*####################
+  #### SEARCHBARS ####
+  ####################*/
+
+/*Searchbars are at column 1 -My Groups- and column 3 -AllGroups-*/
+
+.col1Search{ /*boxes around the searchbars*/
+    margin-top: 0;
+    height: 3rem;
+    border-bottom: 1px solid var(--lineColor); /*bottumline unter the search-box*/
+}
+
+#myGroupSearch{ /*the searchbar-input.. Edit font here*/
+    /*positioning*/
+    width: 70%;
+    margin-left: 15%;
+    margin-top: 1rem;
+
+    background-color: transparent;
+
+    /*dashed bottumline*/
+    border: none;
+    border-bottom: 1px dashed var(--lineColor);
+
+    /*font*/
+    color: white;
+    font-size: 16px;
+    font-family: var(--secondaryFont);
+}
+
+/*#################################################################################################
+  #################################################################################################*/
+
+/*########################
+  #### LIST OF GROUPS #### 
+  ########################*/
+
+.groupList{     /*box around list + button*/
+
+    /*positioning*/
+    text-align: center;
+}
+
+.listBox{         /*box around list elements*/
+
+    /*positioning*/
+    max-height: 15rem;
+    margin-top: 1rem;
+
+    /*make scrollable*/
+    overflow: scroll;
+
+    /*#SCROLLBAR FOR FIREFOX#*/
+    scrollbar-color: var(--secondary) var(--primary);
+    scrollbar-width: thin;
+    scrollbar-track-color: var(--primary);
+
+}
+
+/*## SCROLLBAR FOR BROWSERS != FIREFOX##*/
+.listBox::-webkit-scrollbar {
+    width: 5px;  /* width of the entire scrollbar */
+}
+.listBox::-webkit-scrollbar-track {
+    background: var(--primary);  /* color of the tracking area */
+}
+.listBox::-webkit-scrollbar-thumb {
+    background-color: var(--secondary);    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid var(--primary);  /* creates padding around scroll thumb */
+}
+
+/*##################
+  # LISTS ELEMENTS #
+  ##################*/
+
+.empty{
+    text-align: center;
+    margin-left: 0;
+    margin-right: 0;
+    font-size: 16px;
+    width: 100%;
+    color: white;
+    font-family: var(--secondaryFont);
+}
+
+li{ /*li is a box around of a label and radio button*/
+
+    /*turn off list bullets*/
+    list-style-type: none;
+    /*margin-top: 1rem;*/
+    /*margin-left: 2rem;*/
+    margin-right: 3rem; /*2*/
+}
+
+li.border{
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 25px;
+}
+
+/*## RADIO BUTTONS & LABELS ##*/
+
+input[type=radio] {
+    display: none; /* hide radio buttons */
+    width: 100%;
+}
+
+label { /*text inside list element .. Edit font here*/
+
+    /*positioning*/
+    display: inline-block;
+    padding: 5px 10px;
+    text-align: center;
+    margin-left: 0;
+    margin-right: 0;
+
+    /*fonts*/
+    font-size: 16px;
+    width: 100%;
+    color: white;
+    font-family: var(--secondaryFont);
+}
+
+label.border{
+    border-bottom: 1px solid #4a4a4a;
+}
+
+/* Change when list element is hovered */
+.lbl:hover{
+    background-color: var(--secondary);
+}
+
+/* Change when radio-button is checked */
+input[type=radio]:checked + .lbl {
+    background-color: var(--secondary);
+    padding: 4px 9px;
+    border: 1px solid white;
+}
+
+/*#################################################################################################
+  #################################################################################################*/
+
+/*########################
+  #### SUBMIT BUTTONS ####
+  ########################*/
+
+/* For My Groups and All Groups */
+
+.submitBox{ /* box around button for positioning */
+    text-align: center;
+    margin-top: 20%;
+}
+
+.submitButton{ /*submitbutton styling*/
+    /*positioning and boxform*/
+    width: auto;
+    text-align: center;
+    padding-top: 0.2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 0.2rem;
+    background-color: transparent;
+
+    /* border */
+    border-radius: 30px;
+    border: 2px solid white;
+
+    /*font*/
+    font-size: 16px;
+    color: white;
+    font-family: var(--secondaryFont);
+
+    /*animation time for hover*/
+    transition: 0.5s;
+}
+
+/* Change when button is hovered */
+.submitButton:hover{
+    background-color: white;
+    color: var(--primary);
+}
+
+/* For Create new Group */
+
+.createGroup{ /*box around form element*/
+    background-color: transparent;
+}
+
+.inputGroupName{  /*box around Groupname input*/
+    text-align: center;
+    margin-top: 40%;
+    margin-bottom: 40%;
+}
+
+#groupname{/*input for groupname*/
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px dashed var(--lineColor);
+    width: 80%;
+
+    /*font*/
+    color: white;
+    font-size: 16px;
+    font-family: var(--secondaryFont);
+}
+
+.addGroup{ /*box around add button for positioning*/
+    text-align: center;
+}
+
+/*#######################
+  #### JOIN REQUESTS ####
+  #######################*/
+
+input[type=image]{
+    height: 15px;
+}
+
+table{
+    width: 100%;
+    text-align: center;
+}
+
+#invLabel:hover{
+    background-color: transparent;
+}
+
+.logout{
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    width: 2rem;
+    height: 2rem;
+}
+
+.settings{
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    width: 2rem;
+    height: 2rem;
+}
+
+.image{
+    height: 1.5rem;
+    width: 1.5rem;
+}

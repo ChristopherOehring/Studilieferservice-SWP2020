@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="../static/groupmanager/groupMenu.css" th:href="@{/groupmanager/groupMenu.css}"/>
+    <link rel="stylesheet" type="text/css" href="../static/groupmanager/shoppingList.css" th:href="@{/groupmanager/shoppingList.css}"/>
+    <link rel="stylesheet" type="text/css" href="../static/groupmanager/chat.css" th:href="@{/groupmanager/chat.css}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
+<title>Dashboard</title>
+</head>
+<body>
+
+    <h1>Dashboard</h1>
+
+    <button class="backButton">
+        <a th:href="${'http://' + link + ':9010/web/groupmanager/userMenu'}">
+            <img src="../static/groupmanager/imgs/backButton.png" width="30" height="30"
+                 th:src="@{/groupmanager/imgs/backButton.png}"/>
+            Back
+        </a>
+    </button>
+
+    <div class="members-bar">
+        <div class="memberTitleBox">
+            <h2>Members</h2>
+        </div> 
+        <div class="membersList">
+            <table class="memTable">
+                <tr class="memTr">
+                    <td class="memTd">
+                        <img class="image" src="../static/groupmanager/imgs/crown-3-128.png" alt=" " th:src="@{/groupmanager/imgs/crown-3-128.png}">
+                    </td>
+                    <td class="memTd">
+                        <img class="image" th:if="${currGroup.hasAcceptedDeliveryDate(owner)}" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <div th:unless="${currGroup.hasAcceptedDeliveryDate(owner)}">&emsp;</div>
+                    </td>
+                    <td class="memTd">
+                        <p th:text="${owner.getUserName()}"></p>
+                    </td>
+                    <td class="memTd">
+                        &emsp;
+                    </td>
+                    <td class="memTd">
+                        &emsp;
+                    </td>
+                </tr>
+
+                <!-- List of Admins -->
+                <tr class="memTr" th:each="member: ${adminList}"> <!-- TODO: adjust -->
+                    <td class="memTd">
+                        <img class="image" src="../static/groupmanager/imgs/crown-3-128.png" alt=" " th:src="@{/groupmanager/imgs/crown-3-128.png}">
+                    </td>
+                    <td class="memTd">
+                        <img class="image" th:if="${currGroup.hasAcceptedDeliveryDate(member)}" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <div th:unless="${currGroup.hasAcceptedDeliveryDate(member)}">&emsp;</div>
+                    </td>
+                    <td class="memTd">
+                        <p th:text="${member.getUserName()}"></p>
+                    </td>
+                    <td th:if="${currGroup.getPermissions(currUser.email).equals('owner')}" class="memTd" 4>
+                        <form th:action="${'http://' + link + ':9010/web/groupmanager/demote'}"  method="POST">
+                            <div class="inviteImage">
+                                <input type="image" src="../static/groupmanager/imgs/demote.png" th:src="@{/groupmanager/imgs/demote.png}" alt="-" />
+                            </div>
+                            <input type="hidden" th:name="groupId" th:value="${groupId}" />
+                            <input type="hidden" th:name="email"   th:value="${member.email}" />
+                        </form>
+                    </td>
+                    <td class="memTd" th:unless="${currGroup.getPermissions(currUser.email).equals('owner')}" 5.2>
+                        &emsp;
+                    </td>
+                    <td class="memTd" 5>
+                        &emsp;
+                    </td>
+                </tr>
+
+                <!-- List of the other Members -->
+                <tr class="memTr" th:each="member: ${memberList}">
+                    <td class="memTd">
+                        &emsp;
+                    </td>
+                    <td class="memTd">
+                        <img class="image" th:if="${currGroup.hasAcceptedDeliveryDate(member)}" src="../static/groupmanager/imgs/checkmark-128.png" alt="" th:src="@{/groupmanager/imgs/checkmark-128.png}">
+                        <div th:unless="${currGroup.hasAcceptedDeliveryDate(member)}">&emsp;</div>
+                    </td>
+                    <td class="memTd">
+                        <p th:text="${member.getUserName()}"></p>
+                    </td>
+                    <td class="memTd">
+                        <form th:if="${currGroup.getPermissions(currUser.email).equals('owner')}" th:action="${'http://' + link + ':9010/web/groupmanager/promote'}"  method="POST">
+                            <div class="inviteImage">
+                                <input type="image" src="../static/groupmanager/imgs/promote.png" th:src="@{/groupmanager/imgs/promote.png}" alt="-" />
+                            </div>
+                            <input type="hidden" name="groupId" th:value="${groupId}" />
+                            <input type="hidden" name="email"   th:value="${member.email}" />
+                        </form>
+                        <a th:unless="${currGroup.getPermissions(currUser.email).equals('owner')}">&emsp;</a>
+                    </td>
+                    <td class="memTd">
+                        <form th:if="${currGroup.getPermissions(currUser.email).equals('admin') || currGroup.getPermissions(currUser.email).equals('owner')}" th:action="${'http://' + link + ':9010/web/groupmanager/kick'}"  method="POST">
+                            <div class="inviteImage">
+                                <input type="image" src="../static/groupmanager/imgs/x-mark-128.png" th:src="@{/groupmanager/imgs/x-mark-128.png}" alt="-" />
+                            </div>
+                            <input type="hidden" name="groupId" th:value="${groupId}" />
+                            <input type="hidden" name="email"   th:value="${member.email}" />
+                        </form>
+                        <a th:unless="${currGroup.getPermissions(currUser.email).equals('admin') || currGroup.getPermissions(currUser.email).equals('owner')}" >&emsp;</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="inviteMember">
+            <form th:if="${currGroup.getPermissions(currUser.email).equals('admin') || currGroup.getPermissions(currUser.email).equals('owner')}"
+            th:action="${'http://' + link + ':9010/web/groupmanager/invite'}"  method="POST">
+                <div class="inviteUsername">
+                    <input class="username" name="email" type="text" placeholder="user-email" style="border-bottom: none">
+                </div>
+                <input type="hidden" name="groupId" th:value="${groupId}">
+                <div class="inviteButton">
+                    <input type="submit" value="invite someone" id="inviteButton">
+                </div>
+            </form>
+            <form th:unless="${currGroup.getPermissions(currUser.email).equals('admin') || currGroup.getPermissions(currUser.email).equals('owner')}">
+                <div class="inviteUsername">
+                    <input disabled class="username" name="email" type="text" placeholder="insufficient permissions" style="border-bottom: none">
+                </div>
+                <div class="inviteButtonDisabled">
+                    <input type="submit" value="invite someone" id="inviteButtonDisabled">
+                </div>
+            </form>
+        </div>
+        <div class="memberTitleBox">
+            <h2>pending invites</h2>
+        </div>
+        <div class="inviteList">
+            <table class="memTable">
+                <tr th:each="invite :${pendingInvites}" class="memTr">
+                    <td class="memTd" th:text="${invite.getUser().getEmail()}"></td>
+                    <td class="memTd">
+                        <form th:if="${currGroup.getPermissions(currUser.email).equals('admin') || currGroup.getPermissions(currUser.email).equals('owner')}"
+                              th:action="${'http://' + link + ':9010/web/groupmanager/withdrawInvite'}"  method="POST">
+                            <div class="inviteImage">
+                                <input type="image" src="../static/groupmanager/imgs/x-mark-128.png" th:src="@{/groupmanager/imgs/x-mark-128.png}" alt="-" />
+                            </div>
+                            <input type="hidden" name="groupId" th:value="${invite.id.groupId}" />
+                            <input type="hidden" name="email"   th:value="${invite.getUser().getEmail()}" />
+                        </form>
+                        <a th:unless="${currGroup.getPermissions(currUser.email).equals('owner')}">&emsp;</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="shipping-information">
+        <table class="delTable">
+            <tr class="delTr">
+                <td class="delTd" style="width: 35%">delivery date:</td>
+                <td class="delTd" th:text="${date}" style="width: 55%">01.01.2020</td>
+                <td class="delTd" style="width: 10%"
+                    th:if="${currGroup.getPermissions(currUser.email).equals('admin') ||
+                    currGroup.getPermissions(currUser.email).equals('owner')}">
+                    <button class="edit-btn" onclick="openFormDate()">
+                            <img class="edit-img" src="../static/groupmanager/imgs/edit.png"
+                                 th:src="@{/groupmanager/imgs/edit.png}" alt="+"/>
+                    </button>
+                </td>
+                <!--td below could maybe be deleted-->
+                <td class="delTd" style="width: 10%"
+                    th:unless="${currGroup.getPermissions(currUser.email).equals('admin') ||
+                    currGroup.getPermissions(currUser.email).equals('owner')}">
+                    <button class="edit-btn">
+                        <img class="edit-img" src="../static/groupmanager/imgs/edit.png"
+                             th:src="@{/groupmanager/imgs/edit.png}" alt="+" style="filter: opacity(0%)"/>
+                    </button>
+                </td>
+            </tr>
+        </table>
+
+        <div class="popup" id="formDate">
+            <form th:action="${'http://' + link + ':9010/web/groupmanager/changeDeliveryDate'}" method="POST">
+                <input type="hidden" name="groupId" th:value="${groupId}">
+                <input class="input" type="text" name="deliveryDate" placeholder="DD.MM.YYYY">
+                <button class="popup-btn save" type="submit">Save</button>
+                <button class="popup-btn close" type="button" onclick="closeFormDate()">Close</button>
+            </form>
+        </div>
+
+        <table class="delTable">
+            <tr class="delTr">
+                <td class="delTd" style="width: 35%">delivery adress:</td>
+                <td class="delTd" style="width: 55%">
+                    <div th:text="${address.get(1) + ' ' + address.get(0) + ','}">123456 Model City,</div>
+                    <div th:text="${address.get(2) + ' ' + address.get(3)}">Modelstreet 42</div>
+                </td>
+                <td class="delTd" style="width: 10%"
+                    th:if="${currGroup.getPermissions(currUser.email).equals('admin') ||
+                    currGroup.getPermissions(currUser.email).equals('owner')}">
+                    <button class="edit-btn" onclick="openFormAddress()">
+                        <img class="edit-img" src="../static/groupmanager/imgs/edit.png"
+                             th:src="@{/groupmanager/imgs/edit.png}" alt="+"/>
+                    </button>
+                </td>
+                <!--td below could maybe be deleted-->
+                <td class="delTd" style="width: 10%"
+                    th:unless="${currGroup.getPermissions(currUser.email).equals('admin') ||
+                    currGroup.getPermissions(currUser.email).equals('owner')}">
+                    <button class="edit-btn">
+                        <img class="edit-img" src="../static/groupmanager/imgs/edit.png"
+                             th:src="@{/groupmanager/imgs/edit.png}" alt="+" style="filter: opacity(0%)"/>
+                    </button>
+                </td>
+            </tr>
+        </table>
+
+        <div class="popup" id="formAddress">
+            <form th:action="${'http://' + link + ':9010/web/groupmanager/changeDeliveryAddress'}" method="POST">
+                <input type="hidden" name="groupId" th:value="${groupId}">
+                <input class="input" type="text" name="deliveryAddress" placeholder="zip, city, street, house no.">
+                <button class="popup-btn save" type="submit">Save</button>
+                <button class="popup-btn close" type="button" onclick="closeFormAddress()">Close</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="orderButton">
+        <table><tr>
+            <td>
+                <div th:unless="${hasAcceptedDate}">
+                    <form th:action="${'http://' + link + ':9010/web/groupmanager/confirmDate'}" method="POST">
+                        <input type="submit" id="confirmButton" value="ready">
+                        <input type="hidden" name="groupId" th:value="${currGroup.id}">
+                        <input type="hidden" name="email" th:value="${currUser.email}">
+                    </form>
+                </div>
+                <div th:if="${hasAcceptedDate}">
+                    <form th:action="${'http://' + link + ':9010/web/groupmanager/unconfirmDate'}" method="POST">
+                        <input type="submit" id="unconfirmButton" value="not ready">
+                        <input type="hidden" name="groupId" th:value="${currGroup.id}">
+                        <input type="hidden" name="email" th:value="${currUser.email}">
+                    </form>
+                </div>
+            </td>
+            <td th:if="${mayOrder && (currGroup.getPermissions(currUser.email).equals('admin') || currGroup.getPermissions(currUser.email).equals('owner'))}">
+                &emsp;
+            </td>
+            <td th:if="${mayOrder && (currGroup.getPermissions(currUser.email).equals('admin') || currGroup.getPermissions(currUser.email).equals('owner'))}">
+                <form th:action="${'http://' + link + ':9010/web/groupmanager/order'}" method="POST">
+                    <input type="submit" id="orderButton" value="order">
+                    <input type="hidden" name="groupId" th:value="${currGroup.id}">
+                    <input type="hidden" name="email" th:value="${currUser.email}">
+                    <input type="hidden" name="date" th:value="${date}">
+                    <input type="hidden" name="address" th:value="${address}">
+                </form>
+            </td>
+        </tr></table>
+    </div>
+
+    <div id="chat" class="chat" th:include-html="${'../chat/' + groupId}"></div>
+
+    <div id="shopping-list" class="shopping-list" th:include-html="${'../shoppingList/' + groupId}"></div>
+
+    <div id="valuesScript" style="opacity: 0" th:groupId="${thisGroupId}"></div>
+
+    <script>
+        includeHTML();
+
+        function openFormDate() {
+            document.getElementById("formDate").style.display = "block";
+            closeFormAddress();
+        }
+
+        function closeFormDate() {
+            document.getElementById("formDate").style.display = "none";
+        }
+
+        function openFormAddress() {
+            document.getElementById("formAddress").style.display = "block";
+            closeFormDate();
+        }
+
+        function closeFormAddress() {
+            document.getElementById("formAddress").style.display = "none";
+        }
+
+        function includeHTML() {
+            var z, i, elmnt, file, xhttp;
+            /* Loop through a collection of all HTML elements: */
+            z = document.getElementsByTagName("*");
+            for (i = 0; i < z.length; i++) {
+                elmnt = z[i];
+                /*search for elements with a certain atrribute:*/
+                file = elmnt.getAttribute("include-html");
+                if (file) {
+                    /* Make an HTTP request using the attribute value as the file name: */
+                    xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4) {
+                            if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+                            if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+                            /* Remove the attribute, and call this function once more: */
+                            elmnt.removeAttribute("include-html");
+                            scroll();
+                            includeHTML();
+                        }
+                    }
+                    xhttp.open("GET", file, true);
+                    xhttp.send();
+                    /* Exit the function: */
+                    return;
+                }
+            }
+        }
+
+        function scroll() {
+            var objDiv = document.getElementById("messageArea");
+            if(objDiv != null) objDiv.scrollTop = objDiv.scrollHeight;
+        }
+
+        /*setInterval(function() {reloadChat()}, 3000)
+
+        function reloadChat() {
+            var elmnt, id, file, xhttp;
+            elmnt = document.getElementById("chat");
+            id = document.getElementById("valuesScript").getAttribute("groupId");
+            file = "../chat/" + id;
+            /!* Make an HTTP request*!/
+            xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        console.log(elmnt.innerHTML + ", " + this.responseText);
+                        if (elmnt.innerHTML != this.responseText) {
+                            alert("new msg!")
+                            elmnt.innerHTML = this.responseText;
+                            scroll();
+                        }
+                    }
+                    if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+                }
+            }
+            xhttp.open("GET", file, true);
+            xhttp.send();
+            /!* Exit the function: *!/
+            return;
+        }*/
+    </script>
+</body>
+</html>

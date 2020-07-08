@@ -9,3 +9,11 @@ or at http://localhost:9010/web/group/index when started via docker-compose.
 This module can be started via docker-compose and works for the most part.
 Only the links to the shopping-list-manager do not work because their ports are 
 hard coded and would need to be changed in order to work with Docker.
+
+When started via Docker-Compose you can administer the database at:
+* http://localhost:9002/
+  * System:      postgreSQL
+  * Server:      db
+  * User:        db_user
+  * Password:    db_pwd
+  * Database:    postgres

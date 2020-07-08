@@ -2,49 +2,78 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../static/style.css" th:href="@{/style.css}"/>
-    <title>StudiLieferservice</title>
+<title>StudiLieferservice</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link rel="stylesheet" type="text/css" href="../static/shoppinglistmanager/style.css"
+      th:href="@{/shoppinglistmanager/style.css}" data-rd-options="include" />
+<link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet' />
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 </head>
 
 <body>
-    <div class="header">
-        <div class="logo">REWE</div>
-        <div class="logoAdd">StudiLieferservice</div>
-        <div class="headerTitle">Einkaufsliste</div>
-    </div>
-
-    <div class="columnLeft">
+<rewe-digital-content>
+    <div class="OuterBox">
         <div class="title">
-            Gruppe: <td th:text="${shoppingList.groupName}">Gruppenname</td>
+            <h2>
+                Shopping List
+            </h2>
         </div>
 
-        <div class="element">
-            <h3>Positionen:</h3>
-            <tr th:each="item : ${shoppingList.items}">
-                <p><b>- <td th:text="${item.name}"></td></b></p>
-            </tr>
-        </div>
-    </div>
+        <div class="items">
+            <table>
+                <tr class="row">
+                    <th class="column">Product</th>
+                    <th class="column">Price</th>
+                    <th class="column">Sum</th>
+                    <th class="column">Amount</th>
+                </tr>
 
-    <div class="columnRight">
-        <div class="title">
-            Artikel hinzufügen
+                <tr class="row" th:if="${!shoppingList.items.isEmpty()}" th:each="itemShoppingList : ${shoppingList.items}">
+                    <td class="column" th:text="${itemShoppingList.item.name}">produkt</td>
+                    <td class="column" th:text="${itemShoppingList.item.price+'€'}">preis</td>
+
+                    <td class="column" th:text="${#numbers.formatDecimal(itemShoppingList.item.price*itemShoppingList.amount, 0, 2)+'€'} ">summe</td>
+
+                    <td class="column wrap-group">
+                        <form class="column wrap-group inline" th:action="${'http://' + link + ':9070/web/shoppingList/itemDecrease'}" method="POST">
+                            <input type="image" th:src="@{/shoppinglistmanager/icons/minus.png}" alt="-">
+                            <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
+                            <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
+                        </form>
+
+                        <div class="column wrap-group inline amount" th:text="${itemShoppingList.amount}">0</div>
+
+                        <form class="column wrap-group inline" th:action="${'http://' + link + ':9070/web/shoppingList/itemIncrease'}" method="POST">
+                            <input type="image" th:src="@{/shoppinglistmanager/icons/plus.png}" alt="+">
+                            <input type="hidden" name="shoppingListId" th:value="${itemShoppingList.shoppingList.id}">
+                            <input type="hidden" name="itemName" th:value="${itemShoppingList.item.name}">
+                        </form>
+                    </td>
+                </tr>
+            </table>
         </div>
 
-        <div class="element">
-            <form th:action="@{/shoppingList/addItem}" th:object="${item}"  method="POST">
-                <label for="productname">Produkte hinzufügen: </label>
-                <input type="text" id="productname" th:field="*{name}" placeholder="Produkt" >
-                <input type="hidden" name= "groupId"   th:value="${shoppingList.groupId}" />
-                <input type="submit" value="Hinzufügen">
+        <div class="addProduct">
+            <form th:action="${'http://' + link + ':9060/product/listProducts'}" method="GET">
+                <input type="hidden" name="groupId" th:value="${shoppingList.group.id}">
+                <input type="hidden" name="userId" th:value="${shoppingList.user.id}">
+                <button type="submit" class="addProductButton">add products</button>
             </form>
         </div>
-    </div>
 
-    <div class="footer">
-        Impressum
+        <div class="line"></div>
+
+        <div th:if="${totalPrice != 0}" class="sum">
+            <div class="total" th:text="${#numbers.formatDecimal(totalPrice, 0, 2)+'€'}">total</div>
+        </div>
+
     </div>
+</rewe-digital-content>
+
 </body>
 
 </html>

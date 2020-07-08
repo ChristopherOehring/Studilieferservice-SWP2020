@@ -2,51 +2,38 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
 
 <head>
-    <link rel="stylesheet" href="../static/css/style.css" th:href="@{css/style.css}"/>
-    <link rel="stylesheet" href="../static/css/united/bootstrap.min.css" th:href="@{css/united/bootstrap.min.css}"/>
-    <script th:src="@{webjars/jquery/jquery.min.js}"></script>
-    <script th:src="@{webjars/bootstrap/bootstrap.min.js}"></script>
+    <link rel="stylesheet" href="../static/usermanager/css/error.css" th:href="@{/usermanager/css/error.css}">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
+
 
     <title>Registered</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">SWP-09 </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarColor01">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
+    <div class="navbar">
+        <nav>      
+            <ul>
+                <li>
+                    <a class="nav-link" href="/web/usermanager/register">Register</a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+    
+                <li>
+                    <a class="nav-link" href="/web/usermanager/login">Login</a>
+                </li>
+    
+                <li>
+                    <a class="nav-link" href="/web/usermanager/about">About</a>
                 </li>
             </ul>
-
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="hidden"/>
-                <!-- <button class="btn btn-secondary my-2 my-sm-0" type="submit">Logout</button> -->
-            </form>
-        </div>
-    </nav>
-
-    <div th:layout:fragment="content" class="container mySpace">
-        <div class="jumbotron">
-            <p><h1>Oops!Something went wrong</h1></p>
-            <p><h3>Please try again</h3></p>
-        </div>
+        </nav>
     </div>
 
-    <div id="footer">
-        <p>
-            &copy; 2020 Rewe SWP09
-        </p>
+    <div class="jumbotron">
+        <p><h1>Oops! Something went wrong</h1>
+        <p><h3>Please try again</h3>
     </div>
+
 </body>
 
 </html>

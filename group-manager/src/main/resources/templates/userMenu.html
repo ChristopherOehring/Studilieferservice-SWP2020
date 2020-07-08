@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" media="screen" data-rd-options="include" type="text/css" href="../static/groupmanager/style.css" th:href="@{/groupmanager/style.css}"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Patua One' rel='stylesheet'>
+    <title>StudiLieferservice</title>
+</head>
+
+<body>
+
+<h1>Groups</h1>
+
+<!-- ##############################################################################################-->
+<!-- ##############################################################################################-->
+
+<a class="settings" th:href="${'http://' + link + ':9080/web/usermanager/editaccount'}">
+    <img src="../static/groupmanager/imgs/services-128.png" th:src="@{/groupmanager/imgs/services-128.png}" alt="edit" class="image">
+</a>
+
+<a class="logout" th:href="${'http://' + link + ':9080/web/usermanager/logout'}">
+    <img src="../static/groupmanager/imgs/logoutButton.png" th:src="@{/groupmanager/imgs/logoutButton.png}" alt="logout" class="image">
+</a>
+
+<!-- ##################
+     #### Column 1 ####
+     #### MY GOUPS ####
+     ##################-->
+     <div class="col1">
+
+        <!-- Subheading -->
+        <div class="subtitle">
+            <h2>My Groups</h2>
+        </div>
+    
+        <!-- Searchbar -->
+        <div class="col1Search">
+            <input type="text" onkeyup="searchGroups()" name="myGroupSearch" id="myGroupSearch" placeholder="Search">
+        </div>
+    
+        <div class="groupList">
+            <form  th:action="${'http://' + link + ':9010/web/groupmanager/groupMenuFwd'}" method="GET" >
+                <div class="listBox">
+                    <ul id="groupList">
+                        <!-- Explanation:
+                                - th:each iterates over the groupList with variable "gruppe"
+                                - th:field and th:for belongs together for design purposes
+                                - th:value shows, what is sent to controller when submited
+                                - th:text is the output-text-label what is displayed
+                        -->
+                        <th:block th:each="gruppe : ${groupsWhereOwner}">
+                            <li>
+                                <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                                <label class="lbl" th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
+                            </li>
+                            <li class="border"><label class="border"></label></li>
+                        </th:block>
+                        <th:block th:each="gruppe : ${groupsWhereAdmin}">
+                            <li>
+                                <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                                <label class="lbl" th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
+                            </li>
+                            <li class="border"><label class="border"></label></li>
+                        </th:block>
+                        <th:block th:each="gruppe : ${groupsWhereMember}">
+                            <li>
+                                <input type="radio" th:id="${gruppe.id}" th:value="${gruppe.id}" name="list" />
+                                <label class="lbl" th:for="${gruppe.id}" th:text="${gruppe.groupName}"></label>
+                            </li>
+                            <li class="border"><label class="border"></label></li>
+                        </th:block>
+                    </ul>
+                    <div class="empty" th:if="${groupsWhereOwner.isEmpty() && groupsWhereMember.isEmpty() && groupsWhereAdmin.isEmpty()}">
+                        No Groups Available!
+                    </div>
+                </div>
+                <div class="submitBox">
+                    <input type="submit" value="continue" class="submitButton"/>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+
+<!-- ##############################################################################################-->
+<!-- ##############################################################################################-->
+
+<!-- ####################
+     ####  Column 2  ####
+     #### INVITATION ####
+     ####################-->
+
+<div class="col2">
+    <div class="subtitle">
+        <h2>Invites</h2>
+    </div>
+    <th:block th:if="${!invites.isEmpty()}" th:each="invite: ${invites}">
+        <table>
+            <tr>
+                <td>
+                    <form th:action="@{/web/groupmanager/declineInvite}"  method="POST">
+                        <div class="inviteImage">
+                            <input type="image" src="../static/groupmanager/imgs/x-mark-128.png" th:src="@{/groupmanager/imgs/x-mark-128.png}" alt="-" />
+                        </div>
+                        <input type="hidden" name="groupId" id="groupId" th:value="${invite.id.groupId}" />
+                        <input type="hidden" name="email"   id="email"   th:value="${user}" />
+                    </form>
+                </td>
+                <td>
+                    <label th:for="${invite.getId()}" id="invLabel" th:text="${invite.groupName}">Test2</label>
+                </td>
+                <td>
+                    <form th:action="@{/web/groupmanager/acceptInvite}" method="POST">
+                        <div class="inviteImage">
+                            <input type="image" src="../static/groupmanager/imgs/checkmark-128.png" th:src="@{/groupmanager/imgs/checkmark-128.png}" alt="-" />
+                        </div>
+                        <input type="hidden" name="groupId" id="groupId2" th:value="${invite.id.groupId}" />
+                        <input type="hidden" name="email"   id="email2"   th:value="${user}" />
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </th:block>
+</div>
+
+<!-- ##############################################################################################-->
+<!-- ##############################################################################################-->
+
+<!-- ###################
+     #### Column 3  ####
+     #### NEW GROUP ####
+     ###################-->
+
+<div class="col3">
+    <div class="subtitle">
+        <h2>Create new Group</h2>
+    </div>
+    <div class="createGroup">
+        <form th:action="@{/web/groupmanager/save-group}" th:object="${creationForm}" method="POST">
+            <div class="inputGroupName">
+                <input type="text" id="groupname" th:field="*{groupName}" placeholder="Groupname">
+            </div>
+
+            <input type="hidden" id="user" name="user" th:value="${user}">
+
+            <div class="addGroup">
+                <input type="submit" value="add" class="submitButton">
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--dynamically search groups-->
+<script>
+    function searchGroups() {
+        // Declare variables
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('myGroupSearch');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("groupList");
+        li = ul.getElementsByTagName('li');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("label")[0];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+</script>
+
+</body>
+
+</html>

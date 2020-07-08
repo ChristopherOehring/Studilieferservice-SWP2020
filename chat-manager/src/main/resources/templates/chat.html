@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/chatmanager/css/style.css"
+          th:href="@{/chatmanager/css/style.css}" data-rd-options="include"/>
+
+    <title>StudiLieferservice</title>
+</head>
+
+<body>
+<rewe-digital-content>
+
+        <div id="chat-page">
+            <groupId type="hidden" id="groupId"></groupId>
+            <div class="chat-container">
+                <!-- <div class="chat-header">
+                    <h2>StudiLieferservice Chat</h2>
+                </div> -->
+
+                <ul id="messageArea">
+                    <li class="chat-message" th:class="${message.getHtmlClassForType()}" th:each="message : ${group.messages}">
+                        <i th:if="${message.getHtmlClassForType() == 'chat-message'}" th:text="${message.userName.charAt(0)}">x</i>
+                        <span th:if="${message.getHtmlClassForType() == 'chat-message'}" th:text="${message.userName}">username</span>
+                        <p th:text="${message.content}">message</p>
+                    </li>
+                </ul>
+
+                <form th:action="${'http://' + link + ':9040/chat/addMessage'}" th:object="${chatMessage}" id="messageForm" method="POST">
+                    <div class="form-group">
+                        <div class="input-group clearfix">
+                            <label>
+                                <input type="text" name="content" placeholder="Type a message..."
+                                       autocomplete="off" class="form-control" th:field="*{content}"/>
+                            </label>
+                            <input type="hidden" name="groupId" th:value="${group.id}">
+                            <input type="hidden" name="userId" th:value="${user.id}">
+                            <button type="submit" class="chat-button primary">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!--scroll to bottom of chat-->
+        <script>
+
+        </script>
+
+</rewe-digital-content>
+</body>
+</html>

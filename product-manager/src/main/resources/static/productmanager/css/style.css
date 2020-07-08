@@ -1,0 +1,145 @@
+:root{
+    --primary: #363636;
+    --secondary: #474747;
+    --lineColor: #909090;
+
+    --secondaryFont: "Roboto";
+
+    --colTopMargin: 20%;
+}
+
+body{
+    height: 100%;
+    margin: 0;
+    background-color: var(--primary);
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+h1{
+    font-family: var(--secondaryFont);
+    margin-top: 3rem;
+    text-align: center;
+    color: white;
+}
+
+.image{
+    /*display: block;*/
+    max-width: 200px;
+    max-height: 80px;
+    width: auto;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.searchBox{
+    width: 20%;
+    right: 50px;
+    top: 37px;
+    position: absolute;
+    border-bottom: 2px dashed white;
+    margin-top: 4rem;
+}
+
+::placeholder {
+    color: white;
+    font-family: var(--secondaryFont);
+}
+
+.input{
+    text-align: center;
+    outline: none;
+    border: none;
+    overflow: hidden;
+    margin: 0;
+    width: 100%;
+    padding: 0.25rem 0;
+    background: none;
+    color: white;
+    font-size: 1.2rem;
+    font-family: var(--secondaryFont);
+}
+
+.backButton{
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    background: none;
+    color: white;
+}
+
+.backButton a{
+    padding-top: 50px;
+    font-family: var(--secondaryFont);
+    font-size: 20px;
+    text-decoration: none;
+    color: white;
+    line-height: 16px;
+    display: block;
+    text-align: center;
+}
+
+a.backButton:hover{
+    text-decoration: none;
+    color: var(--secondary);
+}
+
+.columnRight hr{
+    border-color: white;
+}
+
+.productTable {
+    border-collapse: separate;
+    border-spacing: 0 15px;
+    width: 100%;
+}
+
+th{
+    width: 20%;
+}
+
+.th-tr{
+    outline: none;
+    text-indent: 1.1rem;
+}
+
+td{
+    vertical-align: center;
+    padding: 1rem;
+    width: 20%;
+}
+
+tr{
+    padding-top: 15px;
+    outline: #4a4a4a solid thin;
+}
+
+.addbtn{
+    background-color: transparent;
+    border: 1px solid white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    transition: 0.5s;
+
+    /*fonts*/
+    color: white;
+    font-family: var(--secondaryFont);
+    font-size: 1rem;
+}
+
+.addbtn:hover{
+    background-color: white;
+    color: var(--primary);
+}
+
+#productName{
+    font-size: 28px;
+}
+
+.spacer{
+    outline: none;
+    border-bottom: 1px solid #4a4a4a;
+}
