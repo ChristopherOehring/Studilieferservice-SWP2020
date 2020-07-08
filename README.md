@@ -1,13 +1,9 @@
 # StudiLieferservice
 **Softwareprojekt 2020 - Thema 09: "Lieferservice für Studenten"**
 
-## Status  `v0.2`
-Fast fertiges, lauffähiges Programm, vollständig in Docker; umfassende Implementierung 
-aller Komponenten und teilweise Verbindungen zwischen diesen (Kafka vollständig, 
-Web noch nur teilweise); gemischte Funktionalität
-
-Web-Schnittstellen (Composer etc.) und Session-Management müssen noch größtenteils 
-implementiert werden.
+## Status  `v1.0`
+Fertiges, lauffähiges Programm, vollständig in Docker; umfassende Implementierung 
+aller wichtigen Komponenten und Verbindungen zwischen diesen (Kafka, Web, REST)
 
 ## Komponenten (Microservices)
 implementiert (alle):
@@ -16,28 +12,30 @@ implementiert (alle):
 * **Einkaufslistenverwaltung** (shopping-list-manager)
 * **Produktverwaltung** (product-manager)
 * **Chatfunktion** (chat-manager)
-* _(Composer: momentan nur teilweise verwendet)_
+* _(Composer: von REWE digital, nur für Routing)_
 
 ## Funktionalität
-**Nutzerverwaltung**: _relativ vollständig_: Anlegen eines Accounts, 
-mit diesem anmelden und ihn bearbeiten; nicht alle Funktionen sind im Browser aufrufbar; 
-Weiterleitung zur Gruppenverwaltung fehlt; Sessions fehlen
+**Nutzerverwaltung**: _vollständig_: Anlegen eines Accounts, 
+mit diesem anmelden und ihn bearbeiten;  
+Weiterleitung zur Gruppenverwaltung; Sessions
 
 **Gruppenverwaltung**: _relativ vollständig_: Erstellen von Gruppen und sich diese mit den 
-Mitgliedern anzeigen lassen; Chat und Einkaufsliste sind noch nicht eingebunden; es lassen 
-sich noch keine Liefertermine eingeben; Sessions fehlen noch
+Mitgliedern anzeigen lassen; Chat und Einkaufsliste sind eingebunden; es lassen 
+sich Liefertermine eingeben; Sessions
 
-**Einkaufslistenverwaltung**: _nahezu vollständig_: automatisches Erstellen von Einkaufslisten bei 
+**Einkaufslistenverwaltung**: _vollständig_: automatisches Erstellen von Einkaufslisten bei 
 Erstellung einer Gruppe (Kafka); Hinzufügen von Artikeln (Kafka) und sich diese in einer 
-Liste im Browser anzeigen lassen; Sessions fehlen noch
+Liste im Browser anzeigen lassen; Sessions
 
-**Produktverwaltung**: _nahezu vollständig_: Produkte können gespeichert und an andere 
+**Produktverwaltung**: _vollständig_: Produkte können gespeichert und an andere 
 Microservices geschickt werden (Kafka). Im Browser können die Produkte ausgewählt werden; 
-Sessions fehlen noch
+Sessions
 
-**Chatfunktion**: _nahezu vollständig_: Nutzer von Gruppen können sich im Browser 
+**Chatfunktion**: _vollständig_: Nutzer von Gruppen können sich im Browser 
 in Chats schreiben, die Chatverläufe werden gespeichert; Chats werden automatisch 
-beim Erstellen einer Gruppe erstellt (Kafka); Sessions fehlen noch
+beim Erstellen einer Gruppe erstellt (Kafka); Sessions
+
+_Hinweis: Kann-Kriterien etc. nicht berücksichtigt_
 
 ## Setup
 Um das Projekt zu starten bzw. um auf die Webseiten zugreifen zu können, müssen die 
@@ -50,20 +48,21 @@ starten und im Log angezeigt wird, wie diese hochgefahren werden.
 ## Access
 Der Ausgangspunkt der Anwendung ist die Webseite http://localhost:9080 
 (Startseite der Nutzerverwaltung). Von dort aus kann man sich einen Account erstellen und 
-sich einloggen, allerdings gibt es noch keine Weiterleitung zur Gruppenverwaltung.
+sich einloggen, wonach man zur Gruppenverwaltung weitergeleitet wird.
 
-Es ist danach möglich, auf die Seite für den Benutzer in der Gruppenverwaltung zuzugreifen: 
-http://localhost:9010/web/userMenu/<userEmail>. Dort können neue Gruppen erstellt werden, 
+Es ist danach möglich, auf die Seite für den Benutzer in der Gruppenverwaltung zuzugreifen 
+(http://localhost:9010/web/userMenu/). Dort können neue Gruppen erstellt werden, 
 wodurch man zur Seite der neu erstellten Gruppe weitergeleitet wird.
 
-Auf die Einkaufslistenverwaltung kann man momentan nur indirekt zugreifen, indem man sich aus 
-der URL die ID der erstellten Gruppe holt. Danach kann auf die Einkaufsliste zu dieser 
+Auf die Einkaufslistenverwaltung kann man erstmal indirekt zugreifen, 
+sie ist in die Seite der Gruppe eingebunden. Allerdings kann auch direkt auf die Einkaufsliste zu dieser 
 Gruppe und dem Nutzer zugegriffen werden: http://localhost:9070/shoppingList/<groupId>/<userEmail>. 
 Dort kann dann die Menge von Produkten verändert werden. Dafür müssen diese aber erst in der 
-Produktverwaltung erstellt und dann per Konsole der Einkaufsliste hinzugefügt werden.
+Produktverwaltung erstellt und der Einkaufsliste hinzugefügt werden.
 
-Es kann auf die Produktverwaltung im Browser zugegriffen werden: http://localhost:9060/products. 
+Per Link in der Einkaufsliste kann auf die Produktverwaltung (http://localhost:9060/products) 
+zugegriffen werden. 
 Allerdings können Produkte nur per Konsole zur Auswahl hinzugefügt werden.
 
-Auf den Chat kann nur im Browser zugegriffen werden, die Seite ist erreichbar 
-unter: http://localhost:9040/chat/<groupId>/<userEmail>.
+Auf den Chat kann nur im Browser zugegriffen werden, er ist wie die Einkaufsliste 
+in die Seite der Gruppe eingebunden (http://localhost:9040/chat/<groupId>/<userEmail>).
