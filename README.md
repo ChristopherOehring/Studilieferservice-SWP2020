@@ -1,3 +1,9 @@
+# Softwareproject 2020 - Topic 09: "Delivery Service for Students"
+
+Webservice built with Spring Boot utilising Docker, PostgreSQL, Apache Kafka and Composer by REWE digital. Features a Microservice-Frontend. Lets costumers create groups to order groceries for a joint delivery saving shipping costs or helping to reach the minimum order value by bundling the individual orders into one single order.
+
+Made by a team of students in cooperation with REWE digital in the "Softwareproject" at TU Ilmenau.
+
 # StudiLieferservice
 **Softwareprojekt 2020 - Thema 09: "Lieferservice für Studenten"**
 
