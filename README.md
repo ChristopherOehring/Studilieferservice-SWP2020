@@ -4,8 +4,7 @@ Webservice built with Spring Boot utilising Docker, PostgreSQL, Apache Kafka and
 
 Made by a team of students in cooperation with REWE digital in the "Softwareproject" at TU Ilmenau.
 
-# StudiLieferservice
-**Softwareprojekt 2020 - Thema 09: "Lieferservice für Studenten"**
+# Softwareprojekt 2020 - Thema 09: "Lieferservice für Studenten"**
 
 ## Status  `v1.0`
 Fertiges, lauffähiges Programm, vollständig in Docker; umfassende Implementierung 
